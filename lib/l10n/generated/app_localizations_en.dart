@@ -75,6 +75,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get darkTheme => 'Dark';
 
   @override
+  String get systemTheme => 'System';
+
+  @override
   String get layerOsm => 'OpenStreetMap';
 
   @override
@@ -321,4 +324,240 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get locationPermissionDenied => 'Location permission denied';
+
+  @override
+  String get signIn => 'Sign In';
+
+  @override
+  String get signUp => 'Register';
+
+  @override
+  String get cloudSync => 'Cloud Synchronization';
+
+  @override
+  String get cloudSyncDesc =>
+      'Records are stored in Firebase\nand accessible from any device';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get forgotPassword => 'Forgot Password';
+
+  @override
+  String get noAccountSignUp => 'No account? Register';
+
+  @override
+  String get haveAccountSignIn => 'Already have an account? Sign In';
+
+  @override
+  String get passwordResetSent => 'Password reset link sent ✓';
+
+  @override
+  String get enterEmail => 'Enter email';
+
+  @override
+  String get enterPassword => 'Enter password';
+
+  @override
+  String get minSixChars => 'Minimum 6 characters';
+
+  @override
+  String get invalidEmail => 'Email is invalid';
+
+  @override
+  String get accessDenied =>
+      'Access restricted. Contact admin to add this email.';
+
+  @override
+  String get migrateLocalTitle => 'Local Records';
+
+  @override
+  String get migrateLocalContent =>
+      'Do you want to upload records stored on this device to Cloud?';
+
+  @override
+  String get upload => 'Upload';
+
+  @override
+  String uploadSuccess(int count) {
+    return '$count records uploaded ✓';
+  }
+
+  @override
+  String get uploadFailed => 'Upload failed';
+
+  @override
+  String get expeditionMode => 'Expedition Mode';
+
+  @override
+  String get createTab => 'Create';
+
+  @override
+  String get joinTab => 'Join';
+
+  @override
+  String get newExpeditionTitle => 'New Expedition';
+
+  @override
+  String get newExpeditionDesc =>
+      'A 6-character code will be created. Share it with colleagues — they can join via the Join tab and collaborate on records.';
+
+  @override
+  String get expeditionCodeLabel => 'Expedition Code';
+
+  @override
+  String get codeCopied => 'Code copied ✓';
+
+  @override
+  String get tapToCopy => 'Tap code to copy';
+
+  @override
+  String get confirmExpedition => 'Enter Expedition';
+
+  @override
+  String get generateCode => 'Generate New Code';
+
+  @override
+  String get createExpedition => 'Create Expedition';
+
+  @override
+  String get joinExistingTitle => 'Join Existing Expedition';
+
+  @override
+  String get joinExistingDesc =>
+      'Enter the 6-character code received from a colleague.';
+
+  @override
+  String invalidCode(int length) {
+    return 'Code must be $length characters';
+  }
+
+  @override
+  String get expeditionNotFound => 'Expedition not found';
+
+  @override
+  String get gpsTrackHistory => 'GPS Track History';
+
+  @override
+  String get noTracksFound => 'No recorded tracks';
+
+  @override
+  String get noTracksHint => 'Map  ➤  ▶ button';
+
+  @override
+  String get deleteTrackTitle => 'Delete Track';
+
+  @override
+  String get confirmDeleteTrack => 'Do you want to delete this track?';
+
+  @override
+  String get trackRecording => '● Recording in progress';
+
+  @override
+  String get exportGpx => 'Download GPX';
+
+  @override
+  String get refresh => 'Refresh';
+
+  @override
+  String get appearance => 'Appearance';
+
+  @override
+  String get keepScreenOn => 'Keep Screen On';
+
+  @override
+  String get keepScreenOnSub => 'While using the map';
+
+  @override
+  String get emailListTitle => 'Email Addresses';
+
+  @override
+  String get noEmailsAdded => 'No emails added';
+
+  @override
+  String get newEmailHint => 'New email';
+
+  @override
+  String get addEmail => 'Add';
+
+  @override
+  String get storageTitle => 'Data Storage';
+
+  @override
+  String get storageLocal => 'Local';
+
+  @override
+  String get storageCloud => 'Cloud';
+
+  @override
+  String get storageExpedition => 'Exped.';
+
+  @override
+  String get signOut => 'Sign Out';
+
+  @override
+  String get account => 'Account';
+
+  @override
+  String get syncCloudToLocal => 'Cloud → Local';
+
+  @override
+  String get syncCloudToLocalDesc => 'Download cloud records to this device';
+
+  @override
+  String get leaveExpeditionTitle => 'Leave Expedition';
+
+  @override
+  String get leaveExpeditionContent =>
+      'You will leave expedition mode and switch to Cloud (personal) mode. Expedition data remains on the server.';
+
+  @override
+  String get leave => 'Leave';
+
+  @override
+  String get switchToLocal => 'Local Storage';
+
+  @override
+  String get switchToLocalContent =>
+      'Use local SQLite instead of Cloud. Cloud records will not be deleted.';
+
+  @override
+  String get switchToLocalBtn => 'Switch';
+
+  @override
+  String get localModeInfo => 'Records stored only on this device';
+
+  @override
+  String get expeditionCodeShort => 'Expedition Code';
+
+  @override
+  String get copyCode => 'Copy Code';
+
+  @override
+  String get leaveExpeditionShort => 'Leave Expedition';
+
+  @override
+  String get leaveExpeditionSub => 'Return to Cloud (personal) mode';
+
+  @override
+  String get confirmSignOut => 'Cloud sync will stop. Sign out?';
+
+  @override
+  String get expeditionShortcut => 'Expedition Mode';
+
+  @override
+  String get expeditionShortcutSub => 'Group collaborative work';
+
+  @override
+  String get trackHistory => 'Track History';
+
+  @override
+  String get map => 'Map';
+
+  @override
+  String get methodologyShort => 'Guide';
+
+  @override
+  String get paramsShort => 'Params';
 }

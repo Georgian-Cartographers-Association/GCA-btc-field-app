@@ -25,8 +25,11 @@ class CloudRepository implements DataRepository {
   }
 
   @override
-  Future<void> upsert(BtkRecord record) =>
-      _col.doc(record.id).set(record.toJson());
+  Future<bool> upsert(BtkRecord record) async {
+    record.updatedAt = DateTime.now();
+    await _col.doc(record.id).set(record.toJson());
+    return false;
+  }
 
   @override
   Future<void> delete(String id) => _col.doc(id).delete();

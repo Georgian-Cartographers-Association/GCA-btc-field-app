@@ -7,6 +7,17 @@ class AppConstants {
       'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
   static const List<String> topoSubdomains = ['a', 'b', 'c'];
 
+  // Expedition code characters — ambiguous chars (0/O, 1/I/L) excluded
+  static const String expeditionCodeChars =
+      'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  static const int expeditionCodeLength = 6;
+
+  // Georgian month abbreviations (index 0 = January)
+  static const List<String> georgianMonths = [
+    'იანვ', 'თებ', 'მარ', 'აპრ', 'მაი', 'ივნ',
+    'ივლ', 'აგვ', 'სექ', 'ოქტ', 'ნოე', 'დეკ',
+  ];
+
   // Georgia center
   static const LatLng georgiaCenter = LatLng(42.315407, 43.356892);
   static const double defaultZoom = 7.0;

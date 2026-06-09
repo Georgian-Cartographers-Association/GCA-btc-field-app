@@ -102,7 +102,7 @@ class ExportService {
 
   static Future<void> shareCsv(List<BtkRecord> records) async {
     final csv = buildCsv(records);
-    final bytes = Uint8List.fromList(csv.codeUnits);
+    final bytes = Uint8List.fromList(utf8.encode(csv));
     final file = XFile.fromData(bytes, name: 'btk_records.csv', mimeType: 'text/csv');
     await Share.shareXFiles([file], subject: 'ბტკ ჩანაწერები — CSV');
   }

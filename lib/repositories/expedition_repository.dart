@@ -30,8 +30,30 @@ class ExpeditionRepository implements DataRepository {
   }
 
   @override
-  Future<void> upsert(BtkRecord record) =>
-      _col.doc(record.id).set(record.toJson());
+  Future<bool> upsert(BtkRecord record) async {
+    bool conflicted = false;
+    // Capture the local updatedAt before the transaction (it may retry).
+    final localUpdatedAt = record.updatedAt;
+    final docRef = _col.doc(record.id);
+
+    await FirebaseFirestore.instance.runTransaction((tx) async {
+      final snap = await tx.get(docRef);
+      if (snap.exists) {
+        final raw = snap.data()!['updatedAt'];
+        final serverTs =
+            raw != null ? DateTime.tryParse(raw as String) : null;
+        // If server version is newer than what we last read, it's a conflict.
+        if (serverTs != null && serverTs.isAfter(localUpdatedAt)) {
+          conflicted = true;
+        }
+      }
+      // Always write — last-write-wins, but caller is informed of the conflict.
+      record.updatedAt = DateTime.now();
+      tx.set(docRef, record.toJson());
+    });
+
+    return conflicted;
+  }
 
   @override
   Future<void> delete(String id) => _col.doc(id).delete();

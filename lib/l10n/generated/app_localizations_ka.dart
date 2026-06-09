@@ -75,6 +75,9 @@ class AppLocalizationsKa extends AppLocalizations {
   String get darkTheme => 'მუქი';
 
   @override
+  String get systemTheme => 'სისტემა';
+
+  @override
   String get layerOsm => 'OpenStreetMap';
 
   @override
@@ -322,4 +325,240 @@ class AppLocalizationsKa extends AppLocalizations {
 
   @override
   String get locationPermissionDenied => 'ლოკაციის ნებართვა არ არის';
+
+  @override
+  String get signIn => 'შესვლა';
+
+  @override
+  String get signUp => 'რეგისტრაცია';
+
+  @override
+  String get cloudSync => 'Cloud სინქრონიზაცია';
+
+  @override
+  String get cloudSyncDesc =>
+      'ჩანაწერები ინახება Firebase-ში\nდა ხელმისაწვდომია ნებისმიერი მოწყობილობიდან';
+
+  @override
+  String get password => 'პაროლი';
+
+  @override
+  String get forgotPassword => 'პაროლი დამავიწყდა';
+
+  @override
+  String get noAccountSignUp => 'ანგარიში არ გაქვთ? რეგისტრაცია';
+
+  @override
+  String get haveAccountSignIn => 'უკვე გაქვთ ანგარიში? შესვლა';
+
+  @override
+  String get passwordResetSent => 'პაროლის აღდგენის ბმული გაიგზავნა ✓';
+
+  @override
+  String get enterEmail => 'შეიყვანეთ ელ-ფოსტა';
+
+  @override
+  String get enterPassword => 'შეიყვანეთ პაროლი';
+
+  @override
+  String get minSixChars => 'მინიმუმ 6 სიმბოლო';
+
+  @override
+  String get invalidEmail => 'ელ-ფოსტა არასწორია';
+
+  @override
+  String get accessDenied =>
+      'წვდომა შეზღუდულია. ადმინისტრატორს მიმართეთ ამ ელ-ფოსტის დასამატებლად.';
+
+  @override
+  String get migrateLocalTitle => 'ლოკალური მონაცემები';
+
+  @override
+  String get migrateLocalContent =>
+      'გსურთ ამ მოწყობილობაზე შენახული ჩანაწერები Cloud-ში ატვირთოთ?';
+
+  @override
+  String get upload => 'ატვირთვა';
+
+  @override
+  String uploadSuccess(int count) {
+    return '$count ჩანაწერი ატვირთულია ✓';
+  }
+
+  @override
+  String get uploadFailed => 'ატვირთვა ვერ მოხდა';
+
+  @override
+  String get expeditionMode => 'ექსპედიციის რეჟიმი';
+
+  @override
+  String get createTab => 'შექმნა';
+
+  @override
+  String get joinTab => 'შეერთება';
+
+  @override
+  String get newExpeditionTitle => 'ახალი ექსპედიცია';
+
+  @override
+  String get newExpeditionDesc =>
+      'შეიქმნება 6-სიმბოლოიანი კოდი. გაუზიარეთ კოლეგებს — მათ შეუძლიათ \"შეერთება\" ჩანართით შეუერთდნენ და ერთად ამუშაონ ჩანაწერები.';
+
+  @override
+  String get expeditionCodeLabel => 'ექსპედიციის კოდი';
+
+  @override
+  String get codeCopied => 'კოდი კოპირდა ✓';
+
+  @override
+  String get tapToCopy => 'დაჭირეთ კოდზე კოპირებისთვის';
+
+  @override
+  String get confirmExpedition => 'ექსპედიციაში შესვლა';
+
+  @override
+  String get generateCode => 'ახალი კოდის გენერაცია';
+
+  @override
+  String get createExpedition => 'ექსპედიციის შექმნა';
+
+  @override
+  String get joinExistingTitle => 'არსებულ ექსპედიციაში შეერთება';
+
+  @override
+  String get joinExistingDesc =>
+      'შეიყვანეთ კოლეგისგან მიღებული 6-სიმბოლოიანი კოდი.';
+
+  @override
+  String invalidCode(int length) {
+    return 'კოდი უნდა შედგებოდეს $length სიმბოლოსგან';
+  }
+
+  @override
+  String get expeditionNotFound => 'ასეთი ექსპედიცია არ მოიძებნა';
+
+  @override
+  String get gpsTrackHistory => 'GPS ტრეკების ისტორია';
+
+  @override
+  String get noTracksFound => 'ჩაწერილი ტრეკი არ არის';
+
+  @override
+  String get noTracksHint => 'რუკაზე  ➤  ▶ ღილაკი';
+
+  @override
+  String get deleteTrackTitle => 'ტრეკის წაშლა';
+
+  @override
+  String get confirmDeleteTrack => 'გსურთ ამ ტრეკის წაშლა?';
+
+  @override
+  String get trackRecording => '● ჩაწერა მიმდინარეობს';
+
+  @override
+  String get exportGpx => 'GPX გადმოტვირთვა';
+
+  @override
+  String get refresh => 'განახლება';
+
+  @override
+  String get appearance => 'გარეგნობა';
+
+  @override
+  String get keepScreenOn => 'ეკრანი ნუ ჩაქრება';
+
+  @override
+  String get keepScreenOnSub => 'რუკაზე მუშაობისას';
+
+  @override
+  String get emailListTitle => 'ელ-ფოსტის მისამართები';
+
+  @override
+  String get noEmailsAdded => 'ელ-ფოსტა არ არის დამატებული';
+
+  @override
+  String get newEmailHint => 'ახალი ელ-ფოსტა';
+
+  @override
+  String get addEmail => 'დამატება';
+
+  @override
+  String get storageTitle => 'მონაცემების შენახვა';
+
+  @override
+  String get storageLocal => 'ლოკ.';
+
+  @override
+  String get storageCloud => 'Cloud';
+
+  @override
+  String get storageExpedition => 'ექსპ.';
+
+  @override
+  String get signOut => 'გამოსვლა';
+
+  @override
+  String get account => 'ანგარიში';
+
+  @override
+  String get syncCloudToLocal => 'Cloud → ლოკალური';
+
+  @override
+  String get syncCloudToLocalDesc => 'Cloud-ის ჩანაწერები ამ მოწყობილობაზე';
+
+  @override
+  String get leaveExpeditionTitle => 'ექსპედიციის დატოვება';
+
+  @override
+  String get leaveExpeditionContent =>
+      'ექსპედიციის რეჟიმიდან გამოხვალთ და Cloud (პირადი) რეჟიმზე გადაინაცვლებთ. ექსპედიციის მონაცემები სერვერზე რჩება.';
+
+  @override
+  String get leave => 'დატოვება';
+
+  @override
+  String get switchToLocal => 'ლოკალური შენახვა';
+
+  @override
+  String get switchToLocalContent =>
+      'Cloud-ის ნაცვლად ლოკალური SQLite გამოყენება. Cloud-ში ჩანაწერები არ წაიშლება.';
+
+  @override
+  String get switchToLocalBtn => 'გადართვა';
+
+  @override
+  String get localModeInfo => 'ჩანაწერები ინახება მხოლოდ ამ მოწყობილობაზე';
+
+  @override
+  String get expeditionCodeShort => 'ექსპედიციის კოდი';
+
+  @override
+  String get copyCode => 'კოდის კოპირება';
+
+  @override
+  String get leaveExpeditionShort => 'ექსპედიციის დატოვება';
+
+  @override
+  String get leaveExpeditionSub => 'Cloud (პირადი) რეჟიმზე დაბრუნება';
+
+  @override
+  String get confirmSignOut => 'Cloud სინქრონიზაცია შეჩერდება. გამოსვლა?';
+
+  @override
+  String get expeditionShortcut => 'ექსპედიციის რეჟიმი';
+
+  @override
+  String get expeditionShortcutSub => 'ჯგუფური ერთობლივი მუშაობა';
+
+  @override
+  String get trackHistory => 'ტრეკების ისტორია';
+
+  @override
+  String get map => 'რუკა';
+
+  @override
+  String get methodologyShort => 'მეთოდიკა';
+
+  @override
+  String get paramsShort => 'პარამ.';
 }

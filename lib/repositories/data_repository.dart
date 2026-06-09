@@ -4,7 +4,8 @@ import '../models/btk_record.dart';
 /// BtkNotifier only talks to this — never to SQLite or Firestore directly.
 abstract class DataRepository {
   Future<List<BtkRecord>> getAll();
-  Future<void> upsert(BtkRecord record);
+  /// Returns true if a sync conflict was detected (expedition mode only).
+  Future<bool> upsert(BtkRecord record);
   Future<void> delete(String id);
 
   /// Optional: stream of all records (used by cloud repo for real-time sync).

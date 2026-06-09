@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../core/constants.dart';
@@ -21,10 +22,9 @@ class LocalRepository implements DataRepository {
   }
 
   @override
-  Future<void> upsert(BtkRecord record) async {
+  Future<bool> upsert(BtkRecord record) async {
+    record.updatedAt = DateTime.now();
     if (kIsWeb) {
-      // We need the full list to re-save; caller must manage state.
-      // The web path reads & writes the whole list via _saveWeb helper.
       final all = await _loadWeb();
       final idx = all.indexWhere((r) => r.id == record.id);
       if (idx >= 0) {
@@ -36,6 +36,7 @@ class LocalRepository implements DataRepository {
     } else {
       await BtkDatabase.upsertRecord(record);
     }
+    return false;
   }
 
   @override
@@ -44,7 +45,18 @@ class LocalRepository implements DataRepository {
       final all = await _loadWeb();
       await _saveWeb(all.where((r) => r.id != id).toList());
     } else {
+      await _deletePhotoFiles(id);
       await BtkDatabase.deleteRecord(id);
+    }
+  }
+
+  // Delete all photo files on disk for a record before removing from DB.
+  static Future<void> _deletePhotoFiles(String id) async {
+    final photos = await BtkDatabase.getPhotos(id);
+    for (final photo in photos) {
+      try {
+        await File(photo.filePath).delete();
+      } catch (_) {}
     }
   }
 

@@ -230,6 +230,12 @@ abstract class AppLocalizations {
   /// **'მუქი'**
   String get darkTheme;
 
+  /// No description provided for @systemTheme.
+  ///
+  /// In ka, this message translates to:
+  /// **'სისტემა'**
+  String get systemTheme;
+
   /// No description provided for @layerOsm.
   ///
   /// In ka, this message translates to:
@@ -721,6 +727,456 @@ abstract class AppLocalizations {
   /// In ka, this message translates to:
   /// **'ლოკაციის ნებართვა არ არის'**
   String get locationPermissionDenied;
+
+  /// No description provided for @signIn.
+  ///
+  /// In ka, this message translates to:
+  /// **'შესვლა'**
+  String get signIn;
+
+  /// No description provided for @signUp.
+  ///
+  /// In ka, this message translates to:
+  /// **'რეგისტრაცია'**
+  String get signUp;
+
+  /// No description provided for @cloudSync.
+  ///
+  /// In ka, this message translates to:
+  /// **'Cloud სინქრონიზაცია'**
+  String get cloudSync;
+
+  /// No description provided for @cloudSyncDesc.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩანაწერები ინახება Firebase-ში\nდა ხელმისაწვდომია ნებისმიერი მოწყობილობიდან'**
+  String get cloudSyncDesc;
+
+  /// No description provided for @password.
+  ///
+  /// In ka, this message translates to:
+  /// **'პაროლი'**
+  String get password;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In ka, this message translates to:
+  /// **'პაროლი დამავიწყდა'**
+  String get forgotPassword;
+
+  /// No description provided for @noAccountSignUp.
+  ///
+  /// In ka, this message translates to:
+  /// **'ანგარიში არ გაქვთ? რეგისტრაცია'**
+  String get noAccountSignUp;
+
+  /// No description provided for @haveAccountSignIn.
+  ///
+  /// In ka, this message translates to:
+  /// **'უკვე გაქვთ ანგარიში? შესვლა'**
+  String get haveAccountSignIn;
+
+  /// No description provided for @passwordResetSent.
+  ///
+  /// In ka, this message translates to:
+  /// **'პაროლის აღდგენის ბმული გაიგზავნა ✓'**
+  String get passwordResetSent;
+
+  /// No description provided for @enterEmail.
+  ///
+  /// In ka, this message translates to:
+  /// **'შეიყვანეთ ელ-ფოსტა'**
+  String get enterEmail;
+
+  /// No description provided for @enterPassword.
+  ///
+  /// In ka, this message translates to:
+  /// **'შეიყვანეთ პაროლი'**
+  String get enterPassword;
+
+  /// No description provided for @minSixChars.
+  ///
+  /// In ka, this message translates to:
+  /// **'მინიმუმ 6 სიმბოლო'**
+  String get minSixChars;
+
+  /// No description provided for @invalidEmail.
+  ///
+  /// In ka, this message translates to:
+  /// **'ელ-ფოსტა არასწორია'**
+  String get invalidEmail;
+
+  /// No description provided for @accessDenied.
+  ///
+  /// In ka, this message translates to:
+  /// **'წვდომა შეზღუდულია. ადმინისტრატორს მიმართეთ ამ ელ-ფოსტის დასამატებლად.'**
+  String get accessDenied;
+
+  /// No description provided for @migrateLocalTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'ლოკალური მონაცემები'**
+  String get migrateLocalTitle;
+
+  /// No description provided for @migrateLocalContent.
+  ///
+  /// In ka, this message translates to:
+  /// **'გსურთ ამ მოწყობილობაზე შენახული ჩანაწერები Cloud-ში ატვირთოთ?'**
+  String get migrateLocalContent;
+
+  /// No description provided for @upload.
+  ///
+  /// In ka, this message translates to:
+  /// **'ატვირთვა'**
+  String get upload;
+
+  /// No description provided for @uploadSuccess.
+  ///
+  /// In ka, this message translates to:
+  /// **'{count} ჩანაწერი ატვირთულია ✓'**
+  String uploadSuccess(int count);
+
+  /// No description provided for @uploadFailed.
+  ///
+  /// In ka, this message translates to:
+  /// **'ატვირთვა ვერ მოხდა'**
+  String get uploadFailed;
+
+  /// No description provided for @expeditionMode.
+  ///
+  /// In ka, this message translates to:
+  /// **'ექსპედიციის რეჟიმი'**
+  String get expeditionMode;
+
+  /// No description provided for @createTab.
+  ///
+  /// In ka, this message translates to:
+  /// **'შექმნა'**
+  String get createTab;
+
+  /// No description provided for @joinTab.
+  ///
+  /// In ka, this message translates to:
+  /// **'შეერთება'**
+  String get joinTab;
+
+  /// No description provided for @newExpeditionTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'ახალი ექსპედიცია'**
+  String get newExpeditionTitle;
+
+  /// No description provided for @newExpeditionDesc.
+  ///
+  /// In ka, this message translates to:
+  /// **'შეიქმნება 6-სიმბოლოიანი კოდი. გაუზიარეთ კოლეგებს — მათ შეუძლიათ \"შეერთება\" ჩანართით შეუერთდნენ და ერთად ამუშაონ ჩანაწერები.'**
+  String get newExpeditionDesc;
+
+  /// No description provided for @expeditionCodeLabel.
+  ///
+  /// In ka, this message translates to:
+  /// **'ექსპედიციის კოდი'**
+  String get expeditionCodeLabel;
+
+  /// No description provided for @codeCopied.
+  ///
+  /// In ka, this message translates to:
+  /// **'კოდი კოპირდა ✓'**
+  String get codeCopied;
+
+  /// No description provided for @tapToCopy.
+  ///
+  /// In ka, this message translates to:
+  /// **'დაჭირეთ კოდზე კოპირებისთვის'**
+  String get tapToCopy;
+
+  /// No description provided for @confirmExpedition.
+  ///
+  /// In ka, this message translates to:
+  /// **'ექსპედიციაში შესვლა'**
+  String get confirmExpedition;
+
+  /// No description provided for @generateCode.
+  ///
+  /// In ka, this message translates to:
+  /// **'ახალი კოდის გენერაცია'**
+  String get generateCode;
+
+  /// No description provided for @createExpedition.
+  ///
+  /// In ka, this message translates to:
+  /// **'ექსპედიციის შექმნა'**
+  String get createExpedition;
+
+  /// No description provided for @joinExistingTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'არსებულ ექსპედიციაში შეერთება'**
+  String get joinExistingTitle;
+
+  /// No description provided for @joinExistingDesc.
+  ///
+  /// In ka, this message translates to:
+  /// **'შეიყვანეთ კოლეგისგან მიღებული 6-სიმბოლოიანი კოდი.'**
+  String get joinExistingDesc;
+
+  /// No description provided for @invalidCode.
+  ///
+  /// In ka, this message translates to:
+  /// **'კოდი უნდა შედგებოდეს {length} სიმბოლოსგან'**
+  String invalidCode(int length);
+
+  /// No description provided for @expeditionNotFound.
+  ///
+  /// In ka, this message translates to:
+  /// **'ასეთი ექსპედიცია არ მოიძებნა'**
+  String get expeditionNotFound;
+
+  /// No description provided for @gpsTrackHistory.
+  ///
+  /// In ka, this message translates to:
+  /// **'GPS ტრეკების ისტორია'**
+  String get gpsTrackHistory;
+
+  /// No description provided for @noTracksFound.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩაწერილი ტრეკი არ არის'**
+  String get noTracksFound;
+
+  /// No description provided for @noTracksHint.
+  ///
+  /// In ka, this message translates to:
+  /// **'რუკაზე  ➤  ▶ ღილაკი'**
+  String get noTracksHint;
+
+  /// No description provided for @deleteTrackTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'ტრეკის წაშლა'**
+  String get deleteTrackTitle;
+
+  /// No description provided for @confirmDeleteTrack.
+  ///
+  /// In ka, this message translates to:
+  /// **'გსურთ ამ ტრეკის წაშლა?'**
+  String get confirmDeleteTrack;
+
+  /// No description provided for @trackRecording.
+  ///
+  /// In ka, this message translates to:
+  /// **'● ჩაწერა მიმდინარეობს'**
+  String get trackRecording;
+
+  /// No description provided for @exportGpx.
+  ///
+  /// In ka, this message translates to:
+  /// **'GPX გადმოტვირთვა'**
+  String get exportGpx;
+
+  /// No description provided for @refresh.
+  ///
+  /// In ka, this message translates to:
+  /// **'განახლება'**
+  String get refresh;
+
+  /// No description provided for @appearance.
+  ///
+  /// In ka, this message translates to:
+  /// **'გარეგნობა'**
+  String get appearance;
+
+  /// No description provided for @keepScreenOn.
+  ///
+  /// In ka, this message translates to:
+  /// **'ეკრანი ნუ ჩაქრება'**
+  String get keepScreenOn;
+
+  /// No description provided for @keepScreenOnSub.
+  ///
+  /// In ka, this message translates to:
+  /// **'რუკაზე მუშაობისას'**
+  String get keepScreenOnSub;
+
+  /// No description provided for @emailListTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'ელ-ფოსტის მისამართები'**
+  String get emailListTitle;
+
+  /// No description provided for @noEmailsAdded.
+  ///
+  /// In ka, this message translates to:
+  /// **'ელ-ფოსტა არ არის დამატებული'**
+  String get noEmailsAdded;
+
+  /// No description provided for @newEmailHint.
+  ///
+  /// In ka, this message translates to:
+  /// **'ახალი ელ-ფოსტა'**
+  String get newEmailHint;
+
+  /// No description provided for @addEmail.
+  ///
+  /// In ka, this message translates to:
+  /// **'დამატება'**
+  String get addEmail;
+
+  /// No description provided for @storageTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'მონაცემების შენახვა'**
+  String get storageTitle;
+
+  /// No description provided for @storageLocal.
+  ///
+  /// In ka, this message translates to:
+  /// **'ლოკ.'**
+  String get storageLocal;
+
+  /// No description provided for @storageCloud.
+  ///
+  /// In ka, this message translates to:
+  /// **'Cloud'**
+  String get storageCloud;
+
+  /// No description provided for @storageExpedition.
+  ///
+  /// In ka, this message translates to:
+  /// **'ექსპ.'**
+  String get storageExpedition;
+
+  /// No description provided for @signOut.
+  ///
+  /// In ka, this message translates to:
+  /// **'გამოსვლა'**
+  String get signOut;
+
+  /// No description provided for @account.
+  ///
+  /// In ka, this message translates to:
+  /// **'ანგარიში'**
+  String get account;
+
+  /// No description provided for @syncCloudToLocal.
+  ///
+  /// In ka, this message translates to:
+  /// **'Cloud → ლოკალური'**
+  String get syncCloudToLocal;
+
+  /// No description provided for @syncCloudToLocalDesc.
+  ///
+  /// In ka, this message translates to:
+  /// **'Cloud-ის ჩანაწერები ამ მოწყობილობაზე'**
+  String get syncCloudToLocalDesc;
+
+  /// No description provided for @leaveExpeditionTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'ექსპედიციის დატოვება'**
+  String get leaveExpeditionTitle;
+
+  /// No description provided for @leaveExpeditionContent.
+  ///
+  /// In ka, this message translates to:
+  /// **'ექსპედიციის რეჟიმიდან გამოხვალთ და Cloud (პირადი) რეჟიმზე გადაინაცვლებთ. ექსპედიციის მონაცემები სერვერზე რჩება.'**
+  String get leaveExpeditionContent;
+
+  /// No description provided for @leave.
+  ///
+  /// In ka, this message translates to:
+  /// **'დატოვება'**
+  String get leave;
+
+  /// No description provided for @switchToLocal.
+  ///
+  /// In ka, this message translates to:
+  /// **'ლოკალური შენახვა'**
+  String get switchToLocal;
+
+  /// No description provided for @switchToLocalContent.
+  ///
+  /// In ka, this message translates to:
+  /// **'Cloud-ის ნაცვლად ლოკალური SQLite გამოყენება. Cloud-ში ჩანაწერები არ წაიშლება.'**
+  String get switchToLocalContent;
+
+  /// No description provided for @switchToLocalBtn.
+  ///
+  /// In ka, this message translates to:
+  /// **'გადართვა'**
+  String get switchToLocalBtn;
+
+  /// No description provided for @localModeInfo.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩანაწერები ინახება მხოლოდ ამ მოწყობილობაზე'**
+  String get localModeInfo;
+
+  /// No description provided for @expeditionCodeShort.
+  ///
+  /// In ka, this message translates to:
+  /// **'ექსპედიციის კოდი'**
+  String get expeditionCodeShort;
+
+  /// No description provided for @copyCode.
+  ///
+  /// In ka, this message translates to:
+  /// **'კოდის კოპირება'**
+  String get copyCode;
+
+  /// No description provided for @leaveExpeditionShort.
+  ///
+  /// In ka, this message translates to:
+  /// **'ექსპედიციის დატოვება'**
+  String get leaveExpeditionShort;
+
+  /// No description provided for @leaveExpeditionSub.
+  ///
+  /// In ka, this message translates to:
+  /// **'Cloud (პირადი) რეჟიმზე დაბრუნება'**
+  String get leaveExpeditionSub;
+
+  /// No description provided for @confirmSignOut.
+  ///
+  /// In ka, this message translates to:
+  /// **'Cloud სინქრონიზაცია შეჩერდება. გამოსვლა?'**
+  String get confirmSignOut;
+
+  /// No description provided for @expeditionShortcut.
+  ///
+  /// In ka, this message translates to:
+  /// **'ექსპედიციის რეჟიმი'**
+  String get expeditionShortcut;
+
+  /// No description provided for @expeditionShortcutSub.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჯგუფური ერთობლივი მუშაობა'**
+  String get expeditionShortcutSub;
+
+  /// No description provided for @trackHistory.
+  ///
+  /// In ka, this message translates to:
+  /// **'ტრეკების ისტორია'**
+  String get trackHistory;
+
+  /// No description provided for @map.
+  ///
+  /// In ka, this message translates to:
+  /// **'რუკა'**
+  String get map;
+
+  /// No description provided for @methodologyShort.
+  ///
+  /// In ka, this message translates to:
+  /// **'მეთოდიკა'**
+  String get methodologyShort;
+
+  /// No description provided for @paramsShort.
+  ///
+  /// In ka, this message translates to:
+  /// **'პარამ.'**
+  String get paramsShort;
 }
 
 class _AppLocalizationsDelegate

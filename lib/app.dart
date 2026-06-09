@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'providers/settings_provider.dart';
-import 'screens/map/map_screen.dart';
-
+import 'features/settings/domain/settings_provider.dart';
 import 'l10n/generated/app_localizations.dart';
+import 'router.dart';
 
 class BtkApp extends ConsumerWidget {
   const BtkApp({super.key});
@@ -17,9 +16,10 @@ class BtkApp extends ConsumerWidget {
 
     final geoTextTheme = GoogleFonts.notoSansGeorgianTextTheme();
 
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'BTC Field App',
       debugShowCheckedModeBanner: false,
+      routerConfig: appRouter,
       themeMode: settings.themeMode,
       locale: settings.locale,
       supportedLocales: const [Locale('ka'), Locale('en')],
@@ -36,10 +36,10 @@ class BtkApp extends ConsumerWidget {
       ),
       darkTheme: FlexThemeData.dark(
         scheme: FlexScheme.green,
-        textTheme: GoogleFonts.notoSansGeorgianTextTheme(ThemeData.dark().textTheme),
+        textTheme:
+            GoogleFonts.notoSansGeorgianTextTheme(ThemeData.dark().textTheme),
         useMaterial3: true,
       ),
-      home: const MapScreen(),
     );
   }
 }

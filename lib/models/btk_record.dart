@@ -197,6 +197,9 @@ class BtkRecord {
   String vertStructHeight;
   String vertStructDesc;
 
+  // Sync metadata
+  DateTime updatedAt;
+
   BtkRecord({
     required this.id,
     required this.date,
@@ -224,7 +227,9 @@ class BtkRecord {
     this.vertStructIndex = '',
     this.vertStructHeight = '',
     this.vertStructDesc = '',
-  })  : vegetation = vegetation ?? [VegetationRow()],
+    DateTime? updatedAt,
+  })  : updatedAt = updatedAt ?? DateTime.now(),
+        vegetation = vegetation ?? [VegetationRow()],
         soilHorizons = soilHorizons ?? [SoilHorizonRow()],
         geomasses = geomasses ?? [GeomassRow()],
         treePhytomass = treePhytomass ?? [TreePhytomassRow()];
@@ -256,6 +261,7 @@ class BtkRecord {
         'vertStructIndex': vertStructIndex,
         'vertStructHeight': vertStructHeight,
         'vertStructDesc': vertStructDesc,
+        'updatedAt': updatedAt.toIso8601String(),
       };
 
   factory BtkRecord.fromJson(Map<String, dynamic> j) => BtkRecord(
@@ -297,6 +303,9 @@ class BtkRecord {
         vertStructIndex: j['vertStructIndex'] ?? '',
         vertStructHeight: j['vertStructHeight'] ?? '',
         vertStructDesc: j['vertStructDesc'] ?? '',
+        updatedAt: j['updatedAt'] != null
+            ? DateTime.tryParse(j['updatedAt'] as String) ?? DateTime.now()
+            : DateTime.now(),
       );
 
   String toEmailText({bool georgian = true}) {
