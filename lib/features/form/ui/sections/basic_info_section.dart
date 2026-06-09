@@ -47,17 +47,28 @@ class _BasicInfoSectionState extends State<BasicInfoSection> {
     super.didUpdateWidget(oldWidget);
     final r = widget.record;
 
+    // Date is readOnly — simple string compare is safe
     final newDate = r.date.toString().split(' ')[0];
     if (_dateCtrl.text != newDate) _dateCtrl.text = newDate;
 
-    final newLat = r.latitude?.toStringAsFixed(6) ?? '';
-    if (_latCtrl.text != newLat) _latCtrl.text = newLat;
+    // Numeric fields: compare PARSED values, not formatted strings.
+    // This avoids fighting with in-progress typing: typing '41.12' and having
+    // the record round-trip to '41.120000' would reset the cursor mid-keystroke.
+    // We only update when the record's value is genuinely different (e.g. GPS fix).
+    _syncNumericCtrl(_latCtrl, r.latitude, 6);
+    _syncNumericCtrl(_lonCtrl, r.longitude, 6);
+    _syncNumericCtrl(_altCtrl, r.altitude, 0);
+    _syncNumericCtrl(_aspectCtrl, r.aspect, 0);
+  }
 
-    final newLon = r.longitude?.toStringAsFixed(6) ?? '';
-    if (_lonCtrl.text != newLon) _lonCtrl.text = newLon;
-
-    final newAlt = r.altitude != null ? r.altitude!.toStringAsFixed(0) : '';
-    if (_altCtrl.text != newAlt) _altCtrl.text = newAlt;
+  /// Updates [ctrl] only if the record [value] can't be represented by what
+  /// the controller already contains (i.e. it's an external change, not a
+  /// formatting artefact of the user's own keystrokes).
+  void _syncNumericCtrl(
+      TextEditingController ctrl, double? value, int decimals) {
+    if (double.tryParse(ctrl.text) != value) {
+      ctrl.text = value != null ? value.toStringAsFixed(decimals) : '';
+    }
   }
 
   @override
