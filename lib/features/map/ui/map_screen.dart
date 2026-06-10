@@ -231,6 +231,15 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
   // ── Measurement ───────────────────────────────────────────────────────────
 
+  void _fitToGeorgia() {
+    _mapController.fitCamera(
+      CameraFit.bounds(
+        bounds: LatLngBounds(LatLng(41.0, 40.0), LatLng(43.7, 46.8)),
+        padding: const EdgeInsets.all(24),
+      ),
+    );
+  }
+
   void _toggleMeasure() {
     setState(() {
       if (_measureMode == MeasureMode.none) {
@@ -605,11 +614,9 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 ),
                 const SizedBox(height: 8),
                 _MapButton(
-                  icon: Icons.menu_book_outlined,
-                  onTap: () {
-                    AnalyticsService.logPdfOpened();
-                    context.push('/pdf');
-                  },
+                  icon: Icons.zoom_out_map,
+                  tooltip: 'საქართველო',
+                  onTap: _fitToGeorgia,
                 ),
                 const SizedBox(height: 8),
                 _MapButton(
