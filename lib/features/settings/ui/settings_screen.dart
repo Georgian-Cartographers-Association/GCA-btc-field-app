@@ -102,32 +102,6 @@ class SettingsScreen extends ConsumerWidget {
             const Divider(),
           ],
 
-          // ── ელ-ფოსტების სია ───────────────────────────────────────
-          _SectionHeader(l10n.emailListTitle),
-          if (settings.emails.isEmpty)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
-              child: Text(
-                l10n.noEmailsAdded,
-                style: const TextStyle(color: Colors.grey),
-              ),
-            ),
-          ...settings.emails.map((email) => ListTile(
-                leading: const Icon(Icons.email_outlined),
-                title: Text(email),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete_outline, color: Colors.red),
-                  tooltip: l10n.delete,
-                  onPressed: () => notifier.removeEmail(email),
-                ),
-                dense: true,
-              )),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
-            child: _AddEmailField(onAdd: notifier.addEmail),
-          ),
-          const Divider(),
-
           // ── მონაცემების შენახვა ───────────────────────────────────
           _SectionHeader(l10n.storageTitle),
           _StorageSection(settings: settings, notifier: notifier),
@@ -522,63 +496,3 @@ class _StorageSectionState extends ConsumerState<_StorageSection> {
   }
 }
 
-// ── Email field ─────────────────────────────────────────────────────────────────
-
-class _AddEmailField extends StatefulWidget {
-  final Future<void> Function(String) onAdd;
-  const _AddEmailField({required this.onAdd});
-
-  @override
-  State<_AddEmailField> createState() => _AddEmailFieldState();
-}
-
-class _AddEmailFieldState extends State<_AddEmailField> {
-  final _ctrl = TextEditingController();
-  bool _busy = false;
-
-  @override
-  void dispose() {
-    _ctrl.dispose();
-    super.dispose();
-  }
-
-  Future<void> _add() async {
-    final email = _ctrl.text.trim();
-    if (email.isEmpty) return;
-    setState(() => _busy = true);
-    await widget.onAdd(email);
-    _ctrl.clear();
-    if (mounted) setState(() => _busy = false);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return Row(
-      children: [
-        Expanded(
-          child: TextField(
-            controller: _ctrl,
-            keyboardType: TextInputType.emailAddress,
-            textInputAction: TextInputAction.done,
-            onSubmitted: (_) => _add(),
-            decoration: InputDecoration(
-              labelText: l10n.newEmailHint,
-              hintText: 'example@email.com',
-              border: const OutlineInputBorder(),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              isDense: true,
-            ),
-          ),
-        ),
-        const SizedBox(width: 8),
-        FilledButton.icon(
-          onPressed: _busy ? null : _add,
-          icon: const Icon(Icons.add, size: 18),
-          label: Text(l10n.addEmail),
-        ),
-      ],
-    );
-  }
-}
