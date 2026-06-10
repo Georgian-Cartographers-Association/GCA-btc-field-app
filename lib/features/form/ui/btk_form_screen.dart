@@ -115,6 +115,7 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
             content: Text('კოორდინატების დადგენა...'),
             duration: Duration(seconds: 2)));
     final pos = await Geolocator.getCurrentPosition();
+    if (!mounted) return;
 
     // Try to read compass heading (null if no magnetometer)
     double? heading;
@@ -127,6 +128,7 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
       } catch (_) {
         heading = null;
       }
+      if (!mounted) return;
     }
 
     _update(_record
@@ -207,7 +209,7 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
   Future<String?> _askEmailManually() async {
     final l10n = AppLocalizations.of(context)!;
     final controller = TextEditingController();
-    return showDialog<String>(
+    final result = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(l10n.emailAddress),
@@ -242,6 +244,8 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
         ],
       ),
     );
+    controller.dispose();
+    return result;
   }
 
   // ─── Build ──────────────────────────────────────────────────────────────────
