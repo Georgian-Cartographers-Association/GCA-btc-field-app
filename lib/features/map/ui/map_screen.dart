@@ -24,6 +24,7 @@ import '../../raster/domain/raster_provider.dart';
 import '../domain/tile_service_provider.dart';
 import '../../../utils/measurement_service.dart';
 import 'widgets/layer_control_panel.dart';
+import 'widgets/map_search_sheet.dart';
 import 'widgets/measurement_layers.dart';
 import 'widgets/measurement_panel.dart';
 import 'widgets/weather_panel.dart';
@@ -55,6 +56,9 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   List<List<LatLng>> _regionPolygons = [];
   List<List<LatLng>> _municipalityPolygons = [];
 
+  // Search index (built from local GeoJSON at startup)
+  List<GeoSearchResult> _searchIndex = [];
+
   // Measurement
   MeasureMode _measureMode = MeasureMode.none;
   List<LatLng> _measurePoints = [];
@@ -66,6 +70,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     _loadGeojson(AppConstants.regionsGeojsonPath, (p) => _regionPolygons = p);
     _loadGeojson(AppConstants.municipalitiesGeojsonPath,
         (p) => _municipalityPolygons = p);
+    _buildSearchIndex();
     if (!kIsWeb) {
       _initCompass();
       _initTileCache();
@@ -230,6 +235,76 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   }
 
   // ── Measurement ───────────────────────────────────────────────────────────
+
+  Future<void> _buildSearchIndex() async {
+    final index = <GeoSearchResult>[];
+
+    Future<void> load(String asset, String field, String label) async {
+      try {
+        final raw = await rootBundle.loadString(asset);
+        final features = (jsonDecode(raw) as Map)['features'] as List;
+        for (final f in features) {
+          final name = ((f['properties'] as Map)[field] as String?) ?? '';
+          if (name.isEmpty) continue;
+          final geom = f['geometry'] as Map;
+          final coords = geom['coordinates'] as List;
+          final rings = geom['type'] == 'Polygon'
+              ? [_parseRing(coords[0] as List)]
+              : coords
+                  .map((p) => _parseRing((p as List)[0] as List))
+                  .toList();
+          final pts = rings.expand((r) => r).toList();
+          if (pts.isEmpty) continue;
+          double minLat = pts[0].latitude, maxLat = pts[0].latitude;
+          double minLon = pts[0].longitude, maxLon = pts[0].longitude;
+          for (final p in pts) {
+            if (p.latitude < minLat) minLat = p.latitude;
+            if (p.latitude > maxLat) maxLat = p.latitude;
+            if (p.longitude < minLon) minLon = p.longitude;
+            if (p.longitude > maxLon) maxLon = p.longitude;
+          }
+          index.add(GeoSearchResult(
+            name: name,
+            subtitle: label,
+            center: LatLng((minLat + maxLat) / 2, (minLon + maxLon) / 2),
+            bounds: LatLngBounds(LatLng(minLat, minLon), LatLng(maxLat, maxLon)),
+          ));
+        }
+      } catch (_) {}
+    }
+
+    await Future.wait([
+      load(AppConstants.regionsGeojsonPath, 'REGION_ENG', 'რეგიონი'),
+      load(AppConstants.municipalitiesGeojsonPath, 'DISTR_ENG', 'მუნიციპალიტეტი'),
+    ]);
+    index.sort((a, b) => a.name.compareTo(b.name));
+    if (mounted) setState(() => _searchIndex = index);
+  }
+
+  void _openSearch() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => MapSearchSheet(
+        localIndex: _searchIndex,
+        onSelect: (result) {
+          if (result.bounds != null) {
+            _mapController.fitCamera(
+              CameraFit.bounds(
+                bounds: result.bounds!,
+                padding: const EdgeInsets.all(48),
+              ),
+            );
+          } else {
+            _mapController.move(result.center, 13);
+          }
+        },
+      ),
+    );
+  }
 
   void _fitToGeorgia() {
     _mapController.fitCamera(
@@ -536,6 +611,12 @@ class _MapScreenState extends ConsumerState<MapScreen> {
             top: MediaQuery.of(context).padding.top + 80,
             child: Column(
               children: [
+                _MapButton(
+                  icon: Icons.search,
+                  tooltip: 'ძებნა',
+                  onTap: _openSearch,
+                ),
+                const SizedBox(height: 16),
                 _MapButton(
                   icon: Icons.add,
                   onTap: () => _mapController.move(
