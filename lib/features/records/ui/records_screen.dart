@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../models/btk_record.dart';
 import '../domain/btk_provider.dart';
-import '../../../services/analytics_service.dart';
-import '../../../services/export_service.dart';
+import '../../../data/services/analytics_service.dart';
+import '../../../data/services/export_service.dart';
 import '../../../l10n/generated/app_localizations.dart';
 
 class RecordsScreen extends ConsumerStatefulWidget {

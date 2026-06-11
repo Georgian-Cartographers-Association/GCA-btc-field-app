@@ -31,8 +31,8 @@ import 'widgets/weather_panel.dart';
 import '../../../models/gps_track.dart';
 import '../../gps/domain/gps_track_provider.dart';
 import '../../settings/domain/settings_provider.dart';
-import '../../../services/analytics_service.dart';
-import '../../../services/export_service.dart';
+import '../../../data/services/analytics_service.dart';
+import '../../../data/services/export_service.dart';
 
 class MapScreen extends ConsumerStatefulWidget {
   const MapScreen({super.key});
@@ -334,16 +334,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   void _openWeather() {
     AnalyticsService.logWeatherViewed();
     final center = _mapController.camera.center;
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (_) => WeatherPanel(
-        lat: center.latitude,
-        lon: center.longitude,
-      ),
-    );
+    showWeatherDialog(context, center.latitude, center.longitude);
   }
 
   // ── GPS Track finished sheet ──────────────────────────────────────────────

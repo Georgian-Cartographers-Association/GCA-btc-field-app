@@ -1,4 +1,4 @@
-import '../models/btk_record.dart';
+import '../../models/btk_record.dart';
 
 /// Abstract interface shared by LocalRepository and CloudRepository.
 /// BtkNotifier only talks to this — never to SQLite or Firestore directly.

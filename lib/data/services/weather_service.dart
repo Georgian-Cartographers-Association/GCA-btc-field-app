@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/weather_data.dart';
+import '../../models/weather_data.dart';
 
 /// Fetches weather forecasts from api.met.no (yr.no).
 /// Free, no API key. Requires User-Agent header and caches to avoid abuse.

@@ -10,7 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../models/btk_record.dart';
 import '../../records/domain/btk_provider.dart';
 import '../../settings/domain/settings_provider.dart';
-import '../../../services/analytics_service.dart';
+import '../../../data/services/analytics_service.dart';
 import '../../pdf/ui/pdf_viewer_screen.dart';
 import 'sections/photos_section.dart';
 import 'sections/basic_info_section.dart';

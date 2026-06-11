@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../settings/domain/settings_provider.dart';
-import '../../../services/sync_service.dart';
+import '../../../data/services/sync_service.dart';
 
 class AuthFormState {
   final bool isLogin;

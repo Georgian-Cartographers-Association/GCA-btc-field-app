@@ -2,10 +2,10 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../../../models/btk_record.dart';
-import '../../../repositories/cloud_repository.dart';
-import '../../../repositories/data_repository.dart';
-import '../../../repositories/expedition_repository.dart';
-import '../../../repositories/local_repository.dart';
+import '../../../data/repositories/cloud_repository.dart';
+import '../../../data/repositories/data_repository.dart';
+import '../../../data/repositories/expedition_repository.dart';
+import '../../../data/repositories/local_repository.dart';
 import '../../auth/domain/firebase_auth_provider.dart';
 import '../../settings/domain/settings_provider.dart';
 

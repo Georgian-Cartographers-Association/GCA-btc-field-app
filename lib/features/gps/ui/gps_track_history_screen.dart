@@ -4,7 +4,7 @@ import '../../../core/extensions/datetime_extensions.dart';
 import '../../../core/extensions/gps_track_extensions.dart';
 import '../../../database/btk_database.dart';
 import '../../../models/gps_track.dart';
-import '../../../services/export_service.dart';
+import '../../../data/services/export_service.dart';
 import '../../../l10n/generated/app_localizations.dart';
 
 final _gpsHistoryProvider = FutureProvider<List<GpsTrack>>((ref) async {

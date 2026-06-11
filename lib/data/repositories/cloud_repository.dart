@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/btk_record.dart';
+import '../../models/btk_record.dart';
 import 'data_repository.dart';
 
 /// Stores BTK records in Firestore under users/{uid}/btk_records/{id}.

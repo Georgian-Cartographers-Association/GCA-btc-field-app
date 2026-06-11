@@ -10,7 +10,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import '../../../core/locale.dart';
 import '../../auth/domain/firebase_auth_provider.dart';
 import '../domain/settings_provider.dart';
-import '../../../services/sync_service.dart';
+import '../../../data/services/sync_service.dart';
 import '../../../l10n/generated/app_localizations.dart';
 
 const _githubUrl =

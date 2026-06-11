@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../../models/weather_data.dart';
-import '../../../../services/weather_service.dart';
+import '../../../../data/services/weather_service.dart';
 
-/// Bottom sheet that shows yr.no weather for the given coordinates.
+/// Centered dialog that shows yr.no weather for the given coordinates.
+/// Opened via [showWeatherDialog] — NOT a bottom sheet.
+void showWeatherDialog(BuildContext context, double lat, double lon) {
+  showDialog(
+    context: context,
+    barrierColor: Colors.black38,
+    builder: (_) => Dialog(
+      insetPadding: const EdgeInsets.fromLTRB(16, 72, 16, 96),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      clipBehavior: Clip.antiAlias,
+      child: WeatherPanel(lat: lat, lon: lon),
+    ),
+  );
+}
+
 class WeatherPanel extends StatefulWidget {
   final double lat;
   final double lon;
@@ -26,98 +40,236 @@ class _WeatherPanelState extends State<WeatherPanel> {
   }
 
   Future<void> _fetch() async {
-    setState(() { _loading = true; _error = null; });
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
     try {
       final data = await WeatherService.fetch(widget.lat, widget.lon);
-      if (mounted) setState(() { _data = data; _loading = false; });
+      if (mounted) {
+        setState(() {
+          _data = data;
+          _loading = false;
+        });
+      }
     } catch (e) {
-      if (mounted) setState(() { _error = e; _loading = false; });
+      if (mounted) {
+        setState(() {
+          _error = e;
+          _loading = false;
+        });
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final bottomPad = MediaQuery.of(context).viewPadding.bottom;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: SafeArea(
-        top: false,
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(20, 12, 20, bottomPad + 12),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Drag handle
-              Center(
-                child: Container(
-                  width: 40, height: 4,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade400,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ── Title row ────────────────────────────────────────────────────
+            Row(
+              children: [
+                Icon(Icons.cloud_outlined, color: colorScheme.primary, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  'ამინდის პროგნოზი',
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(fontWeight: FontWeight.bold),
                 ),
-              ),
-              const SizedBox(height: 12),
+                const Spacer(),
+                Text(
+                  '${widget.lat.toStringAsFixed(2)}°, ${widget.lon.toStringAsFixed(2)}°',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(color: Colors.grey),
+                ),
+                const SizedBox(width: 4),
+                IconButton(
+                  icon: const Icon(Icons.refresh, size: 20),
+                  tooltip: 'განახლება',
+                  onPressed: () {
+                    WeatherService.clearCache();
+                    _fetch();
+                  },
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
+                const SizedBox(width: 4),
+                IconButton(
+                  icon: const Icon(Icons.close, size: 20),
+                  onPressed: () => Navigator.pop(context),
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
+              ],
+            ),
 
-              // Title row
-              Row(
-                children: [
-                  Icon(Icons.cloud_outlined,
-                      color: colorScheme.primary, size: 20),
-                  const SizedBox(width: 8),
-                  Text('ამინდის პროგნოზი',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(fontWeight: FontWeight.bold)),
-                  const Spacer(),
-                  Text(
-                    '${widget.lat.toStringAsFixed(3)}°, '
-                    '${widget.lon.toStringAsFixed(3)}°',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall
-                        ?.copyWith(color: Colors.grey),
-                  ),
-                  const SizedBox(width: 8),
-                  IconButton(
-                    icon: const Icon(Icons.refresh, size: 20),
-                    onPressed: () {
-                      WeatherService.clearCache();
-                      _fetch();
-                    },
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                  ),
-                ],
-              ),
+            const SizedBox(height: 12),
 
-              const SizedBox(height: 12),
-
-              if (_loading)
-                const Center(
-                    child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 24),
-                        child: CircularProgressIndicator()))
-              else if (_error != null)
-                _ErrorView(onRetry: _fetch)
-              else if (_data != null)
-                _WeatherContent(data: _data!),
-            ],
-          ),
+            // ── Body — accordion-animated ─────────────────────────────────────
+            AnimatedSize(
+              duration: const Duration(milliseconds: 380),
+              curve: Curves.easeOut,
+              alignment: Alignment.topCenter,
+              child: _loading
+                  ? const _AccordionLoader()
+                  : _error != null
+                      ? _ErrorView(onRetry: _fetch)
+                      : _data != null
+                          ? _WeatherContent(data: _data!)
+                          : const SizedBox.shrink(),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-// ── Current conditions + 24h forecast ──────────────────────────────────────
+// ── Accordion loader ──────────────────────────────────────────────────────────
+// Expands from a compact skeleton to full height as it animates in.
+
+class _AccordionLoader extends StatefulWidget {
+  const _AccordionLoader();
+
+  @override
+  State<_AccordionLoader> createState() => _AccordionLoaderState();
+}
+
+class _AccordionLoaderState extends State<_AccordionLoader>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _ctrl;
+  late Animation<double> _fade;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    )..repeat(reverse: true);
+    _fade = CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut);
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final base = Theme.of(context).colorScheme.surfaceContainerHighest;
+    return FadeTransition(
+      opacity: _fade,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _SkeletonBar(height: 80, color: base),
+          const SizedBox(height: 12),
+          _SkeletonBar(height: 16, width: 140, color: base),
+          const SizedBox(height: 8),
+          SizedBox(
+            height: 90,
+            child: Row(
+              children: List.generate(
+                5,
+                (i) => Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 3),
+                    child: _SkeletonBar(height: 90, color: base),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          _SkeletonBar(height: 16, width: 120, color: base),
+          const SizedBox(height: 8),
+          ...List.generate(
+            3,
+            (_) => Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: _SkeletonBar(height: 44, color: base),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SkeletonBar extends StatelessWidget {
+  final double height;
+  final double? width;
+  final Color color;
+
+  const _SkeletonBar({required this.height, this.width, required this.color});
+
+  @override
+  Widget build(BuildContext context) => Container(
+        height: height,
+        width: width,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(8),
+        ),
+      );
+}
+
+// ── Error view ────────────────────────────────────────────────────────────────
+
+class _ErrorView extends StatelessWidget {
+  final VoidCallback onRetry;
+  const _ErrorView({required this.onRetry});
+
+  @override
+  Widget build(BuildContext context) => Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.cloud_off_outlined,
+                  size: 52, color: Colors.grey.shade400),
+              const SizedBox(height: 12),
+              Text(
+                'ამინდის ჩამოტვირთვა ვერ მოხდა',
+                style: TextStyle(
+                    color: Colors.grey.shade600,
+                    fontWeight: FontWeight.w500),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'შეამოწმეთ ინტერნეტ კავშირი',
+                style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              OutlinedButton.icon(
+                onPressed: onRetry,
+                icon: const Icon(Icons.refresh, size: 18),
+                label: const Text('კვლავ ცდა'),
+              ),
+            ],
+          ),
+        ),
+      );
+}
+
+// ── Weather content ───────────────────────────────────────────────────────────
 
 class _WeatherContent extends StatelessWidget {
   final WeatherData data;
@@ -141,7 +293,6 @@ class _WeatherContent extends StatelessWidget {
           ),
           child: Row(
             children: [
-              // Emoji + description
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -155,7 +306,6 @@ class _WeatherContent extends StatelessWidget {
                 ],
               ),
               const Spacer(),
-              // Temperature
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -167,13 +317,10 @@ class _WeatherContent extends StatelessWidget {
                         ),
                   ),
                   const SizedBox(height: 8),
-                  // Wind
                   _InfoRow(Icons.air,
                       '${cur.windSpeed.toStringAsFixed(1)} მ/წ  ${cur.windDirLabel}'),
                   const SizedBox(height: 4),
-                  // Humidity
-                  _InfoRow(Icons.water_drop_outlined,
-                      '${cur.humidity.round()}%'),
+                  _InfoRow(Icons.water_drop_outlined, '${cur.humidity.round()}%'),
                   if (cur.precipitation > 0) ...[
                     const SizedBox(height: 4),
                     _InfoRow(Icons.umbrella_outlined,
@@ -187,70 +334,67 @@ class _WeatherContent extends StatelessWidget {
 
         const SizedBox(height: 16),
 
-        // ── 24h forecast strip ──────────────────────────────────────────────
-        Text('24 საათის პროგნოზი',
-            style: Theme.of(context)
-                .textTheme
-                .labelSmall
-                ?.copyWith(
-                    color: colorScheme.primary,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 0.8)),
+        // ── 24h forecast ────────────────────────────────────────────────────
+        _SectionLabel('24 საათის პროგნოზი', colorScheme),
         const SizedBox(height: 8),
-
         SizedBox(
           height: 90,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: data.hourly.take(12).length,
-            separatorBuilder: (context, index) => const SizedBox(width: 4),
-            itemBuilder: (ctx, i) {
-              final h = data.hourly[i];
-              final isNow = i == 0;
-              return _ForecastTile(
-                hour: h,
-                highlight: isNow,
-                colorScheme: colorScheme,
-              );
-            },
+            separatorBuilder: (_, _) => const SizedBox(width: 4),
+            itemBuilder: (ctx, i) => _ForecastTile(
+              hour: data.hourly[i],
+              highlight: i == 0,
+              colorScheme: colorScheme,
+            ),
           ),
         ),
 
         const SizedBox(height: 16),
 
-        // ── Multi-day forecast ──────────────────────────────────────────────
+        // ── Multi-day ────────────────────────────────────────────────────────
         if (data.daily.isNotEmpty) ...[
-          Text('მომდევნო დღეები',
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: colorScheme.primary,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 0.8)),
+          _SectionLabel('მომდევნო დღეები', colorScheme),
           const SizedBox(height: 8),
           ...data.daily.map((day) => _DailyRow(day: day)),
           const SizedBox(height: 8),
         ],
 
-        // ── Attribution ─────────────────────────────────────────────────────
+        // ── Attribution ──────────────────────────────────────────────────────
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             const Text('ამინდი: ',
                 style: TextStyle(fontSize: 10, color: Colors.grey)),
-            GestureDetector(
-              onTap: () {},
-              child: const Text(
-                'yr.no / MET Norway',
-                style: TextStyle(
-                    fontSize: 10,
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline),
-              ),
+            const Text(
+              'yr.no / MET Norway',
+              style: TextStyle(
+                  fontSize: 10,
+                  color: Colors.blue,
+                  decoration: TextDecoration.underline),
             ),
           ],
         ),
       ],
     );
   }
+}
+
+class _SectionLabel extends StatelessWidget {
+  final String text;
+  final ColorScheme colorScheme;
+  const _SectionLabel(this.text, this.colorScheme);
+
+  @override
+  Widget build(BuildContext context) => Text(
+        text,
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: colorScheme.primary,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.8,
+            ),
+      );
 }
 
 class _InfoRow extends StatelessWidget {
@@ -286,8 +430,7 @@ class _ForecastTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localTime = hour.time.toLocal();
-    final timeStr = DateFormat('HH:mm').format(localTime);
+    final timeStr = DateFormat('HH:mm').format(hour.time.toLocal());
     final tempColor =
         hour.temperature > 0 ? Colors.deepOrange.shade400 : Colors.blue.shade400;
 
@@ -307,7 +450,8 @@ class _ForecastTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Text(timeStr,
-              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
+              style:
+                  const TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
           Text(hour.emoji, style: const TextStyle(fontSize: 20)),
           Text('${hour.temperature.round()}°',
               style: TextStyle(
@@ -325,8 +469,6 @@ class _ForecastTile extends StatelessWidget {
   }
 }
 
-// ── Daily row widget ────────────────────────────────────────────────────────
-
 class _DailyRow extends StatelessWidget {
   final WeatherDay day;
   const _DailyRow({required this.day});
@@ -334,9 +476,8 @@ class _DailyRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final isHighlighted = day.dayName == 'ხვალ' || day.dayName == 'დღეს';
     final hasRain = day.totalPrecip > 0.2;
-    final isHighlighted =
-        day.dayName == 'ხვალ' || day.dayName == 'დღეს';
 
     return Container(
       margin: const EdgeInsets.only(bottom: 4),
@@ -349,22 +490,18 @@ class _DailyRow extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Day name
           SizedBox(
             width: 48,
             child: Text(
               day.dayName,
               style: TextStyle(
-                fontSize: 13,
-                fontWeight:
-                    isHighlighted ? FontWeight.bold : FontWeight.normal,
-              ),
+                  fontSize: 13,
+                  fontWeight:
+                      isHighlighted ? FontWeight.bold : FontWeight.normal),
             ),
           ),
-          // Emoji
           Text(day.emoji, style: const TextStyle(fontSize: 22)),
           const SizedBox(width: 8),
-          // Description (short)
           Expanded(
             child: Text(
               WeatherData.symbolGeorgian(day.symbolCode),
@@ -372,61 +509,27 @@ class _DailyRow extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          // Rain amount (if any)
           if (hasRain) ...[
             const Icon(Icons.water_drop_outlined, size: 13, color: Colors.blue),
             const SizedBox(width: 2),
-            Text(
-              '${day.totalPrecip.toStringAsFixed(0)}მმ',
-              style: const TextStyle(fontSize: 11, color: Colors.blue),
-            ),
+            Text('${day.totalPrecip.toStringAsFixed(0)}მმ',
+                style: const TextStyle(fontSize: 11, color: Colors.blue)),
             const SizedBox(width: 8),
           ],
-          // Min / Max
-          Text(
-            '${day.minTemp.round()}°',
-            style: TextStyle(
-                fontSize: 13,
-                color: Colors.blue.shade400,
-                fontWeight: FontWeight.w600),
-          ),
-          const Text(' / ', style: TextStyle(fontSize: 12, color: Colors.grey)),
-          Text(
-            '${day.maxTemp.round()}°',
-            style: TextStyle(
-                fontSize: 13,
-                color: Colors.deepOrange.shade400,
-                fontWeight: FontWeight.bold),
-          ),
+          Text('${day.minTemp.round()}°',
+              style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.blue.shade400,
+                  fontWeight: FontWeight.w600)),
+          const Text(' / ',
+              style: TextStyle(fontSize: 12, color: Colors.grey)),
+          Text('${day.maxTemp.round()}°',
+              style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.deepOrange.shade400,
+                  fontWeight: FontWeight.bold)),
         ],
       ),
     );
   }
-}
-
-class _ErrorView extends StatelessWidget {
-  final VoidCallback onRetry;
-  const _ErrorView({required this.onRetry});
-
-  @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20),
-        child: Column(
-          children: [
-            const Icon(Icons.cloud_off_outlined, size: 48, color: Colors.grey),
-            const SizedBox(height: 8),
-            const Text('ამინდის ჩამოტვირთვა ვერ მოხდა',
-                style: TextStyle(color: Colors.grey)),
-            const SizedBox(height: 8),
-            const Text('შეამოწმეთ ინტერნეტ კავშირი',
-                style: TextStyle(fontSize: 12, color: Colors.grey)),
-            const SizedBox(height: 12),
-            OutlinedButton.icon(
-              onPressed: onRetry,
-              icon: const Icon(Icons.refresh, size: 18),
-              label: const Text('კვლავ ცდა'),
-            ),
-          ],
-        ),
-      );
 }

@@ -9,7 +9,7 @@ import 'dart:io' show File, Directory;
 import '../../../models/tile_service.dart';
 import '../../raster/domain/raster_provider.dart';
 import '../../map/domain/tile_service_provider.dart';
-import '../../../services/analytics_service.dart';
+import '../../../data/services/analytics_service.dart';
 
 class LayersScreen extends ConsumerStatefulWidget {
   const LayersScreen({super.key});
