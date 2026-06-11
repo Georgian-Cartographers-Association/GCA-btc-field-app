@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../settings/domain/settings_provider.dart';
@@ -88,7 +88,11 @@ class AuthFormNotifier extends StateNotifier<AuthFormState> {
       state = state.copyWith(busy: false);
       return cred.user!.uid;
     } on FirebaseAuthException catch (e) {
-      state = state.copyWith(busy: false, error: _authError(e.code));
+      final knownMsg = _authError(e.code);
+      final displayMsg = knownMsg.startsWith('შეცდომა (')
+          ? '$knownMsg${e.message != null ? '\n${e.message}' : ''}'
+          : knownMsg;
+      state = state.copyWith(busy: false, error: displayMsg);
       return null;
     } on FirebaseException catch (e) {
       final msg = e.code == 'permission-denied'
@@ -134,7 +138,11 @@ class AuthFormNotifier extends StateNotifier<AuthFormState> {
       state = state.copyWith(busy: false);
       return email.trim();
     } on FirebaseAuthException catch (e) {
-      state = state.copyWith(busy: false, error: _authError(e.code));
+      final knownMsg = _authError(e.code);
+      final displayMsg = knownMsg.startsWith('შეცდომა (')
+          ? '$knownMsg${e.message != null ? '\n${e.message}' : ''}'
+          : knownMsg;
+      state = state.copyWith(busy: false, error: displayMsg);
       return null;
     } catch (_) {
       state = state.copyWith(busy: false, error: 'სისტემური შეცდომა');
