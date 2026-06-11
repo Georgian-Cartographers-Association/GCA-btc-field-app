@@ -90,8 +90,15 @@ class AuthFormNotifier extends StateNotifier<AuthFormState> {
     } on FirebaseAuthException catch (e) {
       state = state.copyWith(busy: false, error: _authError(e.code));
       return null;
-    } catch (e) {
-      state = state.copyWith(busy: false, error: 'შეცდომა: $e');
+    } on FirebaseException catch (e) {
+      final msg = e.code == 'permission-denied'
+          ? 'Firestore Rules შეცდომა — '
+              'allowed_users კოლექციაზე "allow read: if true" გახსენით.'
+          : 'DB შეცდომა (${e.code})';
+      state = state.copyWith(busy: false, error: msg);
+      return null;
+    } catch (_) {
+      state = state.copyWith(busy: false, error: 'სისტემური შეცდომა');
       return null;
     }
   }
@@ -113,20 +120,25 @@ class AuthFormNotifier extends StateNotifier<AuthFormState> {
     await _ref.read(settingsProvider.notifier).setStorageMode(StorageMode.cloud);
   }
 
-  /// Sends password reset email. Returns true on success.
-  Future<bool> forgotPassword(String email) async {
-    if (email.isEmpty) {
+  /// Sends password reset email.
+  /// Returns the email used on success, null on failure (error set in state).
+  Future<String?> forgotPassword(String email) async {
+    if (email.trim().isEmpty) {
       state = state.copyWith(error: 'ჯერ შეიყვანეთ ელ-ფოსტა');
-      return false;
+      return null;
     }
     state = state.copyWith(busy: true, error: null);
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      await FirebaseAuth.instance.sendPasswordResetEmail(
+          email: email.trim());
       state = state.copyWith(busy: false);
-      return true;
+      return email.trim();
     } on FirebaseAuthException catch (e) {
       state = state.copyWith(busy: false, error: _authError(e.code));
-      return false;
+      return null;
+    } catch (_) {
+      state = state.copyWith(busy: false, error: 'სისტემური შეცდომა');
+      return null;
     }
   }
 
@@ -138,23 +150,25 @@ class AuthFormNotifier extends StateNotifier<AuthFormState> {
           .get();
       return doc.exists;
     } on FirebaseException catch (e) {
-      if (e.code == 'permission-denied') {
-        // Firestore rules block unauthenticated reads of allowed_users.
-        // Fix: add  match /allowed_users/{e} { allow read: if true; }  in rules.
-        throw Exception(
-            'Firestore წვდომა შეზღუდულია (permission-denied). '
-            'შეამოწმეთ Firestore Security Rules.');
-      }
+      if (e.code == 'permission-denied') rethrow;
       return false;
     }
   }
 
   String _authError(String code) => switch (code) {
+        // Login errors — old + new Firebase SDK codes
         'user-not-found' => 'მომხმარებელი ვერ მოიძებნა',
         'wrong-password' => 'პაროლი არასწორია',
+        'invalid-credential' => 'ელ-ფოსტა ან პაროლი არასწორია',
+        'invalid-login-credentials' => 'ელ-ფოსტა ან პაროლი არასწორია',
+        'INVALID_LOGIN_CREDENTIALS' => 'ელ-ფოსტა ან პაროლი არასწორია',
+        // Registration errors
         'email-already-in-use' => 'ეს ელ-ფოსტა უკვე გამოყენებულია',
         'weak-password' => 'პაროლი ძალიან სუსტია (მინ. 6 სიმბოლო)',
         'invalid-email' => 'ელ-ფოსტის ფორმატი არასწორია',
+        'operation-not-allowed' => 'ეს შესვლის მეთოდი გათიშულია',
+        // General
+        'user-disabled' => 'ანგარიში დაბლოკილია',
         'too-many-requests' => 'ძალიან ბევრი მცდელობა — ცოტა ხანი დაიცადეთ',
         'network-request-failed' => 'ქსელის შეცდომა — შეამოწმეთ ინტერნეტი',
         _ => 'შეცდომა ($code)',

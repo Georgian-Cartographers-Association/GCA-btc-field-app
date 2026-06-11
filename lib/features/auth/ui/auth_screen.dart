@@ -78,15 +78,77 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   }
 
   Future<void> _forgotPassword() async {
-    final l10n = AppLocalizations.of(context)!;
-    final ok = await ref
-        .read(authFormProvider.notifier)
-        .forgotPassword(_emailCtrl.text.trim());
-    if (ok && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.passwordResetSent)),
-      );
-    }
+    // Pre-fill with whatever is already typed in the email field.
+    final prefill = _emailCtrl.text.trim();
+    final inputCtrl = TextEditingController(text: prefill);
+
+    final email = await showDialog<String>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('პაროლის აღდგენა'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'შეიყვანეთ ელ-ფოსტა — გამოგიგზავნოთ '
+              'განახლების ბმული.',
+              style: TextStyle(fontSize: 13),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: inputCtrl,
+              autofocus: prefill.isEmpty,
+              keyboardType: TextInputType.emailAddress,
+              textInputAction: TextInputAction.done,
+              decoration: const InputDecoration(
+                labelText: 'ელ-ფოსტა',
+                prefixIcon: Icon(Icons.email_outlined),
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('გაუქმება'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, inputCtrl.text.trim()),
+            child: const Text('გაგზავნა'),
+          ),
+        ],
+      ),
+    );
+
+    inputCtrl.dispose();
+    if (email == null || email.isEmpty || !mounted) return;
+
+    final sent =
+        await ref.read(authFormProvider.notifier).forgotPassword(email);
+
+    if (!mounted) return;
+
+    final error = ref.read(authFormProvider).error;
+
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(sent != null ? 'გაიგზავნა ✓' : 'შეცდომა'),
+        content: Text(
+          sent != null
+              ? 'პაროლის განახლების ბმული გამოიგზავნა:\n\n$sent\n\n'
+                  'შეამოწმეთ ელ-ფოსტა (spam-საც).'
+              : (error ?? 'უცნობი შეცდომა'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('კარგი'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -178,15 +240,36 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   ),
                   const SizedBox(height: 8),
 
-                  // Error
+                  // Error banner
                   if (state.error != null) ...[
                     const SizedBox(height: 4),
-                    Text(
-                      state.error!,
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.error,
-                          fontSize: 13),
-                      textAlign: TextAlign.center,
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .errorContainer
+                            .withValues(alpha: 0.6),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.error_outline,
+                              size: 16,
+                              color: Theme.of(context).colorScheme.error),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              state.error!,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.error,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 4),
                   ],
@@ -217,7 +300,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     ),
                   ),
 
-                  // Forgot password
+                  // Forgot password — opens dialog
                   if (state.isLogin)
                     TextButton(
                       onPressed: state.busy ? null : _forgotPassword,
