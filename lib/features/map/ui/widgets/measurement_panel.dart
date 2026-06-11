@@ -33,50 +33,38 @@ class MeasurementPanel extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // ── Header row ─────────────────────────────────────────────────
+            // ── Title + action buttons row ──────────────────────────────────
             Row(
               children: [
-                // Mode selector
-                _ModeButton(
-                  icon: Icons.location_on_outlined,
-                  label: 'კოორდ.',
-                  active: mode == MeasureMode.coordinate,
-                  onTap: () => onModeChanged(MeasureMode.coordinate),
-                ),
+                Icon(Icons.straighten, size: 16, color: scheme.primary),
                 const SizedBox(width: 6),
-                _ModeButton(
-                  icon: Icons.straighten,
-                  label: 'ხაზი',
-                  active: mode == MeasureMode.line,
-                  onTap: () => onModeChanged(MeasureMode.line),
-                ),
-                const SizedBox(width: 6),
-                _ModeButton(
-                  icon: Icons.hexagon_outlined,
-                  label: 'პოლიგ.',
-                  active: mode == MeasureMode.polygon,
-                  onTap: () => onModeChanged(MeasureMode.polygon),
+                Text(
+                  'გამზომი',
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: scheme.primary,
+                      ),
                 ),
                 const Spacer(),
-                // Action buttons
                 if (points.isNotEmpty) ...[
                   IconButton(
                     icon: const Icon(Icons.undo, size: 20),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
-                    tooltip: 'გაუქმება',
+                    tooltip: 'უკან (undo)',
                     onPressed: onUndo,
                   ),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: 12),
                   IconButton(
-                    icon: const Icon(Icons.clear, size: 20),
+                    icon: const Icon(Icons.delete_outline, size: 20),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
                     tooltip: 'გასუფთავება',
                     onPressed: onClear,
                   ),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: 12),
                 ],
                 IconButton(
                   icon: const Icon(Icons.close, size: 20),
@@ -84,6 +72,40 @@ class MeasurementPanel extends StatelessWidget {
                   constraints: const BoxConstraints(),
                   tooltip: 'დახურვა',
                   onPressed: onClose,
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 8),
+
+            // ── Mode selector row ────────────────────────────────────────────
+            Row(
+              children: [
+                Expanded(
+                  child: _ModeButton(
+                    icon: Icons.location_on_outlined,
+                    label: 'კოორდ.',
+                    active: mode == MeasureMode.coordinate,
+                    onTap: () => onModeChanged(MeasureMode.coordinate),
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: _ModeButton(
+                    icon: Icons.straighten,
+                    label: 'ხაზი',
+                    active: mode == MeasureMode.line,
+                    onTap: () => onModeChanged(MeasureMode.line),
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: _ModeButton(
+                    icon: Icons.hexagon_outlined,
+                    label: 'პოლიგ.',
+                    active: mode == MeasureMode.polygon,
+                    onTap: () => onModeChanged(MeasureMode.polygon),
+                  ),
                 ),
               ],
             ),
@@ -97,6 +119,7 @@ class MeasurementPanel extends StatelessWidget {
                       .textTheme
                       .bodySmall
                       ?.copyWith(color: scheme.onSurface.withValues(alpha: 0.5)),
+                  textAlign: TextAlign.center,
                 ),
               ),
 
@@ -208,13 +231,13 @@ class _ModeButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(8),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
         decoration: BoxDecoration(
-          color: active ? scheme.primaryContainer : Colors.transparent,
+          color: active ? scheme.primaryContainer : scheme.surfaceContainerHighest.withValues(alpha: 0.5),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 16,
                 color: active ? scheme.primary : scheme.onSurface.withValues(alpha: 0.6)),

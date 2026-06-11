@@ -701,12 +701,17 @@ class _MapScreenState extends ConsumerState<MapScreen> {
           ),
 
           // ── Measurement panel ───────────────────────────────────────────
+          // bottom: 0 + SafeArea + padding clears the system nav bar and the
+          // bottom bar (12 margin + ~68px buttons + 12 margin = 92) + 8px gap.
           if (measuring)
             Positioned(
-              bottom: 90,
+              bottom: 0,
               left: 12,
               right: 12,
-              child: MeasurementPanel(
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 100),
+                  child: MeasurementPanel(
                 mode: _measureMode,
                 points: _measurePoints,
                 onModeChanged: (m) =>
@@ -719,6 +724,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 }),
                 onClear: () => setState(() => _measurePoints = []),
                 onClose: _toggleMeasure,
+              ),
+                ),
               ),
             ),
 
