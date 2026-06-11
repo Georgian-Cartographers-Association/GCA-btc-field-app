@@ -137,7 +137,14 @@ class AuthFormNotifier extends StateNotifier<AuthFormState> {
           .doc(email)
           .get();
       return doc.exists;
-    } catch (_) {
+    } on FirebaseException catch (e) {
+      if (e.code == 'permission-denied') {
+        // Firestore rules block unauthenticated reads of allowed_users.
+        // Fix: add  match /allowed_users/{e} { allow read: if true; }  in rules.
+        throw Exception(
+            'Firestore წვდომა შეზღუდულია (permission-denied). '
+            'შეამოწმეთ Firestore Security Rules.');
+      }
       return false;
     }
   }
