@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -17,32 +18,53 @@ class PhotoNotifier extends StateNotifier<List<Photo>> {
     state = await BtkDatabase.getPhotos(recordId);
   }
 
-  Future<void> addFromSource(ImageSource source) async {
-    final XFile? file = await ImagePicker().pickImage(
-      source: source,
-      imageQuality: 85,
-      maxWidth: 2048,
-    );
+  Future<void> addFromSource(ImageSource source, BuildContext context) async {
+    XFile? file;
+    try {
+      file = await ImagePicker().pickImage(
+        source: source,
+        imageQuality: 85,
+        maxWidth: 2048,
+      );
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('ფოტო ვერ გაიხსნა: $e')),
+        );
+      }
+      return;
+    }
     if (file == null) return;
 
-    final docs = await getApplicationDocumentsDirectory();
-    final dir = Directory('${docs.path}/photos/$recordId');
-    await dir.create(recursive: true);
+    try {
+      final docs = await getApplicationDocumentsDirectory();
+      final dir = Directory('${docs.path}/photos/$recordId');
+      await dir.create(recursive: true);
 
-    final ext = file.path.split('.').last.toLowerCase();
-    final id = const Uuid().v4().substring(0, 8);
-    final dest = '${dir.path}/$id.$ext';
-    await File(file.path).copy(dest);
+      final ext = file.path.split('.').last.toLowerCase();
+      final id = const Uuid().v4().substring(0, 8);
+      final dest = '${dir.path}/$id.$ext';
 
-    final photo = Photo(
-      id: id,
-      recordId: recordId,
-      filePath: dest,
-      sortOrder: state.length,
-      createdAt: DateTime.now(),
-    );
-    await BtkDatabase.insertPhoto(photo);
-    state = [...state, photo];
+      // Use readAsBytes instead of File.copy — works with content URIs (Android 14+)
+      final bytes = await file.readAsBytes();
+      await File(dest).writeAsBytes(bytes);
+
+      final photo = Photo(
+        id: id,
+        recordId: recordId,
+        filePath: dest,
+        sortOrder: state.length,
+        createdAt: DateTime.now(),
+      );
+      await BtkDatabase.insertPhoto(photo);
+      state = [...state, photo];
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('ფოტო ვერ შეინახა: $e')),
+        );
+      }
+    }
   }
 
   Future<void> delete(Photo photo) async {

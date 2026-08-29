@@ -25,13 +25,13 @@ class PhotosSection extends ConsumerWidget {
           Row(
             children: [
               FilledButton.icon(
-                onPressed: () => notifier.addFromSource(ImageSource.camera),
+                onPressed: () => notifier.addFromSource(ImageSource.camera, context),
                 icon: const Icon(Icons.camera_alt_outlined, size: 18),
                 label: const Text('კამერა'),
               ),
               const SizedBox(width: 8),
               OutlinedButton.icon(
-                onPressed: () => notifier.addFromSource(ImageSource.gallery),
+                onPressed: () => notifier.addFromSource(ImageSource.gallery, context),
                 icon: const Icon(Icons.photo_library_outlined, size: 18),
                 label: const Text('გალერეა'),
               ),

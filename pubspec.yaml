@@ -1,7 +1,7 @@
 ﻿name: btk_field_app
 description: BTC Field App - Georgian Cartographers Association landscape field survey tool.
 publish_to: "none"
-version: 1.16.2+22
+version: 1.16.3+23
 
 environment:
   sdk: ^3.11.5

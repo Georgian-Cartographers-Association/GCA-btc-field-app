@@ -118,8 +118,8 @@ class _VerticalStructureSectionState
           SectionPhotoPanel(
             label: 'ვ.ს. ფოტოები',
             photos: photos,
-            onCamera: () => notifier.addFromSource(ImageSource.camera),
-            onGallery: () => notifier.addFromSource(ImageSource.gallery),
+            onCamera: () => notifier.addFromSource(ImageSource.camera, context),
+            onGallery: () => notifier.addFromSource(ImageSource.gallery, context),
             onTap: (i) => Navigator.push(
               context,
               MaterialPageRoute(
