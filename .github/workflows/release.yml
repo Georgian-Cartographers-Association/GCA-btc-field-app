@@ -82,6 +82,11 @@ jobs:
           channel: 'stable'
           cache: true
 
+      - name: Enable Developer Mode (symlink support for Flutter plugins)
+        run: |
+          reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t REG_DWORD /f /v "AllowDevelopmentWithoutDevLicense" /d "1"
+        shell: cmd
+
       - name: Install dependencies
         run: flutter pub get
 
