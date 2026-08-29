@@ -1,4 +1,4 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,6 +12,9 @@ enum StorageMode {
   expedition, // Firestore shared expedition — requires Firebase Auth + expId
 }
 
+
+/// Coordinate format used when exporting CSV / GeoJSON.
+enum ExportCoordFormat { dd, dm, dms, utm38 }
 class SettingsState {
   final ThemeMode themeMode;
   final AppLocale appLocale;
@@ -20,6 +23,7 @@ class SettingsState {
   final bool screenAwake; // keep screen on while map is open
   final StorageMode storageMode;
   final String? expeditionId; // non-null only when storageMode == expedition
+  final ExportCoordFormat exportCoordFormat;
 
   Locale get locale => appLocale.locale;
 
@@ -31,6 +35,7 @@ class SettingsState {
     this.screenAwake = false,
     this.storageMode = StorageMode.local,
     this.expeditionId,
+    this.exportCoordFormat = ExportCoordFormat.dd,
   });
 
   SettingsState copyWith({
@@ -41,6 +46,7 @@ class SettingsState {
     bool? screenAwake,
     StorageMode? storageMode,
     Object? expeditionId = _sentinel,
+    ExportCoordFormat? exportCoordFormat,
   }) =>
       SettingsState(
         themeMode: themeMode ?? this.themeMode,
@@ -52,6 +58,7 @@ class SettingsState {
         expeditionId: expeditionId == _sentinel
             ? this.expeditionId
             : expeditionId as String?,
+        exportCoordFormat: exportCoordFormat ?? this.exportCoordFormat,
       );
 }
 
@@ -70,6 +77,7 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
     final screenAwake = prefs.getBool('screen_awake') ?? false;
     final storageModeStr = prefs.getString('storage_mode') ?? 'local';
     final expeditionId = prefs.getString('expedition_id');
+    final coordFmtStr = prefs.getString('export_coord_format') ?? 'dd';
 
     List<String> emails = [];
     final emailsJson = prefs.getString(AppConstants.prefEmails);
@@ -88,6 +96,7 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
       screenAwake: screenAwake,
       storageMode: _parseStorageMode(storageModeStr),
       expeditionId: expeditionId,
+      exportCoordFormat: _parseCoordFormat(coordFmtStr),
     );
   }
 
@@ -181,6 +190,19 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('storage_mode', 'cloud');
     await prefs.remove('expedition_id');
+  }
+
+  static ExportCoordFormat _parseCoordFormat(String s) => switch (s) {
+        'dm' => ExportCoordFormat.dm,
+        'dms' => ExportCoordFormat.dms,
+        'utm38' => ExportCoordFormat.utm38,
+        _ => ExportCoordFormat.dd,
+      };
+
+  Future<void> setExportCoordFormat(ExportCoordFormat fmt) async {
+    state = state.copyWith(exportCoordFormat: fmt);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('export_coord_format', fmt.name);
   }
 }
 

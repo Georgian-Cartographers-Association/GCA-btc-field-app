@@ -1,4 +1,4 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
@@ -7,12 +7,15 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart' show PdfGoogleFonts, Printing;
 import 'package:share_plus/share_plus.dart';
 import '../../models/btk_record.dart';
+import '../../utils/coord_converter.dart';
+import '../../features/settings/domain/settings_provider.dart';
 import '../../models/gps_track.dart';
 
 class ExportService {
   // ─── CSV ─────────────────────────────────────────────────────────────────────
 
-  static String buildCsv(List<BtkRecord> records) {
+  static String buildCsv(List<BtkRecord> records,
+      {ExportCoordFormat coordFormat = ExportCoordFormat.dd}) {
     final buf = StringBuffer();
     // Header
     buf.writeln(
@@ -22,11 +25,13 @@ class ExportService {
       'ვ.ს.ტიპ.,ვ.ს.ინდ.,ვ.ს.სიმ.',
     );
     for (final r in records) {
+      final (latStr, lonStr) = _fmtCoordPair(
+          r.latitude, r.longitude, coordFormat);
       buf.writeln([
         _q(r.id),
         _q(r.date.toString().split(' ')[0]),
-        r.latitude?.toStringAsFixed(6) ?? '',
-        r.longitude?.toStringAsFixed(6) ?? '',
+        latStr,
+        lonStr,
         _q(r.location),
         _q(r.geologicalFormation),
         _q(r.reliefType),
@@ -43,6 +48,34 @@ class ExportService {
       ].join(','));
     }
     return buf.toString();
+  }
+
+  static (String, String) _fmtCoordPair(
+      double? lat, double? lon, ExportCoordFormat fmt) {
+    if (lat == null || lon == null) return ('', '');
+    return switch (fmt) {
+      ExportCoordFormat.dd => (
+          lat.toStringAsFixed(6),
+          lon.toStringAsFixed(6)
+        ),
+      ExportCoordFormat.dm => (
+          CoordConverter.ddToDm(lat, isLat: true),
+          CoordConverter.ddToDm(lon, isLat: false)
+        ),
+      ExportCoordFormat.dms => (
+          CoordConverter.ddToDms(lat, isLat: true),
+          CoordConverter.ddToDms(lon, isLat: false)
+        ),
+      ExportCoordFormat.utm38 => _utmPair(lat, lon),
+    };
+  }
+
+  static (String, String) _utmPair(double lat, double lon) {
+    final utm = CoordConverter.toUtm38N(lat, lon);
+    return (
+      'N ${utm.northing.toStringAsFixed(1)}',
+      'E ${utm.easting.toStringAsFixed(1)}'
+    );
   }
 
   static String _q(String s) => '"${s.replaceAll('"', '""')}"';
@@ -100,8 +133,9 @@ class ExportService {
     await Share.shareXFiles([file], subject: 'ბტკ ჩანაწერები — GeoJSON');
   }
 
-  static Future<void> shareCsv(List<BtkRecord> records) async {
-    final csv = buildCsv(records);
+  static Future<void> shareCsv(List<BtkRecord> records,
+      {ExportCoordFormat coordFormat = ExportCoordFormat.dd}) async {
+    final csv = buildCsv(records, coordFormat: coordFormat);
     final bytes = Uint8List.fromList(utf8.encode(csv));
     final file = XFile.fromData(bytes, name: 'btk_records.csv', mimeType: 'text/csv');
     await Share.shareXFiles([file], subject: 'ბტკ ჩანაწერები — CSV');

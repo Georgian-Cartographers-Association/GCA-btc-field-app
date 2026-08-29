@@ -1,4 +1,4 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -21,13 +21,14 @@ class BtkDatabase {
     final dbPath = join(await getDatabasesPath(), 'btk_field_app.db');
     return openDatabase(
       dbPath,
-      version: 2,
+      version: 3,
       onCreate: (db, _) async {
         await _createV1(db);
         await _createV2(db);
       },
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < 2) await _createV2(db);
+        if (oldVersion < 3) await _createV3(db);
       },
     );
   }
@@ -72,6 +73,11 @@ class BtkDatabase {
         'CREATE INDEX idx_tracks_started ON gps_tracks(started_at DESC)');
   }
 
+  static Future<void> _createV3(Database db) async {
+    await db.execute(
+        "ALTER TABLE btk_records ADD COLUMN name TEXT DEFAULT ''");
+  }
+
   // ── BtkRecord ───────────────────────────────────────────────────────────────
 
   static Future<List<BtkRecord>> getAllRecords() async {
@@ -90,6 +96,7 @@ class BtkDatabase {
         'id': r.id,
         'json': jsonEncode(r.toJson()),
         'date': r.date.toIso8601String(),
+        'name': r.name,
         'location': r.location,
         'latitude': r.latitude,
         'longitude': r.longitude,

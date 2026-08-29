@@ -1,4 +1,4 @@
-class VegetationRow {
+﻿class VegetationRow {
   String tier;
   String height;
   String density;
@@ -159,6 +159,7 @@ class TreePhytomassRow {
 
 class BtkRecord {
   final String id;
+  String name;
   DateTime date;
   double? latitude;
   double? longitude;
@@ -203,6 +204,7 @@ class BtkRecord {
   BtkRecord({
     required this.id,
     required this.date,
+    this.name = '',
     this.latitude,
     this.longitude,
     this.altitude,
@@ -236,6 +238,7 @@ class BtkRecord {
 
   Map<String, dynamic> toJson() => {
         'id': id,
+        'name': name,
         'date': date.toIso8601String(),
         'latitude': latitude,
         'longitude': longitude,
@@ -266,6 +269,7 @@ class BtkRecord {
 
   factory BtkRecord.fromJson(Map<String, dynamic> j) => BtkRecord(
         id: j['id'] ?? '',
+        name: j['name'] ?? '',
         date: DateTime.tryParse(j['date'] ?? '') ?? DateTime.now(),
         latitude: (j['latitude'] as num?)?.toDouble(),
         longitude: (j['longitude'] as num?)?.toDouble(),

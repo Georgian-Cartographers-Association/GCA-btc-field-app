@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -101,23 +101,71 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
   }
 
   Future<void> _detectGps() async {
+    // 1. Check if GPS hardware/service is enabled
+    final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      if (!mounted) return;
+      final open = await showDialog<bool>(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text('GPS გათიშულია'),
+          content: const Text(
+              'კოორდინატების დასადგენად GPS (მდებარეობის სერვისი) '
+              'ჩართული უნდა იყოს.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('გაუქმება'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('GPS ჩართვა'),
+            ),
+          ],
+        ),
+      );
+      if (open == true) await Geolocator.openLocationSettings();
+      return;
+    }
+
+    // 2. Check / request permission
     LocationPermission perm = await Geolocator.checkPermission();
     if (perm == LocationPermission.denied) {
       perm = await Geolocator.requestPermission();
     }
-    if (perm == LocationPermission.denied ||
-        perm == LocationPermission.deniedForever) {
+    if (perm == LocationPermission.deniedForever) {
+      if (!mounted) return;
+      final open = await showDialog<bool>(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text('მდებარეობა აკრძალულია'),
+          content: const Text(
+              'აპლიკაციას მდებარეობაზე წვდომა არ აქვს. '
+              'გახსენით პარამეტრები და ჩართეთ.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('გაუქმება'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('პარამეტრები'),
+            ),
+          ],
+        ),
+      );
+      if (open == true) await Geolocator.openAppSettings();
       return;
     }
+    if (perm == LocationPermission.denied) return;
+
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('კოორდინატების დადგენა...'),
-            duration: Duration(seconds: 2)));
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('კოორდინატების დადგენა...'),
+        duration: Duration(seconds: 2)));
     final pos = await Geolocator.getCurrentPosition();
     if (!mounted) return;
 
-    // Try to read compass heading (null if no magnetometer)
     double? heading;
     if (!kIsWeb) {
       try {

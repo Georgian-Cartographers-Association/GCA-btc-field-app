@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../../models/btk_record.dart';
+import '../../../../utils/coord_converter.dart';
+import '../widgets/coord_converter_widget.dart';
 
 class BasicInfoSection extends StatefulWidget {
   final BtkRecord record;
@@ -183,7 +185,7 @@ class _BasicInfoSectionState extends State<BasicInfoSection> {
                     final err = _validateLat(v);
                     setState(() => _latError = err);
                     if (err == null) {
-                      widget.onChanged(r..latitude = double.tryParse(v));
+                      widget.onChanged(r..latitude = CoordConverter.parseCoord(v));
                     }
                   },
                   decoration: InputDecoration(
@@ -206,7 +208,7 @@ class _BasicInfoSectionState extends State<BasicInfoSection> {
                     final err = _validateLon(v);
                     setState(() => _lonError = err);
                     if (err == null) {
-                      widget.onChanged(r..longitude = double.tryParse(v));
+                      widget.onChanged(r..longitude = CoordConverter.parseCoord(v));
                     }
                   },
                   decoration: InputDecoration(
@@ -280,6 +282,18 @@ class _BasicInfoSectionState extends State<BasicInfoSection> {
             onPressed: widget.onDetectGps,
             icon: const Icon(Icons.gps_fixed, size: 18),
             label: const Text('GPS-ით დადგენა'),
+          ),
+          const SizedBox(height: 8),
+          CoordConverterWidget(
+            latitude: r.latitude,
+            longitude: r.longitude,
+            onApply: (lat, lon) {
+              _latCtrl.text = lat.toStringAsFixed(6);
+              _lonCtrl.text = lon.toStringAsFixed(6);
+              widget.onChanged(r
+                ..latitude = lat
+                ..longitude = lon);
+            },
           ),
         ],
       ),

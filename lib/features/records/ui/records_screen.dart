@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../models/btk_record.dart';
@@ -6,6 +6,7 @@ import '../domain/btk_provider.dart';
 import '../../../data/services/analytics_service.dart';
 import '../../../data/services/export_service.dart';
 import '../../../l10n/generated/app_localizations.dart';
+import '../../settings/domain/settings_provider.dart';
 
 class RecordsScreen extends ConsumerStatefulWidget {
   const RecordsScreen({super.key});
@@ -138,11 +139,12 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
   }
 
   Future<void> _export(String format, List<BtkRecord> records) async {
+    final coordFmt = ref.read(settingsProvider).exportCoordFormat;
     try {
       if (format == 'geojson') {
         await ExportService.shareGeoJson(records);
       } else if (format == 'csv') {
-        await ExportService.shareCsv(records);
+        await ExportService.shareCsv(records, coordFormat: coordFmt);
       } else if (format == 'pdf') {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

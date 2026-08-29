@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+﻿import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -101,6 +101,23 @@ class SettingsScreen extends ConsumerWidget {
             ),
             const Divider(),
           ],
+
+          // -- export coord format --
+          const _SectionHeader('კოორდინატის ფორმატი (ექსპ.)'),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: SegmentedButton<ExportCoordFormat>(
+              segments: const [
+                ButtonSegment(value: ExportCoordFormat.dd, label: Text('DD')),
+                ButtonSegment(value: ExportCoordFormat.dm, label: Text('DM')),
+                ButtonSegment(value: ExportCoordFormat.dms, label: Text('DMS')),
+                ButtonSegment(value: ExportCoordFormat.utm38, label: Text('UTM38')),
+              ],
+              selected: {settings.exportCoordFormat},
+              onSelectionChanged: (s) => notifier.setExportCoordFormat(s.first),
+            ),
+          ),
+          const Divider(),
 
           // ── მონაცემების შენახვა ───────────────────────────────────
           _SectionHeader(l10n.storageTitle),
