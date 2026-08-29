@@ -405,39 +405,31 @@ class ExportService {
     }
 
     try {
-      if (!kIsWeb &&
-          (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
-        final path = await FilePicker.platform.saveFile(
-          dialogTitle: 'PDF შენახვა',
-          fileName: filename,
-          type: FileType.custom,
-          allowedExtensions: ['pdf'],
-        );
-        if (path == null) return;
+      final isDesktop =
+          Platform.isWindows || Platform.isLinux || Platform.isMacOS;
+
+      // Desktop: file_picker returns path, we write manually.
+      // Mobile: pass bytes so file_picker writes via SAF/document picker —
+      // user sees system "Save to" dialog and picks Downloads, Drive, etc.
+      final path = await FilePicker.platform.saveFile(
+        dialogTitle: 'PDF შენახვა',
+        fileName: filename,
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+        bytes: isDesktop ? null : bytes,
+      );
+
+      if (path == null) return; // user cancelled
+
+      if (isDesktop) {
         await File(path).writeAsBytes(bytes);
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('შენახულია: $path'),
-              duration: const Duration(seconds: 5),
-            ),
-          );
-        }
-      } else {
-        final dir = Platform.isIOS
-            ? await getApplicationDocumentsDirectory()
-            : await getExternalStorageDirectory();
-        if (dir == null) throw Exception('შენახვის საქაღალდე ვერ მოიძებნა');
-        final file = File('${dir.path}/$filename');
-        await file.writeAsBytes(bytes);
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('შენახულია:\n${file.path}'),
-              duration: const Duration(seconds: 6),
-            ),
-          );
-        }
+      }
+
+      if (context.mounted) {
+        final msg = isDesktop ? 'შენახულია: $path' : 'PDF შენახულია';
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(msg), duration: const Duration(seconds: 4)),
+        );
       }
     } catch (e) {
       if (context.mounted) {
