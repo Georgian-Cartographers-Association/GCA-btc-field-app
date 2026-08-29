@@ -377,17 +377,32 @@ class ExportService {
 
   static Future<void> sharePdf(List<BtkRecord> records) async {
     final bytes = await buildPdf(records);
+    final filename = _pdfFilename(records);
 
     if (kIsWeb) {
-      await Printing.sharePdf(bytes: bytes, filename: 'btk_records.pdf');
+      await Printing.sharePdf(bytes: bytes, filename: filename);
     } else {
       final tmp = await getTemporaryDirectory();
-      final file = File('${tmp.path}/btk_records.pdf');
+      final file = File('${tmp.path}/$filename');
       await file.writeAsBytes(bytes);
       await Share.shareXFiles(
         [XFile(file.path)],
-        subject: 'ბტკ ჩანაწერები — PDF',
+        subject: 'ბტკ — $filename',
       );
     }
+  }
+
+  static String _pdfFilename(List<BtkRecord> records) {
+    String fmtDate(DateTime d) =>
+        '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+    String safeName(String s) => s.replaceAll(RegExp(r'[/\\:*?"<>|]'), '').trim();
+
+    if (records.length == 1) {
+      final r = records.first;
+      final label = r.name.isNotEmpty ? safeName(r.name) : r.id.substring(0, 8);
+      return 'btk_${label}_${fmtDate(r.date)}.pdf';
+    }
+
+    return 'btk_${records.length}_records_${fmtDate(DateTime.now())}.pdf';
   }
 }
