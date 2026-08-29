@@ -62,6 +62,18 @@ class BtkNotifier extends StateNotifier<List<BtkRecord>> {
     await _repo.delete(id);
   }
 
+  Future<BtkRecord> duplicate(BtkRecord original) async {
+    final json = original.toJson();
+    json['id'] = const Uuid().v4().substring(0, 8).toUpperCase();
+    if ((json['name'] as String).isNotEmpty) {
+      json['name'] = '${json['name']} (ასლი)';
+    }
+    final copy = BtkRecord.fromJson(json);
+    state = [...state, copy];
+    await _repo.upsert(copy);
+    return copy;
+  }
+
   Future<({int added, int updated})> importRecords(
       List<BtkRecord> records) async {
     final existingIds = {for (final r in state) r.id};

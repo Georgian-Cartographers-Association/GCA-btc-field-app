@@ -1,5 +1,6 @@
 ﻿import 'dart:convert';
 import 'dart:io';
+import 'package:archive/archive.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart' show PdfGoogleFonts, Printing;
 import 'package:share_plus/share_plus.dart';
 import '../../models/btk_record.dart';
+import '../../models/photo.dart';
 import '../../utils/coord_converter.dart';
 import '../../features/settings/domain/settings_provider.dart';
 import '../../models/gps_track.dart';
@@ -542,5 +544,193 @@ class ExportService {
     return list
         .map((r) => BtkRecord.fromJson(r as Map<String, dynamic>))
         .toList();
+  }
+
+  // ── KML ──────────────────────────────────────────────────────────────────────
+
+  static String buildKml(List<BtkRecord> records) {
+    final sb = StringBuffer()
+      ..writeln('<?xml version="1.0" encoding="UTF-8"?>')
+      ..writeln('<kml xmlns="http://www.opengis.net/kml/2.2">')
+      ..writeln('<Document>')
+      ..writeln('  <name><![CDATA[ბტკ ჩანაწერები]]></name>');
+
+    for (final r in records) {
+      if (r.latitude == null || r.longitude == null) continue;
+      final title = r.name.isNotEmpty ? r.name : 'ბტკ #${r.id}';
+      final desc = [
+        'ID: ${r.id}',
+        'თარიღი: ${_fmtDate(r.date)}',
+        if (r.location.isNotEmpty) 'ლოკაცია: ${r.location}',
+        if (r.geologicalFormation.isNotEmpty) 'გეოლ. ფორმაცია: ${r.geologicalFormation}',
+        if (r.reliefType.isNotEmpty) 'რელიეფი: ${r.reliefType}',
+        if (r.soilTypeName.isNotEmpty) 'ნიადაგი: ${r.soilTypeName}',
+        if (r.moistureDegree.isNotEmpty) 'ტენიანობა: ${r.moistureDegree}',
+      ].join('\n');
+      final alt = r.altitude ?? 0.0;
+      sb
+        ..writeln('  <Placemark>')
+        ..writeln('    <name><![CDATA[$title]]></name>')
+        ..writeln('    <description><![CDATA[$desc]]></description>')
+        ..writeln('    <Point>')
+        ..writeln('      <coordinates>${r.longitude},'
+            '${r.latitude},$alt</coordinates>')
+        ..writeln('    </Point>')
+        ..writeln('  </Placemark>');
+    }
+
+    sb.writeln('</Document>');
+    sb.writeln('</kml>');
+    return sb.toString();
+  }
+
+  static Future<void> shareKml(List<BtkRecord> records) async {
+    final content = buildKml(records);
+    final bytes = utf8.encode(content);
+    final filename = 'btk_${_fmtDate(DateTime.now())}.kml';
+
+    if (kIsWeb) {
+      final file = XFile.fromData(bytes, name: filename,
+          mimeType: 'application/vnd.google-earth.kml+xml');
+      await Share.shareXFiles([file], subject: filename);
+      return;
+    }
+    final tmp = await getTemporaryDirectory();
+    final file = File('${tmp.path}/$filename');
+    await file.writeAsBytes(bytes);
+    await Share.shareXFiles([XFile(file.path)], subject: 'ბტკ KML');
+  }
+
+  // ── .btkz (ZIP with photos) ──────────────────────────────────────────────────
+
+  static Future<void> exportBtkz(
+      List<BtkRecord> records, BuildContext context) async {
+    final archive = Archive();
+
+    // records.json
+    final recordsJson = jsonEncode({
+      'btk_export_version': 2,
+      'exported_at': DateTime.now().toIso8601String(),
+      'records': records.map((r) => r.toJson()).toList(),
+    });
+    final rBytes = utf8.encode(recordsJson);
+    archive.addFile(ArchiveFile('records.json', rBytes.length, rBytes));
+
+    // photos
+    final List<Map<String, dynamic>> photosMeta = [];
+    if (!kIsWeb) {
+      for (final r in records) {
+        final photos = await BtkDatabase.getPhotos(r.id);
+        for (final p in photos) {
+          final f = File(p.filePath);
+          if (!await f.exists()) continue;
+          final ext = p.filePath.split('.').last.toLowerCase();
+          final arcName = 'photos/${p.id}.$ext';
+          final pBytes = await f.readAsBytes();
+          archive.addFile(ArchiveFile(arcName, pBytes.length, pBytes));
+          photosMeta.add({...p.toMap(), 'archive_path': arcName});
+        }
+      }
+    }
+
+    final pJson = utf8.encode(jsonEncode(photosMeta));
+    archive.addFile(ArchiveFile('photos.json', pJson.length, pJson));
+
+    final zipBytes = Uint8List.fromList(ZipEncoder().encode(archive));
+    final filename = records.length == 1
+        ? 'btk_${_label(records.first)}_${_fmtDate(records.first.date)}.btkz'
+        : 'btk_export_${_fmtDate(DateTime.now())}.btkz';
+
+    if (kIsWeb) {
+      await Share.shareXFiles(
+          [XFile.fromData(zipBytes, name: filename)],
+          subject: filename);
+      return;
+    }
+
+    try {
+      final isDesktop =
+          Platform.isWindows || Platform.isLinux || Platform.isMacOS;
+      final path = await FilePicker.platform.saveFile(
+        dialogTitle: 'ბტკ ჩანაწერები + ფოტოები',
+        fileName: filename,
+        type: FileType.custom,
+        allowedExtensions: ['btkz'],
+        bytes: isDesktop ? null : zipBytes,
+      );
+      if (path == null) return;
+      if (isDesktop) await File(path).writeAsBytes(zipBytes);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(isDesktop
+              ? 'შენახულია: $path'
+              : 'ექსპორტირებულია (${photosMeta.length} ფოტო)'),
+          duration: const Duration(seconds: 4),
+        ));
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('შეცდომა: $e')));
+      }
+    }
+  }
+
+  /// Returns null if user cancels.
+  static Future<({List<BtkRecord> records, int photoCount})?> parseBtkzFile() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['btkz'],
+      withData: true,
+    );
+    if (result == null || result.files.isEmpty) return null;
+
+    final f = result.files.first;
+    final List<int> bytes;
+    if (f.bytes != null) {
+      bytes = f.bytes!;
+    } else if (f.path != null) {
+      bytes = await File(f.path!).readAsBytes();
+    } else {
+      throw Exception('ფაილი ვერ წაიკითხა');
+    }
+
+    final archive = ZipDecoder().decodeBytes(bytes);
+
+    final rFile = archive.findFile('records.json');
+    if (rFile == null) throw Exception('არასწორი .btkz ფორმატი');
+    final map = jsonDecode(utf8.decode(rFile.content as List<int>))
+        as Map<String, dynamic>;
+    final records = (map['records'] as List)
+        .map((r) => BtkRecord.fromJson(r as Map<String, dynamic>))
+        .toList();
+
+    int photoCount = 0;
+    final pFile = archive.findFile('photos.json');
+    if (pFile != null && !kIsWeb) {
+      final meta = jsonDecode(utf8.decode(pFile.content as List<int>)) as List;
+      final dir = Platform.isIOS
+          ? await getApplicationDocumentsDirectory()
+          : (await getExternalStorageDirectory() ??
+              await getApplicationDocumentsDirectory());
+      for (final m in meta) {
+        final arcPath = m['archive_path'] as String;
+        final photoFile = archive.findFile(arcPath);
+        if (photoFile == null) continue;
+        final localPath = '${dir.path}/${arcPath.split('/').last}';
+        await File(localPath).writeAsBytes(photoFile.content as List<int>);
+        await BtkDatabase.insertPhoto(Photo(
+          id: m['id'] as String,
+          recordId: m['record_id'] as String,
+          filePath: localPath,
+          caption: m['caption'] as String? ?? '',
+          sortOrder: m['sort_order'] as int? ?? 0,
+          createdAt: DateTime.parse(m['created_at'] as String),
+        ));
+        photoCount++;
+      }
+    }
+
+    return (records: records, photoCount: photoCount);
   }
 }

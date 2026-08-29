@@ -301,12 +301,44 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      // Auto-save on back navigation
-      onPopInvokedWithResult: (didPop, _) {
-        if (didPop && _dirty) {
+      canPop: !_dirty,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) return; // already navigated (canPop was true)
+        if (!mounted) return;
+        final choice = await showDialog<String>(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text('ჩანაწერი შეიცვალა'),
+            content: const Text(
+                'ბოლო ცვლილებები ავტომატურად ჯერ არ შენახულა.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, 'stay'),
+                child: const Text('დარჩენა'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, 'discard'),
+                child: const Text('გასვლა',
+                    style: TextStyle(color: Colors.red)),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(context, 'save'),
+                child: const Text('შენახვა და გასვლა'),
+              ),
+            ],
+          ),
+        );
+        if (!mounted) return;
+        if (choice == 'save') {
           _autoSaveTimer?.cancel();
-          ref.read(btkProvider.notifier).update(_record);
+          await ref.read(btkProvider.notifier).update(_record);
+          if (mounted) Navigator.of(context).pop();
+        } else if (choice == 'discard') {
+          _autoSaveTimer?.cancel();
+          setState(() => _dirty = false); // prevent dispose from re-saving
+          if (mounted) Navigator.of(context).pop();
         }
+        // 'stay' / null → do nothing
       },
       child: Scaffold(
         appBar: AppBar(
