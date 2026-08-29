@@ -1,13 +1,14 @@
 ﻿import 'dart:convert';
+import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import '../models/btk_record.dart';
 import '../models/gps_track.dart';
 import '../models/photo.dart';
 
-/// SQLite wrapper — used on Android/native only.
-/// Web continues to use SharedPreferences via BtkNotifier.
+/// SQLite wrapper — used on Android/desktop. Not available on web.
 class BtkDatabase {
   static Database? _db;
 
@@ -18,7 +19,13 @@ class BtkDatabase {
   }
 
   static Future<Database> _open() async {
-    final dbPath = join(await getDatabasesPath(), 'btk_field_app.db');
+    final String dbPath;
+    if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+      final dir = await getApplicationSupportDirectory();
+      dbPath = join(dir.path, 'btk_field_app.db');
+    } else {
+      dbPath = join(await getDatabasesPath(), 'btk_field_app.db');
+    }
     return openDatabase(
       dbPath,
       version: 3,

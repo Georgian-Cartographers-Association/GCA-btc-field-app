@@ -1,4 +1,4 @@
-name: Build & Release APK
+name: Build & Release
 
 on:
   push:
@@ -55,10 +55,47 @@ jobs:
           body: |
             ## ბტკ საველე აპლიკაცია ${{ github.ref_name }}
 
-            ### ინსტალაცია
+            ### Android ინსტალაცია
             1. ჩამოტვირთეთ `app-release.apk`
             2. Android → Settings → Install unknown apps → ჩართეთ
             3. APK გაუშვით
 
+            ### Windows ინსტალაცია
+            1. ჩამოტვირთეთ `btk-windows.zip`
+            2. გახსენით zip
+            3. გაუშვით `btk_field_app.exe`
+
             ### ცვლილებები
             ${{ github.event.head_commit.message }}
+
+  build-windows:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.7'
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate localizations
+        run: flutter gen-l10n
+
+      - name: Build Windows
+        run: flutter build windows --release
+
+      - name: Zip Windows build
+        run: |
+          Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath btk-windows.zip
+
+      - name: Upload Windows build to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: btk-windows.zip
