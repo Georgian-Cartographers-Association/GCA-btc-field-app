@@ -1,6 +1,8 @@
 ﻿import 'dart:convert';
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -389,6 +391,60 @@ class ExportService {
         [XFile(file.path)],
         subject: 'ბტკ — $filename',
       );
+    }
+  }
+
+  static Future<void> savePdf(
+      List<BtkRecord> records, BuildContext context) async {
+    final bytes = await buildPdf(records);
+    final filename = _pdfFilename(records);
+
+    if (kIsWeb) {
+      await Printing.sharePdf(bytes: bytes, filename: filename);
+      return;
+    }
+
+    try {
+      if (!kIsWeb &&
+          (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+        final path = await FilePicker.platform.saveFile(
+          dialogTitle: 'PDF შენახვა',
+          fileName: filename,
+          type: FileType.custom,
+          allowedExtensions: ['pdf'],
+        );
+        if (path == null) return;
+        await File(path).writeAsBytes(bytes);
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('შენახულია: $path'),
+              duration: const Duration(seconds: 5),
+            ),
+          );
+        }
+      } else {
+        final dir = Platform.isIOS
+            ? await getApplicationDocumentsDirectory()
+            : await getExternalStorageDirectory();
+        if (dir == null) throw Exception('შენახვის საქაღალდე ვერ მოიძებნა');
+        final file = File('${dir.path}/$filename');
+        await file.writeAsBytes(bytes);
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('შენახულია:\n${file.path}'),
+              duration: const Duration(seconds: 6),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('შეცდომა: $e')),
+        );
+      }
     }
   }
 

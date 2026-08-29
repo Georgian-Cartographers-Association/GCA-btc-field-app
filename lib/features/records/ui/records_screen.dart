@@ -146,13 +146,7 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
       } else if (format == 'csv') {
         await ExportService.shareCsv(records, coordFormat: coordFmt);
       } else if (format == 'pdf') {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('PDF მზადდება...'),
-            duration: Duration(seconds: 2),
-          ));
-        }
-        await ExportService.sharePdf(records);
+        if (mounted) await _pdfActionSheet(context, records);
       }
     } catch (e) {
       if (mounted) {
@@ -185,6 +179,44 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
         ],
       ),
     );
+  }
+}
+
+// ── PDF action sheet (shared between tile and export menu) ───────────────────
+
+Future<void> _pdfActionSheet(
+    BuildContext context, List<BtkRecord> records) async {
+  final choice = await showModalBottomSheet<String>(
+    context: context,
+    builder: (_) => SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.share_outlined),
+            title: const Text('გაზიარება'),
+            onTap: () => Navigator.pop(context, 'share'),
+          ),
+          ListTile(
+            leading: const Icon(Icons.save_alt_outlined),
+            title: const Text('ფაილად შენახვა'),
+            onTap: () => Navigator.pop(context, 'save'),
+          ),
+        ],
+      ),
+    ),
+  );
+  if (choice == null || !context.mounted) return;
+  if (context.mounted) {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('PDF მზადდება...'),
+      duration: Duration(seconds: 3),
+    ));
+  }
+  if (choice == 'share') {
+    await ExportService.sharePdf(records);
+  } else {
+    await ExportService.savePdf(records, context);
   }
 }
 
@@ -230,18 +262,9 @@ class _RecordTile extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              icon: const Icon(Icons.share_outlined, size: 20),
-              tooltip: 'გაზიარება',
-              onPressed: () async {
-                try {
-                  await ExportService.sharePdf([r]);
-                } catch (e) {
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('შეცდომა: $e')));
-                  }
-                }
-              },
+              icon: const Icon(Icons.picture_as_pdf_outlined, size: 20),
+              tooltip: 'PDF',
+              onPressed: () => _pdfActionSheet(context, [r]),
             ),
             IconButton(
               icon: const Icon(Icons.delete_outline, color: Colors.red),
