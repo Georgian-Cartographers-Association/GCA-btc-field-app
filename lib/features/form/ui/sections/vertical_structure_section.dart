@@ -1,21 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../../models/btk_record.dart';
+import '../../domain/photo_provider.dart';
+import '../widgets/section_photo_panel.dart';
 
-class VerticalStructureSection extends StatefulWidget {
+class VerticalStructureSection extends ConsumerStatefulWidget {
   final BtkRecord record;
   final ValueChanged<BtkRecord> onChanged;
 
-  const VerticalStructureSection({super.key, required this.record, required this.onChanged});
+  const VerticalStructureSection(
+      {super.key, required this.record, required this.onChanged});
 
   @override
-  State<VerticalStructureSection> createState() => _VerticalStructureSectionState();
+  ConsumerState<VerticalStructureSection> createState() =>
+      _VerticalStructureSectionState();
 }
 
-class _VerticalStructureSectionState extends State<VerticalStructureSection> {
+class _VerticalStructureSectionState
+    extends ConsumerState<VerticalStructureSection> {
   late final TextEditingController _typeNameCtrl;
   late final TextEditingController _indexCtrl;
   late final TextEditingController _heightCtrl;
   late final TextEditingController _descCtrl;
+
+  String get _photoKey => '${widget.record.id}_vertStruct';
 
   @override
   void initState() {
@@ -39,12 +48,15 @@ class _VerticalStructureSectionState extends State<VerticalStructureSection> {
   @override
   Widget build(BuildContext context) {
     final r = widget.record;
+    final photos = ref.watch(photoProvider(_photoKey));
+    final notifier = ref.read(photoProvider(_photoKey).notifier);
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _header(context, 'ბტკ-ის ვერტიკალური სტრუქტურა'),
+          _vsHeader(context, 'ბტკ-ის ვერტიკალური სტრუქტურა'),
           const SizedBox(height: 16),
           TextField(
             controller: _typeNameCtrl,
@@ -66,7 +78,8 @@ class _VerticalStructureSectionState extends State<VerticalStructureSection> {
                   decoration: const InputDecoration(
                     labelText: 'ინდექსი',
                     border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     isDense: true,
                   ),
                 ),
@@ -79,7 +92,8 @@ class _VerticalStructureSectionState extends State<VerticalStructureSection> {
                   decoration: const InputDecoration(
                     labelText: 'სიმაღლე',
                     border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     isDense: true,
                   ),
                 ),
@@ -98,13 +112,36 @@ class _VerticalStructureSectionState extends State<VerticalStructureSection> {
               isDense: true,
             ),
           ),
+          const SizedBox(height: 10),
+
+          // ── Vert-struct photos ──────────────────────────────────────
+          SectionPhotoPanel(
+            label: 'ვ.ს. ფოტოები',
+            photos: photos,
+            onCamera: () => notifier.addFromSource(ImageSource.camera),
+            onGallery: () => notifier.addFromSource(ImageSource.gallery),
+            onTap: (i) => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => SectionFullScreenGallery(
+                  photos: photos,
+                  initialIndex: i,
+                  title: 'ვ.სტრ.',
+                ),
+              ),
+            ),
+            onDelete: (photo) => confirmDeleteSectionPhoto(
+              context,
+              () => notifier.delete(photo),
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-Widget _header(BuildContext context, String title) => Container(
+Widget _vsHeader(BuildContext context, String title) => Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       decoration: BoxDecoration(

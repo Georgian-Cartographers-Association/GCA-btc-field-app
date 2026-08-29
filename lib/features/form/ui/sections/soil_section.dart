@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../../models/btk_record.dart';
+import '../../domain/photo_provider.dart';
+import '../widgets/section_photo_panel.dart';
 
-class SoilSection extends StatefulWidget {
+class SoilSection extends ConsumerStatefulWidget {
   final BtkRecord record;
   final ValueChanged<BtkRecord> onChanged;
 
   const SoilSection({super.key, required this.record, required this.onChanged});
 
   @override
-  State<SoilSection> createState() => _SoilSectionState();
+  ConsumerState<SoilSection> createState() => _SoilSectionState();
 }
 
-class _SoilSectionState extends State<SoilSection> {
+class _SoilSectionState extends ConsumerState<SoilSection> {
   late final TextEditingController _soilTypeNameCtrl;
   late final TextEditingController _soilProfileDescCtrl;
   late final TextEditingController _geohorizonIndexCtrl;
   late final TextEditingController _soilSurfaceFormationCtrl;
   late List<List<TextEditingController>> _horizonCtrls;
+
+  String get _photoKey => '${widget.record.id}_soil';
 
   List<TextEditingController> _makeHorizonCtrls(SoilHorizonRow h) => [
         TextEditingController(text: h.horizon),
@@ -30,7 +36,8 @@ class _SoilSectionState extends State<SoilSection> {
     _soilTypeNameCtrl = TextEditingController(text: r.soilTypeName);
     _soilProfileDescCtrl = TextEditingController(text: r.soilProfileDesc);
     _geohorizonIndexCtrl = TextEditingController(text: r.geohorizonIndex);
-    _soilSurfaceFormationCtrl = TextEditingController(text: r.soilSurfaceFormation);
+    _soilSurfaceFormationCtrl =
+        TextEditingController(text: r.soilSurfaceFormation);
     _horizonCtrls = r.soilHorizons.map(_makeHorizonCtrls).toList();
   }
 
@@ -77,12 +84,15 @@ class _SoilSectionState extends State<SoilSection> {
   @override
   Widget build(BuildContext context) {
     final r = widget.record;
+    final photos = ref.watch(photoProvider(_photoKey));
+    final notifier = ref.read(photoProvider(_photoKey).notifier);
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _header(context, 'ნიადაგი'),
+          _sectionHeader(context, 'ნიადაგი'),
           const SizedBox(height: 12),
           TextField(
             controller: _soilTypeNameCtrl,
@@ -106,6 +116,30 @@ class _SoilSectionState extends State<SoilSection> {
               isDense: true,
             ),
           ),
+          const SizedBox(height: 10),
+
+          // ── Soil profile photos ─────────────────────────────────────
+          SectionPhotoPanel(
+            label: 'მორფ. დახასიათების ფოტოები',
+            photos: photos,
+            onCamera: () => notifier.addFromSource(ImageSource.camera),
+            onGallery: () => notifier.addFromSource(ImageSource.gallery),
+            onTap: (i) => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => SectionFullScreenGallery(
+                  photos: photos,
+                  initialIndex: i,
+                  title: 'ნიადაგი',
+                ),
+              ),
+            ),
+            onDelete: (photo) => confirmDeleteSectionPhoto(
+              context,
+              () => notifier.delete(photo),
+            ),
+          ),
+
           const SizedBox(height: 16),
           Text('გენეტიკური ჰორიზონტები',
               style: Theme.of(context)
@@ -198,7 +232,7 @@ class _SoilSectionState extends State<SoilSection> {
   }
 }
 
-Widget _header(BuildContext context, String title) => Container(
+Widget _sectionHeader(BuildContext context, String title) => Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       decoration: BoxDecoration(

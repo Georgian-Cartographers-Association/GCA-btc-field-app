@@ -10,6 +10,7 @@ import '../../models/btk_record.dart';
 import '../../utils/coord_converter.dart';
 import '../../features/settings/domain/settings_provider.dart';
 import '../../models/gps_track.dart';
+import '../../database/btk_database.dart';
 
 class ExportService {
   // ─── CSV ─────────────────────────────────────────────────────────────────────
@@ -148,13 +149,10 @@ class ExportService {
   // ─── PDF ─────────────────────────────────────────────────────────────────────
 
   static Future<Uint8List> buildPdf(List<BtkRecord> records) async {
-    // Try to load Georgian font; fall back to Helvetica if offline
     pw.Font? geoFont;
     try {
       geoFont = await PdfGoogleFonts.notoSansGeorgianRegular();
-    } catch (_) {
-      geoFont = null; // offline fallback
-    }
+    } catch (_) {}
 
     pw.TextStyle style(
             {double size = 10, bool bold = false, pw.Font? font}) =>
@@ -164,9 +162,20 @@ class ExportService {
           fontWeight: bold ? pw.FontWeight.bold : pw.FontWeight.normal,
         );
 
+    // Pre-load section photos for every record (soil + vert struct)
+    final soilImgMap = <String, List<pw.MemoryImage>>{};
+    final vertImgMap = <String, List<pw.MemoryImage>>{};
+    for (final r in records) {
+      soilImgMap[r.id] = await _loadPdfImages('${r.id}_soil');
+      vertImgMap[r.id] = await _loadPdfImages('${r.id}_vertStruct');
+    }
+
     final doc = pw.Document();
 
     for (final r in records) {
+      final soilImgs = soilImgMap[r.id] ?? [];
+      final vertImgs = vertImgMap[r.id] ?? [];
+
       doc.addPage(
         pw.MultiPage(
           pageFormat: PdfPageFormat.a4,
@@ -189,7 +198,9 @@ class ExportService {
             _pdfRow('ID', r.id, style),
             _pdfRow('თარიღი', r.date.toString().split(' ')[0], style),
             if (r.latitude != null)
-              _pdfRow('კოორდ.', '${r.latitude!.toStringAsFixed(6)}, ${r.longitude!.toStringAsFixed(6)}', style),
+              _pdfRow('კოორდ.',
+                  '${r.latitude!.toStringAsFixed(6)}, ${r.longitude!.toStringAsFixed(6)}',
+                  style),
             _pdfRow('ადგილმდ.', r.location, style),
             _pdfSep,
             // Physical geo
@@ -207,7 +218,8 @@ class ExportService {
               pw.TableHelper.fromTextArray(
                 headers: ['იარ.', 'სიმ.', 'სიმძლ.', 'ფენოფ.', 'სახეობა'],
                 data: r.vegetation
-                    .map((v) => [v.tier, v.height, v.density, v.phenophase, v.species])
+                    .map((v) =>
+                        [v.tier, v.height, v.density, v.phenophase, v.species])
                     .toList(),
                 headerStyle: style(bold: true, size: 9),
                 cellStyle: style(size: 9),
@@ -223,14 +235,23 @@ class ExportService {
             if (r.soilHorizons.isNotEmpty)
               pw.TableHelper.fromTextArray(
                 headers: ['ჰ-ტი', 'დახასიათება'],
-                data: r.soilHorizons.map((h) => [h.horizon, h.description]).toList(),
-                columnWidths: {0: const pw.FixedColumnWidth(60), 1: const pw.FlexColumnWidth()},
+                data: r.soilHorizons
+                    .map((h) => [h.horizon, h.description])
+                    .toList(),
+                columnWidths: {
+                  0: const pw.FixedColumnWidth(60),
+                  1: const pw.FlexColumnWidth()
+                },
                 headerStyle: style(bold: true, size: 9),
                 cellStyle: style(size: 9),
                 border: pw.TableBorder.all(color: PdfColors.grey400, width: 0.5),
               ),
             _pdfRow('გეოჰ. ინდ.', r.geohorizonIndex, style),
             _pdfRow('ნ.ზ.ფ. ტ.', r.soilSurfaceFormation, style),
+            if (soilImgs.isNotEmpty) ...[
+              pw.SizedBox(height: 4),
+              _pdfPhotoGrid(soilImgs),
+            ],
             _pdfSep,
             // Vertical structure
             _pdfHeader('ბტკ-ის ვერტიკალური სტრუქტურა', style),
@@ -238,12 +259,58 @@ class ExportService {
             _pdfRow('ინდ.', r.vertStructIndex, style),
             _pdfRow('სიმ.', r.vertStructHeight, style),
             _pdfRow('აღწ.', r.vertStructDesc, style),
+            if (vertImgs.isNotEmpty) ...[
+              pw.SizedBox(height: 4),
+              _pdfPhotoGrid(vertImgs),
+            ],
           ],
         ),
       );
     }
 
     return doc.save();
+  }
+
+  static Future<List<pw.MemoryImage>> _loadPdfImages(String photoKey) async {
+    final result = <pw.MemoryImage>[];
+    try {
+      final photos = await BtkDatabase.getPhotos(photoKey);
+      for (final p in photos) {
+        try {
+          final bytes = await File(p.filePath).readAsBytes();
+          result.add(pw.MemoryImage(bytes));
+        } catch (_) {}
+      }
+    } catch (_) {}
+    return result;
+  }
+
+  static pw.Widget _pdfPhotoGrid(List<pw.MemoryImage> images) {
+    const maxPerRow = 3;
+    const imgW = 158.0;
+    const imgH = 118.0;
+    final rows = <pw.Widget>[];
+    for (int i = 0; i < images.length; i += maxPerRow) {
+      final end = (i + maxPerRow) > images.length ? images.length : i + maxPerRow;
+      rows.add(
+        pw.Padding(
+          padding: const pw.EdgeInsets.only(bottom: 4),
+          child: pw.Row(
+            children: images.sublist(i, end).map((img) => pw.Padding(
+                  padding: const pw.EdgeInsets.only(right: 4),
+                  child: pw.ClipRRect(
+                    horizontalRadius: 3,
+                    verticalRadius: 3,
+                    child: pw.Image(img,
+                        width: imgW, height: imgH, fit: pw.BoxFit.cover),
+                  ),
+                )).toList(),
+          ),
+        ),
+      );
+    }
+    return pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start, children: rows);
   }
 
   static pw.Widget _pdfRow(String label, String value,
