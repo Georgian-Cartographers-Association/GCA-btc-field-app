@@ -440,17 +440,107 @@ class ExportService {
     }
   }
 
-  static String _pdfFilename(List<BtkRecord> records) {
-    String fmtDate(DateTime d) =>
-        '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
-    String safeName(String s) => s.replaceAll(RegExp(r'[/\\:*?"<>|]'), '').trim();
+  // ── Filename helpers ────────────────────────────────────────────────────────
 
+  static String _fmtDate(DateTime d) =>
+      '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+
+  static String _safeName(String s) =>
+      s.replaceAll(RegExp(r'[/\\:*?"<>|]'), '').trim();
+
+  static String _label(BtkRecord r) =>
+      r.name.isNotEmpty ? _safeName(r.name) : r.id.substring(0, 8);
+
+  static String _pdfFilename(List<BtkRecord> records) {
     if (records.length == 1) {
       final r = records.first;
-      final label = r.name.isNotEmpty ? safeName(r.name) : r.id.substring(0, 8);
-      return 'btk_${label}_${fmtDate(r.date)}.pdf';
+      return 'btk_${_label(r)}_${_fmtDate(r.date)}.pdf';
+    }
+    return 'btk_${records.length}_records_${_fmtDate(DateTime.now())}.pdf';
+  }
+
+  static String _btkFilename(List<BtkRecord> records) {
+    if (records.length == 1) {
+      final r = records.first;
+      return 'btk_${_label(r)}_${_fmtDate(r.date)}.btk';
+    }
+    return 'btk_export_${_fmtDate(DateTime.now())}.btk';
+  }
+
+  // ── BTK import/export ────────────────────────────────────────────────────────
+
+  static Future<void> exportBtk(
+      List<BtkRecord> records, BuildContext context) async {
+    final payload = jsonEncode({
+      'btk_export_version': 1,
+      'exported_at': DateTime.now().toIso8601String(),
+      'records': records.map((r) => r.toJson()).toList(),
+    });
+    final bytes = utf8.encode(payload);
+    final filename = _btkFilename(records);
+
+    if (kIsWeb) {
+      final file = XFile.fromData(
+        Uint8List.fromList(bytes),
+        name: filename,
+        mimeType: 'application/json',
+      );
+      await Share.shareXFiles([file], subject: filename);
+      return;
     }
 
-    return 'btk_${records.length}_records_${fmtDate(DateTime.now())}.pdf';
+    try {
+      final isDesktop =
+          Platform.isWindows || Platform.isLinux || Platform.isMacOS;
+      final path = await FilePicker.platform.saveFile(
+        dialogTitle: 'ბტკ ჩანაწერების ექსპორტი',
+        fileName: filename,
+        type: FileType.custom,
+        allowedExtensions: ['btk'],
+        bytes: isDesktop ? null : Uint8List.fromList(bytes),
+      );
+      if (path == null) return;
+      if (isDesktop) await File(path).writeAsBytes(bytes);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(isDesktop ? 'შენახულია: $path' : 'ექსპორტირებულია'),
+          duration: const Duration(seconds: 4),
+        ));
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('შეცდომა: $e')));
+      }
+    }
+  }
+
+  /// Picks a .btk file and parses it. Returns null if user cancels.
+  static Future<List<BtkRecord>?> parseBtkFile() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['btk', 'json'],
+      withData: true,
+    );
+    if (result == null || result.files.isEmpty) return null;
+
+    final f = result.files.first;
+    final String content;
+    if (f.bytes != null) {
+      content = utf8.decode(f.bytes!);
+    } else if (f.path != null) {
+      content = await File(f.path!).readAsString();
+    } else {
+      throw Exception('ფაილი ვერ წაიკითხა');
+    }
+
+    final map = jsonDecode(content) as Map<String, dynamic>;
+    if (map['btk_export_version'] == null || map['records'] == null) {
+      throw Exception('არასწორი .btk ფაილის ფორმატი');
+    }
+    final list = map['records'] as List<dynamic>;
+    return list
+        .map((r) => BtkRecord.fromJson(r as Map<String, dynamic>))
+        .toList();
   }
 }

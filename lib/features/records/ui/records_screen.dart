@@ -47,11 +47,33 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
         title: const Text('შენახული ჩანაწერები'),
         actions: [
           if (all.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.upload_file_outlined),
+              tooltip: 'იმპორტი (.btk)',
+              onPressed: _importBtk,
+            ),
             PopupMenuButton<String>(
               icon: const Icon(Icons.file_download_outlined),
               tooltip: 'ექსპორტი',
               onSelected: (val) => _export(val, all),
               itemBuilder: (_) => const [
+                PopupMenuItem(
+                  value: 'btk',
+                  child: ListTile(
+                    leading: Icon(Icons.import_export_outlined),
+                    title: Text('ბტკ ჩანაწერი (.btk)'),
+                    subtitle: Text('სხვა მოწყობილობაზე გადატანა'),
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
+                PopupMenuItem(
+                  value: 'pdf',
+                  child: ListTile(
+                    leading: Icon(Icons.picture_as_pdf_outlined),
+                    title: Text('PDF დოკუმენტი'),
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
                 PopupMenuItem(
                   value: 'geojson',
                   child: ListTile(
@@ -65,14 +87,6 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
                   child: ListTile(
                     leading: Icon(Icons.table_chart_outlined),
                     title: Text('CSV (Excel/Sheets)'),
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                ),
-                PopupMenuItem(
-                  value: 'pdf',
-                  child: ListTile(
-                    leading: Icon(Icons.picture_as_pdf_outlined),
-                    title: Text('PDF დოკუმენტი'),
                     contentPadding: EdgeInsets.zero,
                   ),
                 ),
@@ -141,12 +155,37 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
   Future<void> _export(String format, List<BtkRecord> records) async {
     final coordFmt = ref.read(settingsProvider).exportCoordFormat;
     try {
-      if (format == 'geojson') {
+      if (format == 'btk') {
+        await ExportService.exportBtk(records, context);
+      } else if (format == 'geojson') {
         await ExportService.shareGeoJson(records);
       } else if (format == 'csv') {
         await ExportService.shareCsv(records, coordFormat: coordFmt);
       } else if (format == 'pdf') {
         if (mounted) await _pdfActionSheet(context, records);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('შეცდომა: $e')));
+      }
+    }
+  }
+
+  Future<void> _importBtk() async {
+    try {
+      final records = await ExportService.parseBtkFile();
+      if (records == null) return; // user cancelled
+      final result =
+          await ref.read(btkProvider.notifier).importRecords(records);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            '${result.added + result.updated} ჩანაწერი შემოიტანა '
+            '(${result.added} ახალი, ${result.updated} განახლდა)',
+          ),
+          duration: const Duration(seconds: 4),
+        ));
       }
     } catch (e) {
       if (mounted) {

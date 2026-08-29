@@ -61,6 +61,32 @@ class BtkNotifier extends StateNotifier<List<BtkRecord>> {
     state = state.where((r) => r.id != id).toList();
     await _repo.delete(id);
   }
+
+  Future<({int added, int updated})> importRecords(
+      List<BtkRecord> records) async {
+    final existingIds = {for (final r in state) r.id};
+    int added = 0, updated = 0;
+
+    for (final r in records) {
+      if (existingIds.contains(r.id)) {
+        updated++;
+      } else {
+        added++;
+      }
+      await _repo.upsert(r);
+    }
+
+    final stateMap = {for (final r in state) r.id: r};
+    for (final r in records) {
+      stateMap[r.id] = r;
+    }
+    if (mounted) {
+      state = stateMap.values.toList()
+        ..sort((a, b) => b.date.compareTo(a.date));
+    }
+
+    return (added: added, updated: updated);
+  }
 }
 
 /// Provider automatically recreates BtkNotifier when storage mode, auth state
