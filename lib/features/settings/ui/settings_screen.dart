@@ -105,16 +105,27 @@ class SettingsScreen extends ConsumerWidget {
           // -- export coord format --
           const _SectionHeader('კოორდინატის ფორმატი (ექსპ.)'),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: SegmentedButton<ExportCoordFormat>(
-              segments: const [
-                ButtonSegment(value: ExportCoordFormat.dd, label: Text('DD')),
-                ButtonSegment(value: ExportCoordFormat.dm, label: Text('DM')),
-                ButtonSegment(value: ExportCoordFormat.dms, label: Text('DMS')),
-                ButtonSegment(value: ExportCoordFormat.utm38, label: Text('UTM38')),
-              ],
-              selected: {settings.exportCoordFormat},
-              onSelectionChanged: (s) => notifier.setExportCoordFormat(s.first),
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+            child: Wrap(
+              spacing: 6,
+              runSpacing: 4,
+              children: ExportCoordFormat.values.map((fmt) {
+                final label = switch (fmt) {
+                  ExportCoordFormat.dd => 'DD',
+                  ExportCoordFormat.dm => 'DM',
+                  ExportCoordFormat.dms => 'DMS',
+                  ExportCoordFormat.utm37 => 'UTM 37N',
+                  ExportCoordFormat.utm38 => 'UTM 38N',
+                };
+                final selected = settings.exportCoordFormat == fmt;
+                return FilterChip(
+                  label: Text(label),
+                  selected: selected,
+                  onSelected: (_) => notifier.setExportCoordFormat(fmt),
+                  showCheckmark: false,
+                  visualDensity: VisualDensity.compact,
+                );
+              }).toList(),
             ),
           ),
           const Divider(),

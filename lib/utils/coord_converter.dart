@@ -109,13 +109,80 @@ class CoordConverter {
         RegExp(r'[NSEWnsew]').hasMatch(s);
   }
 
-  // ─── UTM projection ────────────────────────────────────────────────────────
+  // ─── UTM projection (forward) ─────────────────────────────────────────────
 
   static UtmResult toUtm37N(double latDeg, double lonDeg) =>
       _toUtm(latDeg, lonDeg, 39.0);
 
   static UtmResult toUtm38N(double latDeg, double lonDeg) =>
       _toUtm(latDeg, lonDeg, 45.0);
+
+  // ─── UTM → DD (inverse) ───────────────────────────────────────────────────
+
+  /// Converts UTM Zone 37N (cm 39°E) → WGS84 DD.
+  static (double lat, double lon) fromUtm37N(double easting, double northing) =>
+      _fromUtm(easting, northing, 39.0);
+
+  /// Converts UTM Zone 38N (cm 45°E) → WGS84 DD.
+  static (double lat, double lon) fromUtm38N(double easting, double northing) =>
+      _fromUtm(easting, northing, 45.0);
+
+  static (double, double) _fromUtm(
+      double easting, double northing, double cmDeg) {
+    final lon0 = cmDeg * math.pi / 180.0;
+    final x = easting - _e0;
+    final e4 = _e2 * _e2;
+    final e6 = e4 * _e2;
+    final M = northing / _k0;
+    final mu = M / (_a * (1 - _e2 / 4 - 3 * e4 / 64 - 5 * e6 / 256));
+    final e1 = (1 - math.sqrt(1 - _e2)) / (1 + math.sqrt(1 - _e2));
+    final e12 = e1 * e1;
+    final e13 = e12 * e1;
+    final e14 = e13 * e1;
+    final phi1 = mu +
+        (3 * e1 / 2 - 27 * e13 / 32) * math.sin(2 * mu) +
+        (21 * e12 / 16 - 55 * e14 / 32) * math.sin(4 * mu) +
+        (151 * e13 / 96) * math.sin(6 * mu) +
+        (1097 * e14 / 512) * math.sin(8 * mu);
+    final sinPhi1 = math.sin(phi1);
+    final cosPhi1 = math.cos(phi1);
+    final tanPhi1 = math.tan(phi1);
+    final n1 = _a / math.sqrt(1 - _e2 * sinPhi1 * sinPhi1);
+    final t1 = tanPhi1 * tanPhi1;
+    final c1 = _ePrime2 * cosPhi1 * cosPhi1;
+    final r1 = _a *
+        (1 - _e2) /
+        math.pow(1 - _e2 * sinPhi1 * sinPhi1, 1.5);
+    final d = x / (n1 * _k0);
+    final d2 = d * d;
+    final d3 = d2 * d;
+    final d4 = d3 * d;
+    final d5 = d4 * d;
+    final d6 = d5 * d;
+    final latRad = phi1 -
+        (n1 * tanPhi1 / r1) *
+            (d2 / 2 -
+                (5 + 3 * t1 + 10 * c1 - 4 * c1 * c1 - 9 * _ePrime2) *
+                    d4 /
+                    24 +
+                (61 +
+                        90 * t1 +
+                        298 * c1 +
+                        45 * t1 * t1 -
+                        252 * _ePrime2 -
+                        3 * c1 * c1) *
+                    d6 /
+                    720);
+    final lonRad = lon0 +
+        (d -
+                (1 + 2 * t1 + c1) * d3 / 6 +
+                (5 - 2 * c1 + 28 * t1 - 3 * c1 * c1 + 8 * _ePrime2 +
+                        24 * t1 * t1) *
+                    d5 /
+                    120) /
+            cosPhi1;
+    return (latRad * 180 / math.pi, lonRad * 180 / math.pi);
+  }
 
   static UtmResult _toUtm(double latDeg, double lonDeg, double cmDeg) {
     final lon0 = cmDeg * math.pi / 180.0;

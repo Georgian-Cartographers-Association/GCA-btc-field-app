@@ -66,12 +66,16 @@ class ExportService {
           CoordConverter.ddToDms(lat, isLat: true),
           CoordConverter.ddToDms(lon, isLat: false)
         ),
-      ExportCoordFormat.utm38 => _utmPair(lat, lon),
+      ExportCoordFormat.utm37 => _utmPair(lat, lon, zone: 37),
+      ExportCoordFormat.utm38 => _utmPair(lat, lon, zone: 38),
     };
   }
 
-  static (String, String) _utmPair(double lat, double lon) {
-    final utm = CoordConverter.toUtm38N(lat, lon);
+  static (String, String) _utmPair(double lat, double lon,
+      {int zone = 38}) {
+    final utm = zone == 37
+        ? CoordConverter.toUtm37N(lat, lon)
+        : CoordConverter.toUtm38N(lat, lon);
     return (
       'N ${utm.northing.toStringAsFixed(1)}',
       'E ${utm.easting.toStringAsFixed(1)}'

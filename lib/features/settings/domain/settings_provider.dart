@@ -14,7 +14,7 @@ enum StorageMode {
 
 
 /// Coordinate format used when exporting CSV / GeoJSON.
-enum ExportCoordFormat { dd, dm, dms, utm38 }
+enum ExportCoordFormat { dd, dm, dms, utm37, utm38 }
 class SettingsState {
   final ThemeMode themeMode;
   final AppLocale appLocale;
@@ -195,6 +195,7 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
   static ExportCoordFormat _parseCoordFormat(String s) => switch (s) {
         'dm' => ExportCoordFormat.dm,
         'dms' => ExportCoordFormat.dms,
+        'utm37' => ExportCoordFormat.utm37,
         'utm38' => ExportCoordFormat.utm38,
         _ => ExportCoordFormat.dd,
       };
