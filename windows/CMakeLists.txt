@@ -2,6 +2,11 @@
 cmake_minimum_required(VERSION 3.14)
 project(btk_field_app LANGUAGES CXX)
 
+# Workaround: Firebase C++ SDK uses cmake_minimum_required < 3.5 which
+# CMake 3.30+ rejects. This cache variable allows subprojects to declare
+# older minimums without aborting the configure step.
+set(CMAKE_POLICY_VERSION_MINIMUM "3.5" CACHE STRING "" FORCE)
+
 # The name of the executable created for the application. Change this to change
 # the on-disk name of your application.
 set(BINARY_NAME "btk_field_app")
