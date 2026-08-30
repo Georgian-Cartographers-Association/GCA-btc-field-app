@@ -5,12 +5,19 @@
 **ივანე ჯავახიშვილის სახ. თბილისის სახელმწიფო უნივერსიტეტი**  
 **ალ. ასლანიკაშვილის სახ. საქართველოს კარტოგრაფთა ასოციაცია**
 
-[![Build & Release](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/actions/workflows/release.yml/badge.svg)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/actions/workflows/release.yml)
-[![Flutter](https://img.shields.io/badge/Flutter-3.41.7-blue?logo=flutter)](https://flutter.dev)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.20.0-brightgreen)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)
+[![ვებ აპლიკაცია](https://img.shields.io/badge/▶_ვებ_აპლიკაცია-btc.qgis.ge-0066CC?style=flat-square&logo=googlechrome&logoColor=white)](https://btc.qgis.ge)&ensp;[![GitHub](https://img.shields.io/badge/GitHub-Georgian--Cartographers--Association-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app)&ensp;[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Georgian-Cartographers-Association/GCA-btc-field-app)
 
-🌐 **[btc.qgis.ge](https://btc.qgis.ge)** &nbsp;·&nbsp; 📥 [ბოლო Release](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)
+<br/>
+
+[![Android arm64](https://img.shields.io/badge/Android-arm64-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)&ensp;[![Android arm32](https://img.shields.io/badge/Android-arm32-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)&ensp;[![Android x86_64](https://img.shields.io/badge/Android-x86__64-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)
+
+[![Windows Setup](https://img.shields.io/badge/Windows-Setup_Installer-0078D4?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)&ensp;[![Windows Portable](https://img.shields.io/badge/Windows-Portable_ZIP-0078D4?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)
+
+[![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)&ensp;[![Debian/Ubuntu](https://img.shields.io/badge/.deb-Debian%20%7C%20Ubuntu-A81D33?style=for-the-badge&logo=debian&logoColor=white)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)&ensp;[![Fedora/RHEL](https://img.shields.io/badge/.rpm-Fedora%20%7C%20RHEL-EE0000?style=for-the-badge&logo=redhat&logoColor=white)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)
+
+<br/>
+
+[![Build & Release](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/actions/workflows/release.yml/badge.svg)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/actions/workflows/release.yml)&ensp;[![Version](https://img.shields.io/github/v/release/Georgian-Cartographers-Association/GCA-btc-field-app?label=ვერსია&color=brightgreen)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)&ensp;[![Downloads](https://img.shields.io/github/downloads/Georgian-Cartographers-Association/GCA-btc-field-app/total?label=ჩამოტვირთვები&color=blue)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases)&ensp;[![Flutter](https://img.shields.io/badge/Flutter-3.41.7-027DFD?logo=flutter&logoColor=white)](https://flutter.dev)&ensp;[![License: MIT](https://img.shields.io/badge/License-MIT-22863A)](LICENSE)
 
 </div>
 
@@ -40,25 +47,24 @@
 | **Linux** | `btk-linux-X.Y.Z.rpm` | Fedora / RHEL / openSUSE |
 | **Web** | — | **[btc.qgis.ge](https://btc.qgis.ge)** |
 
-SHA256 checksums: `checksums-android.txt`, `checksums-windows.txt`, `checksums-linux.txt`
+SHA256 checksums: `checksums-android.txt` · `checksums-windows.txt` · `checksums-linux.txt`
 
-### Android ინსტალაცია
+<details>
+<summary>ინსტალაციის ინსტრუქციები</summary>
 
-```
-Settings → Install unknown apps → ჩართეთ → APK გაუშვეთ
-```
+**Android** — `Settings → Install unknown apps → ჩართეთ → APK გაუშვეთ`
 
-### Linux (AppImage)
-
+**Linux (AppImage)**
 ```bash
 chmod +x btk-linux-*.AppImage && ./btk-linux-*.AppImage
 ```
 
-### Linux (Debian/Ubuntu)
-
+**Linux (Debian/Ubuntu)**
 ```bash
 sudo dpkg -i btk-linux-*.deb && sudo apt-get install -f
 ```
+
+</details>
 
 ---
 
