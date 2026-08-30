@@ -3,7 +3,7 @@
 [![Launch BTK Web](https://img.shields.io/badge/Launch-BTK%20Web-2D8653?logo=googlechrome&logoColor=white)](https://btc.qgis.ge)
 [![GCA GitHub](https://img.shields.io/badge/Georgian%20Cartographers%20Association-GitHub-181717?logo=github&logoColor=white)](https://github.com/Georgian-Cartographers-Association)
 [![Build & Release](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/actions/workflows/release.yml/badge.svg)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/actions/workflows/release.yml)
-[![Version](https://img.shields.io/github/v/release/Georgian-Cartographers-Association/GCA-btc-field-app?label=version)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)
+[![Version](https://img.shields.io/github/v/release/Georgian-Cartographers-Association/GCA-btc-field-app?label=version&color=brightgreen)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/Georgian-Cartographers-Association/GCA-btc-field-app/total?label=downloads&color=blue)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases)
 [![Android](https://img.shields.io/badge/Android-APK%20%7C%20AAB-3DDC84?logo=android&logoColor=white)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)
 [![Windows](https://img.shields.io/badge/Windows-Setup%20%7C%20Portable-0078D4?logo=windows&logoColor=white)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)
