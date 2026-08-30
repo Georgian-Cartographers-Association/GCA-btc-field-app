@@ -27,10 +27,6 @@ A joint project of Tbilisi State University and the **Georgian Cartographers Ass
 
 ## Screenshots
 
-> 📸 **სქრინშოტები მალე გამოჩნდება.** გამოაქვეყნეთ პრობლემა ან pull request `docs/screenshots/` დირექტორიაში.
-
-<!-- გთხოვთ, ჩაანაცვლოთ ქვემოთ მოცემული placeholder-ები რეალური სქრინშოტებით:
-
 <table>
   <tr>
     <td width="33%"><a href="docs/screenshots/records.png"><img src="docs/screenshots/records.png" alt="ჩანაწერების სია"></a></td>
@@ -53,7 +49,6 @@ A joint project of Tbilisi State University and the **Georgian Cartographers Ass
     <td align="center"><b>ექსპორტი</b></td>
   </tr>
 </table>
--->
 
 ## რა არის ბტკ?
 
@@ -225,22 +220,26 @@ lib/
 
 ## ციტირება · Citation
 
-თუ ამ პროგრამას კვლევაში იყენებთ, გთხოვთ, მიუთითოთ:
+<!-- Zenodo DOI badge — replace XXXXXXX with your Zenodo record ID after registration -->
+<!-- [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX) -->
 
-If you use this software in your research, please cite it:
+თუ ამ პროგრამას კვლევაში იყენებთ, გთხოვთ, მიუთითოთ. GitHub-ის **"Cite this repository"** ღილაკი ([`CITATION.cff`](CITATION.cff)) APA და BibTeX ფორმატებს ავტომატურად გასცემს.
+
+If you use this software in your research, please cite it. Use GitHub's **"Cite this repository"** button ([`CITATION.cff`](CITATION.cff)) for a ready-made APA or BibTeX entry.
 
 ```bibtex
-@software{btk_field_app,
-  author       = {Georgian Cartographers Association},
-  title        = {BTK Field App — ბტკ საველე აპლიკაცია},
-  year         = {2024--2026},
+@software{btk_field_app_2026,
+  author       = {{Georgian Cartographers Association}},
+  title        = {{BTK Field App} -- ბტკ საველე აპლიკაცია},
+  year         = {2026},
   publisher    = {GitHub},
-  institution  = {Tbilisi State University, Georgian Cartographers Association},
-  url          = {https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app}
+  institution  = {{Iv. Javakhishvili Tbilisi State University}},
+  url          = {https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app},
+  license      = {MIT}
 }
 ```
 
-> Georgian Cartographers Association. (2024–2026). *BTK Field App — ბტკ საველე აპლიკაცია* [Computer software]. Tbilisi State University. https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app
+> Georgian Cartographers Association. (2026). *BTK Field App — ბტკ საველე აპლიკაცია* [Computer software]. Iv. Javakhishvili Tbilisi State University. https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app
 
 ## მადლობა · Acknowledgements
 

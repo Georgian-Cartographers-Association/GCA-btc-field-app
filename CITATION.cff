@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "BTK Field App — ბტკ საველე აპლიკაცია"
+abstract: >
+  A free, open-source field survey platform for landscape natural-territorial complexes (NTC/BTC),
+  developed by the Georgian Cartographers Association and Tbilisi State University.
+  Runs on Android, Windows, Linux, and the web.
+authors:
+  - name: "Georgian Cartographers Association"
+    alias: "Georgian-Cartographers-Association"
+    website: "https://github.com/Georgian-Cartographers-Association"
+institution:
+  name: "Iv. Javakhishvili Tbilisi State University"
+  alias: "TSU"
+  country: GE
+license: MIT
+repository-code: "https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app"
+url: "https://btc.qgis.ge"
+keywords:
+  - landscape geography
+  - field survey
+  - GIS
+  - natural-territorial complex
+  - NTC
+  - BTC
+  - Flutter
+  - Georgia
+  - ლანდშაფტი
+  - ბტკ
+  - საველე კვლევა
