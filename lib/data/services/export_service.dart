@@ -416,8 +416,8 @@ class ExportService {
       final path = await FilePicker.platform.saveFile(
         dialogTitle: 'PDF შენახვა',
         fileName: filename,
-        type: FileType.custom,
-        allowedExtensions: ['pdf'],
+        type: isDesktop ? FileType.custom : FileType.any,
+        allowedExtensions: isDesktop ? ['pdf'] : null,
         bytes: isDesktop ? null : bytes,
       );
 
@@ -497,8 +497,8 @@ class ExportService {
       final path = await FilePicker.platform.saveFile(
         dialogTitle: 'ბტკ ჩანაწერების ექსპორტი',
         fileName: filename,
-        type: FileType.custom,
-        allowedExtensions: ['btk'],
+        type: isDesktop ? FileType.custom : FileType.any,
+        allowedExtensions: isDesktop ? ['btk'] : null,
         bytes: isDesktop ? null : Uint8List.fromList(bytes),
       );
       if (path == null) return;
@@ -657,8 +657,8 @@ class ExportService {
       final path = await FilePicker.platform.saveFile(
         dialogTitle: 'ბტკ ჩანაწერები + ფოტოები',
         fileName: filename,
-        type: FileType.custom,
-        allowedExtensions: ['btkz'],
+        type: isDesktop ? FileType.custom : FileType.any,
+        allowedExtensions: isDesktop ? ['btkz'] : null,
         bytes: isDesktop ? null : zipBytes,
       );
       if (path == null) return;
