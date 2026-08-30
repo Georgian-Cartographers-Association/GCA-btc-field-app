@@ -44,21 +44,43 @@ jobs:
       - name: Generate localizations
         run: flutter gen-l10n
 
-      - name: Build APK
-        run: flutter build apk --release
+      - name: Build APKs (split by ABI)
+        run: flutter build apk --split-per-abi --release
 
-      - name: Upload APK to Release
+      - name: Rename APKs
+        run: |
+          cd build/app/outputs/flutter-apk
+          cp app-arm64-v8a-release.apk    btk-android-arm64.apk
+          cp app-armeabi-v7a-release.apk  btk-android-arm32.apk
+          cp app-x86_64-release.apk       btk-android-x86_64.apk
+
+      - name: SHA256 checksums (Android)
+        run: |
+          cd build/app/outputs/flutter-apk
+          sha256sum btk-android-arm64.apk btk-android-arm32.apk btk-android-x86_64.apk \
+            > checksums-android.txt
+          cat checksums-android.txt
+
+      - name: Upload APKs to Release
         uses: softprops/action-gh-release@v2
         with:
-          files: build/app/outputs/flutter-apk/app-release.apk
           name: "BTC Field App ${{ github.ref_name }}"
+          files: |
+            build/app/outputs/flutter-apk/btk-android-arm64.apk
+            build/app/outputs/flutter-apk/btk-android-arm32.apk
+            build/app/outputs/flutter-apk/btk-android-x86_64.apk
+            build/app/outputs/flutter-apk/checksums-android.txt
           body: |
             ## ბტკ საველე აპლიკაცია ${{ github.ref_name }}
 
             ### Android
-            1. ჩამოტვირთეთ `app-release.apk`
-            2. Settings → Install unknown apps → ჩართეთ
-            3. APK გაუშვით
+            | ფაილი | არქიტექტურა |
+            |---|---|
+            | `btk-android-arm64.apk` | arm64-v8a — თანამედროვე ტელეფონები (რეკომენდირებული) |
+            | `btk-android-arm32.apk` | armeabi-v7a — ძველი ტელეფონები |
+            | `btk-android-x86_64.apk` | x86_64 — ემულატორები |
+
+            Settings → Install unknown apps → ჩართეთ
 
             ### Windows
             1. ჩამოტვირთეთ `btk-windows.zip`
@@ -73,6 +95,9 @@ jobs:
             ```bash
             sudo dnf install btk-linux-*.rpm
             ```
+
+            ### SHA256 Checksums
+            იხილეთ `checksums-android.txt`, `checksums-windows.txt`, `checksums-linux.txt`
 
             ### ცვლილებები
             ${{ github.event.head_commit.message }}
@@ -91,7 +116,7 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Enable Developer Mode (symlink support for Flutter plugins)
+      - name: Enable Developer Mode
         run: |
           reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /t REG_DWORD /f /v "AllowDevelopmentWithoutDevLicense" /d "1"
         shell: cmd
@@ -109,10 +134,18 @@ jobs:
         run: |
           Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath btk-windows.zip
 
+      - name: SHA256 checksum (Windows)
+        run: |
+          $hash = (Get-FileHash btk-windows.zip -Algorithm SHA256).Hash.ToLower()
+          "$hash  btk-windows.zip" | Out-File -Encoding utf8 checksums-windows.txt
+          Get-Content checksums-windows.txt
+
       - name: Upload Windows build to Release
         uses: softprops/action-gh-release@v2
         with:
-          files: btk-windows.zip
+          files: |
+            btk-windows.zip
+            checksums-windows.txt
 
   build-linux:
     runs-on: ubuntu-latest
@@ -168,27 +201,27 @@ jobs:
             > ${PKG}/usr/bin/btk-field-app
           chmod +x ${PKG}/usr/bin/btk-field-app
 
-          cat > ${PKG}/usr/share/applications/btk-field-app.desktop <<EOF
-          [Desktop Entry]
-          Name=BTK Field App
-          Comment=Georgian landscape field survey tool
-          Exec=/usr/bin/btk-field-app
-          Terminal=false
-          Type=Application
-          Categories=Science;Geography;
-          EOF
+          cat > ${PKG}/usr/share/applications/btk-field-app.desktop <<'DESKTOP'
+[Desktop Entry]
+Name=BTK Field App
+Comment=Georgian landscape field survey tool
+Exec=/usr/bin/btk-field-app
+Terminal=false
+Type=Application
+Categories=Science;Geography;
+DESKTOP
 
-          cat > ${PKG}/DEBIAN/control <<EOF
-          Package: btk-field-app
-          Version: ${V}
-          Section: science
-          Priority: optional
-          Architecture: amd64
-          Depends: libgtk-3-0, libblkid1, liblzma5, libsecret-1-0
-          Maintainer: Georgian Cartographers Association <info@gca.ge>
-          Description: BTK Field App
-           Georgian landscape field survey tool.
-          EOF
+          cat > ${PKG}/DEBIAN/control <<CONTROL
+Package: btk-field-app
+Version: ${V}
+Section: science
+Priority: optional
+Architecture: amd64
+Depends: libgtk-3-0, libblkid1, liblzma5, libsecret-1-0
+Maintainer: Georgian Cartographers Association <info@gca.ge>
+Description: BTK Field App
+ Georgian landscape field survey tool.
+CONTROL
 
           dpkg-deb --build ${PKG}
           mv ${PKG}.deb btk-linux-${V}.deb
@@ -197,8 +230,14 @@ jobs:
         run: |
           V=${{ steps.ver.outputs.VERSION }}
           sudo alien --rpm btk-linux-${V}.deb
-          mv btk-field-app-*.x86_64.rpm btk-linux-${V}.rpm || \
+          mv btk-field-app-*.x86_64.rpm btk-linux-${V}.rpm 2>/dev/null || \
           mv btk-field-app_*.x86_64.rpm btk-linux-${V}.rpm
+
+      - name: SHA256 checksums (Linux)
+        run: |
+          V=${{ steps.ver.outputs.VERSION }}
+          sha256sum btk-linux-${V}.deb btk-linux-${V}.rpm > checksums-linux.txt
+          cat checksums-linux.txt
 
       - name: Upload Linux builds to Release
         uses: softprops/action-gh-release@v2
@@ -206,18 +245,4 @@ jobs:
           files: |
             btk-linux-*.deb
             btk-linux-*.rpm
-          body: |
-            ### Linux ინსტალაცია
-
-            **Debian/Ubuntu (.deb):**
-            ```bash
-            sudo dpkg -i btk-linux-VERSION.deb
-            sudo apt-get install -f   # dependencies
-            ```
-
-            **Fedora/RHEL (.rpm):**
-            ```bash
-            sudo rpm -i btk-linux-VERSION.rpm
-            # ან
-            sudo dnf install btk-linux-VERSION.rpm
-            ```
+            checksums-linux.txt
