@@ -287,12 +287,12 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
           : AppBar(
               title: const Text('შენახული ჩანაწერები'),
               actions: [
-                if (all.isNotEmpty) ...[
-                  IconButton(
-                    icon: const Icon(Icons.upload_file_outlined),
-                    tooltip: 'იმპორტი',
-                    onPressed: _importAny,
-                  ),
+                IconButton(
+                  icon: const Icon(Icons.upload_file_outlined),
+                  tooltip: 'იმპორტი',
+                  onPressed: _importAny,
+                ),
+                if (all.isNotEmpty)
                   PopupMenuButton<String>(
                     icon: const Icon(Icons.file_download_outlined),
                     tooltip: 'ექსპორტი',
@@ -350,7 +350,6 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
                       ),
                     ],
                   ),
-                ],
               ],
               bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(56),

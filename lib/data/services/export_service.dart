@@ -519,9 +519,12 @@ class ExportService {
 
   /// Picks a .btk file and parses it. Returns null if user cancels.
   static Future<List<BtkRecord>?> parseBtkFile() async {
+    // Android doesn't support custom MIME-less extensions via FileType.custom
+    final isDesktop = !kIsWeb &&
+        (Platform.isWindows || Platform.isLinux || Platform.isMacOS);
     final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['btk', 'json'],
+      type: isDesktop ? FileType.custom : FileType.any,
+      allowedExtensions: isDesktop ? ['btk', 'json'] : null,
       withData: true,
     );
     if (result == null || result.files.isEmpty) return null;
@@ -678,9 +681,11 @@ class ExportService {
 
   /// Returns null if user cancels.
   static Future<({List<BtkRecord> records, int photoCount})?> parseBtkzFile() async {
+    final isDesktop = !kIsWeb &&
+        (Platform.isWindows || Platform.isLinux || Platform.isMacOS);
     final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['btkz'],
+      type: isDesktop ? FileType.custom : FileType.any,
+      allowedExtensions: isDesktop ? ['btkz'] : null,
       withData: true,
     );
     if (result == null || result.files.isEmpty) return null;
