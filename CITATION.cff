@@ -16,6 +16,7 @@ authors:
     orcid: "https://orcid.org/0009-0006-4193-5939"
 version: "1.20.1"
 date-released: "2026-08-30"
+doi: "10.5281/zenodo.22171694"
 license: MIT
 repository-code: "https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app"
 url: "https://btc.qgis.ge"

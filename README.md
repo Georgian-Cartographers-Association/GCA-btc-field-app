@@ -12,6 +12,7 @@
 [![Fedora/RHEL](https://img.shields.io/badge/.rpm-Fedora%20%7C%20RHEL-EE0000?logo=redhat&logoColor=white)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)
 [![Flutter](https://img.shields.io/badge/Flutter-3.41.7-027DFD?logo=flutter&logoColor=white)](https://flutter.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-22863A)](LICENSE)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22171694.svg)](https://doi.org/10.5281/zenodo.22171694)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Georgian-Cartographers-Association/GCA-btc-field-app)
 
 თბილისის სახელმწიფო უნივერსიტეტისა და **[საქართველოს კარტოგრაფთა ასოციაციის](https://github.com/Georgian-Cartographers-Association)** ერთობლივი პროექტი — **ბუნებრივ-ტერიტორიული კომპლექსების (ბტკ) ველური კვლევის ღია კოდის პლატფორმა.** მუშაობს ვებ-ბრაუზერში, Android ტელეფონზე, Windows-სა და Linux-ზე — მონაცემები ადგილობრივ მოწყობილობაზე რჩება.
@@ -220,8 +221,7 @@ lib/
 
 ## ციტირება · Citation
 
-<!-- Zenodo DOI badge — replace XXXXXXX with your Zenodo record ID after registration -->
-<!-- [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX) -->
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22171694.svg)](https://doi.org/10.5281/zenodo.22171694)
 
 **ავტორი · Author:** გიორგი კაპანაძე / Giorgi Kapanadze  
 **აფილიაცია · Affiliation:** ასოცირებული პროფესორი, Business and Technology University (BTU)  
@@ -238,15 +238,15 @@ If you use this software, please cite it. Use GitHub's **"Cite this repository"*
   author       = {Kapanadze, Giorgi},
   title        = {{BTK Field App} -- ბტკ საველე აპლიკაცია},
   year         = {2026},
-  publisher    = {GitHub},
+  publisher    = {Zenodo},
   institution  = {{Business and Technology University (BTU)}},
   note         = {Member, Georgian Cartographers Association},
-  url          = {https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app},
-  license      = {MIT}
+  doi          = {10.5281/zenodo.22171694},
+  url          = {https://doi.org/10.5281/zenodo.22171694}
 }
 ```
 
-> Kapanadze, G. (2026). *BTK Field App — ბტკ საველე აპლიკაცია* [Computer software]. Business and Technology University (BTU); Georgian Cartographers Association. https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app
+> Kapanadze, G. (2026). *BTK Field App — ბტკ საველე აპლიკაცია* [Computer software]. Business and Technology University (BTU); Georgian Cartographers Association. https://doi.org/10.5281/zenodo.22171694
 
 ## მადლობა · Acknowledgements
 
