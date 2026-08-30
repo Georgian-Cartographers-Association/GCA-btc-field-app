@@ -714,10 +714,10 @@ class ExportService {
     final pFile = archive.findFile('photos.json');
     if (pFile != null && !kIsWeb) {
       final meta = jsonDecode(utf8.decode(pFile.content as List<int>)) as List;
-      final dir = Platform.isIOS
-          ? await getApplicationDocumentsDirectory()
-          : (await getExternalStorageDirectory() ??
-              await getApplicationDocumentsDirectory());
+      final dir = Platform.isAndroid
+          ? (await getExternalStorageDirectory() ??
+              await getApplicationDocumentsDirectory())
+          : await getApplicationDocumentsDirectory();
       for (final m in meta) {
         final arcPath = m['archive_path'] as String;
         final photoFile = archive.findFile(arcPath);
