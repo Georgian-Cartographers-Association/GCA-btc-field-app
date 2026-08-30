@@ -83,8 +83,10 @@ jobs:
             Settings → Install unknown apps → ჩართეთ
 
             ### Windows
-            1. ჩამოტვირთეთ `btk-windows.zip`
-            2. გახსენით zip და გაუშვით `btk_field_app.exe`
+            | ფაილი | |
+            |---|---|
+            | `btk-windows-setup-X.Y.Z.exe` | ინსტალერი — Start Menu, Programs & Features (რეკომენდირებული) |
+            | `btk-windows.zip` | Portable — გახსენით zip და გაუშვით `btk_field_app.exe` |
 
             ### Linux
             | ფაილი | გამოყენება |
@@ -138,14 +140,26 @@ jobs:
       - name: Build Windows
         run: flutter build windows --release
 
-      - name: Zip Windows build
+      - name: Zip Windows build (portable)
         run: |
           Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath btk-windows.zip
 
-      - name: SHA256 checksum (Windows)
+      - name: Build Windows installer (Inno Setup)
         run: |
-          $hash = (Get-FileHash btk-windows.zip -Algorithm SHA256).Hash.ToLower()
-          "$hash  btk-windows.zip" | Out-File -Encoding utf8 checksums-windows.txt
+          $ver = (Select-String '^version:' pubspec.yaml).Line.Split(' ')[1].Split('+')[0]
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" /DAppVersion=$ver windows\installer\btk-setup.iss
+
+      - name: Rename installer
+        run: |
+          $ver = (Select-String '^version:' pubspec.yaml).Line.Split(' ')[1].Split('+')[0]
+          Rename-Item btk-windows-setup.exe "btk-windows-setup-$ver.exe"
+
+      - name: SHA256 checksums (Windows)
+        run: |
+          $ver = (Select-String '^version:' pubspec.yaml).Line.Split(' ')[1].Split('+')[0]
+          $h1 = (Get-FileHash btk-windows.zip -Algorithm SHA256).Hash.ToLower()
+          $h2 = (Get-FileHash "btk-windows-setup-$ver.exe" -Algorithm SHA256).Hash.ToLower()
+          "$h1  btk-windows.zip`n$h2  btk-windows-setup-$ver.exe" | Out-File -Encoding utf8 checksums-windows.txt
           Get-Content checksums-windows.txt
 
       - name: Upload Windows build to Release
@@ -153,6 +167,7 @@ jobs:
         with:
           files: |
             btk-windows.zip
+            btk-windows-setup-*.exe
             checksums-windows.txt
 
   build-linux:
