@@ -228,27 +228,11 @@ jobs:
             > ${PKG}/usr/bin/btk-field-app
           chmod +x ${PKG}/usr/bin/btk-field-app
 
-          cat > ${PKG}/usr/share/applications/btk-field-app.desktop <<'DESKTOP'
-[Desktop Entry]
-Name=BTK Field App
-Comment=Georgian landscape field survey tool
-Exec=/usr/bin/btk-field-app
-Terminal=false
-Type=Application
-Categories=Science;Geography;
-DESKTOP
+          cp linux/packaging/btk-field-app.desktop \
+            ${PKG}/usr/share/applications/btk-field-app.desktop
 
-          cat > ${PKG}/DEBIAN/control <<CONTROL
-Package: btk-field-app
-Version: ${V}
-Section: science
-Priority: optional
-Architecture: amd64
-Depends: libgtk-3-0, libblkid1, liblzma5, libsecret-1-0
-Maintainer: Georgian Cartographers Association <info@gca.ge>
-Description: BTK Field App
- Georgian landscape field survey tool.
-CONTROL
+          sed "s/__VERSION__/${V}/g" linux/packaging/control.template \
+            > ${PKG}/DEBIAN/control
 
           dpkg-deb --build ${PKG}
           mv ${PKG}.deb btk-linux-${V}.deb
@@ -273,26 +257,13 @@ CONTROL
 
           cp -r build/linux/x64/release/bundle/. ${APPDIR}/usr/lib/btk-field-app/
 
-          cat > ${APPDIR}/AppRun <<'APPRUN'
-#!/bin/bash
-HERE="$(dirname "$(readlink -f "${0}")")"
-exec "${HERE}/usr/lib/btk-field-app/btk_field_app" "$@"
-APPRUN
+          cp linux/packaging/AppRun ${APPDIR}/AppRun
           chmod +x ${APPDIR}/AppRun
 
-          cat > ${APPDIR}/btk-field-app.desktop <<'DESKTOP'
-[Desktop Entry]
-Name=BTK Field App
-Comment=Georgian landscape field survey tool
-Exec=btk-field-app
-Icon=btk-field-app
-Terminal=false
-Type=Application
-Categories=Science;Geography;
-DESKTOP
+          cp linux/packaging/appimage.desktop ${APPDIR}/btk-field-app.desktop
 
           cp android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png \
-             ${APPDIR}/btk-field-app.png
+            ${APPDIR}/btk-field-app.png
 
           ARCH=x86_64 ./appimagetool-x86_64.AppImage \
             --appimage-extract-and-run \

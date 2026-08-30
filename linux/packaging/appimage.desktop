@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=BTK Field App
+Comment=Georgian landscape field survey tool
+Exec=btk-field-app
+Icon=btk-field-app
+Terminal=false
+Type=Application
+Categories=Science;Geography;

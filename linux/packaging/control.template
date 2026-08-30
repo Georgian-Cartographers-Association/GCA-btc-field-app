@@ -1,0 +1,9 @@
+Package: btk-field-app
+Version: __VERSION__
+Section: science
+Priority: optional
+Architecture: amd64
+Depends: libgtk-3-0, libblkid1, liblzma5, libsecret-1-0
+Maintainer: Giorgi Kapanadze <kapan.gio777@gmail.com>
+Description: BTK Field App
+ Georgian landscape field survey tool for natural-territorial complexes.
