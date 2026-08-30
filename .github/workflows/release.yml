@@ -86,13 +86,21 @@ jobs:
             1. ჩამოტვირთეთ `btk-windows.zip`
             2. გახსენით zip და გაუშვით `btk_field_app.exe`
 
-            ### Linux — Debian/Ubuntu
-            ```bash
-            sudo dpkg -i btk-linux-*.deb && sudo apt-get install -f
-            ```
+            ### Linux
+            | ფაილი | გამოყენება |
+            |---|---|
+            | `btk-linux-X.Y.Z.AppImage` | ნებისმიერი distro — chmod +x და გაუშვით |
+            | `btk-linux-X.Y.Z.deb` | Debian / Ubuntu |
+            | `btk-linux-X.Y.Z.rpm` | Fedora / RHEL / openSUSE |
 
-            ### Linux — Fedora/RHEL
             ```bash
+            # AppImage (universalური)
+            chmod +x btk-linux-*.AppImage && ./btk-linux-*.AppImage
+
+            # Debian/Ubuntu
+            sudo dpkg -i btk-linux-*.deb && sudo apt-get install -f
+
+            # Fedora/RHEL
             sudo dnf install btk-linux-*.rpm
             ```
 
@@ -233,10 +241,49 @@ CONTROL
           mv btk-field-app-*.x86_64.rpm btk-linux-${V}.rpm 2>/dev/null || \
           mv btk-field-app_*.x86_64.rpm btk-linux-${V}.rpm
 
+      - name: Download appimagetool
+        run: |
+          wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool-x86_64.AppImage
+
+      - name: Package AppImage
+        run: |
+          V=${{ steps.ver.outputs.VERSION }}
+          APPDIR=BTKFieldApp.AppDir
+          mkdir -p ${APPDIR}/usr/lib/btk-field-app
+
+          cp -r build/linux/x64/release/bundle/. ${APPDIR}/usr/lib/btk-field-app/
+
+          cat > ${APPDIR}/AppRun <<'APPRUN'
+#!/bin/bash
+HERE="$(dirname "$(readlink -f "${0}")")"
+exec "${HERE}/usr/lib/btk-field-app/btk_field_app" "$@"
+APPRUN
+          chmod +x ${APPDIR}/AppRun
+
+          cat > ${APPDIR}/btk-field-app.desktop <<'DESKTOP'
+[Desktop Entry]
+Name=BTK Field App
+Comment=Georgian landscape field survey tool
+Exec=btk-field-app
+Icon=btk-field-app
+Terminal=false
+Type=Application
+Categories=Science;Geography;
+DESKTOP
+
+          cp android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png \
+             ${APPDIR}/btk-field-app.png
+
+          ARCH=x86_64 ./appimagetool-x86_64.AppImage \
+            --appimage-extract-and-run \
+            ${APPDIR} btk-linux-${V}.AppImage
+
       - name: SHA256 checksums (Linux)
         run: |
           V=${{ steps.ver.outputs.VERSION }}
-          sha256sum btk-linux-${V}.deb btk-linux-${V}.rpm > checksums-linux.txt
+          sha256sum btk-linux-${V}.deb btk-linux-${V}.rpm btk-linux-${V}.AppImage \
+            > checksums-linux.txt
           cat checksums-linux.txt
 
       - name: Upload Linux builds to Release
@@ -245,4 +292,5 @@ CONTROL
           files: |
             btk-linux-*.deb
             btk-linux-*.rpm
+            btk-linux-*.AppImage
             checksums-linux.txt
