@@ -223,23 +223,30 @@ lib/
 <!-- Zenodo DOI badge — replace XXXXXXX with your Zenodo record ID after registration -->
 <!-- [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX) -->
 
+**ავტორი · Author:** გიორგი კაპანაძე / Giorgi Kapanadze  
+**აფილიაცია · Affiliation:** ასოცირებული პროფესორი, Business and Technology University (BTU)  
+**ორგანიზაცია · Organization:** [საქართველოს კარტოგრაფთა ასოციაცია / Georgian Cartographers Association](https://github.com/Georgian-Cartographers-Association)
+
+პროგრამა შექმნილია სტუდენტებისთვის — ლანდშაფტური გეოგრაფიის საველე კვლევების სასწავლო და სამეცნიერო პრაქტიკისათვის.
+
 თუ ამ პროგრამას კვლევაში იყენებთ, გთხოვთ, მიუთითოთ. GitHub-ის **"Cite this repository"** ღილაკი ([`CITATION.cff`](CITATION.cff)) APA და BibTeX ფორმატებს ავტომატურად გასცემს.
 
-If you use this software in your research, please cite it. Use GitHub's **"Cite this repository"** button ([`CITATION.cff`](CITATION.cff)) for a ready-made APA or BibTeX entry.
+If you use this software, please cite it. Use GitHub's **"Cite this repository"** button ([`CITATION.cff`](CITATION.cff)) for a ready-made APA or BibTeX entry.
 
 ```bibtex
-@software{btk_field_app_2026,
-  author       = {{Georgian Cartographers Association}},
+@software{kapanadze_btk_2026,
+  author       = {Kapanadze, Giorgi},
   title        = {{BTK Field App} -- ბტკ საველე აპლიკაცია},
   year         = {2026},
   publisher    = {GitHub},
-  institution  = {{Iv. Javakhishvili Tbilisi State University}},
+  institution  = {{Business and Technology University (BTU)}},
+  note         = {Member, Georgian Cartographers Association},
   url          = {https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app},
   license      = {MIT}
 }
 ```
 
-> Georgian Cartographers Association. (2026). *BTK Field App — ბტკ საველე აპლიკაცია* [Computer software]. Iv. Javakhishvili Tbilisi State University. https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app
+> Kapanadze, G. (2026). *BTK Field App — ბტკ საველე აპლიკაცია* [Computer software]. Business and Technology University (BTU); Georgian Cartographers Association. https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app
 
 ## მადლობა · Acknowledgements
 
