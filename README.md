@@ -1,36 +1,66 @@
 # ბტკ საველე აპლიკაცია · BTK Field App
 
-<div align="center">
+[![Launch BTK Web](https://img.shields.io/badge/Launch-BTK%20Web-2D8653?logo=googlechrome&logoColor=white)](https://btc.qgis.ge)
+[![GCA GitHub](https://img.shields.io/badge/Georgian%20Cartographers%20Association-GitHub-181717?logo=github&logoColor=white)](https://github.com/Georgian-Cartographers-Association)
+[![Build & Release](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/actions/workflows/release.yml/badge.svg)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/actions/workflows/release.yml)
+[![Version](https://img.shields.io/github/v/release/Georgian-Cartographers-Association/GCA-btc-field-app?label=version)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/Georgian-Cartographers-Association/GCA-btc-field-app/total?label=downloads&color=blue)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases)
+[![Android](https://img.shields.io/badge/Android-APK%20%7C%20AAB-3DDC84?logo=android&logoColor=white)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)
+[![Windows](https://img.shields.io/badge/Windows-Setup%20%7C%20Portable-0078D4?logo=windows&logoColor=white)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)
+[![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?logo=linux&logoColor=black)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)
+[![Debian/Ubuntu](https://img.shields.io/badge/.deb-Debian%20%7C%20Ubuntu-A81D33?logo=debian&logoColor=white)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)
+[![Fedora/RHEL](https://img.shields.io/badge/.rpm-Fedora%20%7C%20RHEL-EE0000?logo=redhat&logoColor=white)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)
+[![Flutter](https://img.shields.io/badge/Flutter-3.41.7-027DFD?logo=flutter&logoColor=white)](https://flutter.dev)
+[![License: MIT](https://img.shields.io/badge/License-MIT-22863A)](LICENSE)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Georgian-Cartographers-Association/GCA-btc-field-app)
 
-**ივანე ჯავახიშვილის სახ. თბილისის სახელმწიფო უნივერსიტეტი**  
-**ალ. ასლანიკაშვილის სახ. საქართველოს კარტოგრაფთა ასოციაცია**
+თბილისის სახელმწიფო უნივერსიტეტისა და **[საქართველოს კარტოგრაფთა ასოციაციის](https://github.com/Georgian-Cartographers-Association)** ერთობლივი პროექტი — **ბუნებრივ-ტერიტორიული კომპლექსების (ბტკ) ველური კვლევის ღია კოდის პლატფორმა.** მუშაობს ვებ-ბრაუზერში, Android ტელეფონზე, Windows-სა და Linux-ზე — მონაცემები ადგილობრივ მოწყობილობაზე რჩება.
 
-[![ვებ აპლიკაცია](https://img.shields.io/badge/▶_ვებ_აპლიკაცია-btc.qgis.ge-0066CC?style=flat-square&logo=googlechrome&logoColor=white)](https://btc.qgis.ge)&ensp;[![GitHub](https://img.shields.io/badge/GitHub-Georgian--Cartographers--Association-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app)&ensp;[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Georgian-Cartographers-Association/GCA-btc-field-app)
+A joint project of Tbilisi State University and the **Georgian Cartographers Association** — a free, open-source field survey platform for **landscape natural-territorial complexes (NTC/BTC)**. Runs on the web, Android, Windows, and Linux, with your data staying local.
 
-<br/>
+- **[Launch BTK Web](https://btc.qgis.ge)** — სრული აპლიკაცია ბრაუზერში, ინსტალაცია არ სჭირდება
+- **[Download the app](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)** — Android APK, Windows Setup/Portable, Linux AppImage/.deb/.rpm
+- **[ბტკ ბლანკი](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)** — 6-სექციანი ფიზიკურ-გეოგრაფიული ბლანკი GPS-ით, ფოტოებით, ტრეკით
+- **[Import / Export](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)** — .btk, .btkz (ფოტო+GPS), PDF, KML, GeoJSON, CSV, GPX
+- **[სტატისტიკა](https://btc.qgis.ge)** — dashboard: ჩანაწერების ანალიზი, bar charts, mini-map
+- **[GPS ტრეკი](https://btc.qgis.ge)** — ჩაწერა → GPX ექსპორტი → .btkz-ში ავტოჩართვა
 
-[![Android arm64](https://img.shields.io/badge/Android-arm64-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)&ensp;[![Android arm32](https://img.shields.io/badge/Android-arm32-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)&ensp;[![Android x86_64](https://img.shields.io/badge/Android-x86__64-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)
+## Screenshots
 
-[![Windows Setup](https://img.shields.io/badge/Windows-Setup_Installer-0078D4?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)&ensp;[![Windows Portable](https://img.shields.io/badge/Windows-Portable_ZIP-0078D4?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)
+> 📸 **სქრინშოტები მალე გამოჩნდება.** გამოაქვეყნეთ პრობლემა ან pull request `docs/screenshots/` დირექტორიაში.
 
-[![Linux AppImage](https://img.shields.io/badge/Linux-AppImage-FCC624?style=for-the-badge&logo=linux&logoColor=black)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)&ensp;[![Debian/Ubuntu](https://img.shields.io/badge/.deb-Debian%20%7C%20Ubuntu-A81D33?style=for-the-badge&logo=debian&logoColor=white)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)&ensp;[![Fedora/RHEL](https://img.shields.io/badge/.rpm-Fedora%20%7C%20RHEL-EE0000?style=for-the-badge&logo=redhat&logoColor=white)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)
+<!-- გთხოვთ, ჩაანაცვლოთ ქვემოთ მოცემული placeholder-ები რეალური სქრინშოტებით:
 
-<br/>
-
-[![Build & Release](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/actions/workflows/release.yml/badge.svg)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/actions/workflows/release.yml)&ensp;[![Version](https://img.shields.io/github/v/release/Georgian-Cartographers-Association/GCA-btc-field-app?label=ვერსია&color=brightgreen)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)&ensp;[![Downloads](https://img.shields.io/github/downloads/Georgian-Cartographers-Association/GCA-btc-field-app/total?label=ჩამოტვირთვები&color=blue)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases)&ensp;[![Flutter](https://img.shields.io/badge/Flutter-3.41.7-027DFD?logo=flutter&logoColor=white)](https://flutter.dev)&ensp;[![License: MIT](https://img.shields.io/badge/License-MIT-22863A)](LICENSE)
-
-</div>
-
----
+<table>
+  <tr>
+    <td width="33%"><a href="docs/screenshots/records.png"><img src="docs/screenshots/records.png" alt="ჩანაწერების სია"></a></td>
+    <td width="33%"><a href="docs/screenshots/form.png"><img src="docs/screenshots/form.png" alt="ბტკ ბლანკი"></a></td>
+    <td width="33%"><a href="docs/screenshots/map.png"><img src="docs/screenshots/map.png" alt="რუქა"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><b>ჩანაწერები</b></td>
+    <td align="center"><b>ბტკ ბლანკი</b></td>
+    <td align="center"><b>რუქა</b></td>
+  </tr>
+  <tr>
+    <td width="33%"><a href="docs/screenshots/stats.png"><img src="docs/screenshots/stats.png" alt="სტატისტიკა"></a></td>
+    <td width="33%"><a href="docs/screenshots/gps.png"><img src="docs/screenshots/gps.png" alt="GPS ტრეკი"></a></td>
+    <td width="33%"><a href="docs/screenshots/export.png"><img src="docs/screenshots/export.png" alt="ექსპორტი"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><b>სტატისტიკა</b></td>
+    <td align="center"><b>GPS ტრეკი</b></td>
+    <td align="center"><b>ექსპორტი</b></td>
+  </tr>
+</table>
+-->
 
 ## რა არის ბტკ?
 
-> **ბტკ = ბუნებრივ-ტერიტორიული კომპლექსი**  
+> **ბტკ = ბუნებრივ-ტერიტორიული კომპლექსი**
 > ლანდშაფტური გეოგრაფიის ფუნდამენტური სტრუქტურული ერთეული — ტერიტორიის ის ნაწილი, სადაც **რელიეფი, ნიადაგი, მცენარეულობა, ჰიდროლოგია და მიკროკლიმატი** ერთიან, ურთიერთდაკავშირებულ სისტემას ქმნიან.
 
-ეს აპლიკაცია გამიზნულია **პირდაპირ ველში** ბტკ-ების კომპონენტების აღწერისა და გაზომვებისთვის.
-
----
+ეს აპლიკაცია გამიზნულია **პირდაპირ ველში** ბტკ-ების კომპონენტების აღწერისა და გაზომვებისთვის, ნ. ბერუჩაშვილის **ლანდშაფტურ-გეოფიზიკური კვლევის** მეთოდიკის მიხედვით.
 
 ## ჩამოტვირთვა
 
@@ -66,74 +96,60 @@ sudo dpkg -i btk-linux-*.deb && sudo apt-get install -f
 
 </details>
 
----
-
 ## ფუნქციები
 
-### ბტკ ბლანკი (6 სექცია)
+### ბტკ ბლანკი — 6 სექცია
 
-| # | სექცია | შიგთავსი |
+| # | სექცია | ველები |
 |---|---|---|
 | 1 | **ძირითადი** | ID, სახელი, თარიღი, GPS კოორდინატები, ლოკაცია |
 | 2 | **ფიზ.-გეოგ.** | გეოლ. ფორმაცია, რელიეფი, მორფ. დახასიათება, მიგრ. რეჟიმი, ტენიანობა |
 | 3 | **მცენარეულობა** | ვ.სტრუქტ. ტიპი/ინდ., იარუსები, სახეობები, სიმ./სიმძლ./ფენოფაზა |
 | 4 | **ნიადაგი** | ტიპი, ჰორიზონტები, გეოჰ. ინდ., ზ.ფენ. ფორმ. + ფოტოები |
-| 5 | **გეომასა** | სექციები — პედო/ლითო/ჰიდრო/ფიტომასა |
+| 5 | **გეომასა** | სექციები — პედო / ლითო / ჰიდრო / ფიტომასა |
 | 6 | **ვ.სტრუქტურა** | ტიპი, ინდ., სიმ., აღწ. + ფოტოები |
 
-### 🗺️ რუქა
+### ექსპორტი და იმპორტი
 
-- **OpenStreetMap** + **OpenTopoMap** — tile overlay-ები
-- ლოკალური **რასტრული რუქები** (ნიადაგი, ლანდშაფტი, რელიეფი) — Bounding Box + გამჭვირვალობა
-- საქართველოს ადმინ. საზღვრები (GeoJSON)
-- მეზობელი ქვეყნების შრეები
-- ზომის გამზომი ინსტრუმენტი
-
-### 📡 GPS ტრეკი
-
-- ტრეკის ჩაწერა ველში (ფონური)
-- ჩაწერილი ტრეკების ისტორია
-- GPX ექსპორტი
-- **ტრეკი ავტომატურად .btkz-ში შედის** — ჩანაწერების მიმდებარე დღის ტრეკები
-
-### 📤 ექსპორტი & იმპორტი
-
-| ფორმატი | | |
+| ფორმატი | შიგთავსი | |
 |---|---|---|
-| **.btk** | JSON — ჩანაწერების სრული მონაცემები | import ✓ / export ✓ |
-| **.btkz** | ZIP — ჩანაწერები + ფოტოები + GPS ტრეკები | import ✓ / export ✓ |
-| **PDF** | A4, ქართული ფონტი, ფოტოები | export / share |
-| **KML** | Google Earth / QGIS | export / share |
-| **GeoJSON** | QGIS / MapBox | export / share |
-| **CSV** | Excel / Google Sheets (5 კოორდ. ფორმატი) | export / share |
-| **GPX** | GPS ტრეკი | export / share |
+| **.btk** | JSON — ჩანაწერების სრული მონაცემები | import ✓ · export ✓ |
+| **.btkz** | ZIP — ჩანაწერები + ფოტოები + GPS ტრეკები | import ✓ · export ✓ |
+| **PDF** | A4, ქართული ფონტი (Noto Sans Georgian), ფოტოები | export · share |
+| **KML** | Google Earth / QGIS / ArcGIS | export · share |
+| **GeoJSON** | QGIS / Mapbox / Leaflet | export · share |
+| **CSV** | Excel / Sheets — 5 კოორდინატთა ფორმატი | export · share |
+| **GPX** | GPS ტრეკი — Garmin / OsmAnd / Strava | export · share |
 
-**ყველა ფორმატი მუშაობს Android, Windows და Linux-ზე.**
+ყველა ფორმატი **Android, Windows და Linux**-ზე სრულად მუშაობს.
 
-### 📊 სტატისტიკა
+### რუქა და GPS
 
-- ჩანაწერების სულ / GPS / GPS-გარეშე
-- ბოლო 6 თვის bar chart
-- გეოლ. ფორმ. / რელიეფ. ტიპ. / ნიადაგ. სიხშირე
-- Mini-map — ყველა ჩანაწერი FlutterMap-ზე
+- **OpenStreetMap** + **OpenTopoMap** tile overlay-ები
+- ლოკალური **რასტრული რუქები** — Bounding Box + გამჭვირვალობა (ნიადაგი, ლანდშაფტი, რელიეფი)
+- საქართველოს ადმინ. საზღვრები (GeoJSON) — რეგიონები, მუნიციპალიტეტები
+- **GPS ტრეკის ჩაწერა** — ფონური, ტრეკის ისტორია, GPX ექსპორტი
+- ტრეკი **ავტომატურად .btkz-ში** — ჩანაწერების მიმდებარე დღის ტრეკები
 
-### 📱 UX
+### UX
 
-- **Long-press → multi-select** — batch export / PDF / წაშლა
-- **Record duplication** — "(ასლი)" სუფიქსით
-- **Discard dialog** — unsaved changes გაფრთხილება
-- **Auto-update banner** — GitHub Releases-ს ამოწმებს, ახალი ვერსია → notification
-- ღია / მუქი ფონი · ქართული / English
+| ფუნქცია | |
+|---|---|
+| Long-press → multi-select | batch export / batch PDF / batch წაშლა |
+| Record duplication | "(ასლი)" სუფიქსით |
+| Discard dialog | unsaved changes გაფრთხილება |
+| Auto-update banner | GitHub Releases-ს ამოწმებს, ახალი ვერსია → notification |
+| სტატისტიკა / Dashboard | bar chart, სიხშირე, mini-map |
+| ღია / მუქი ფონი | Material 3 theming |
+| ქართული / English | სრული ბილინგვალური UI |
 
-### ☁️ შენახვის რეჟიმები
+### შენახვის რეჟიმები
 
 | რეჟიმი | |
 |---|---|
-| **Local** | SQLite — მოწყობილობაზე |
+| **Local** | SQLite — მოწყობილობაზე, ინტერნეტი არ სჭირდება |
 | **Cloud** | Firebase Firestore — real-time sync |
 | **Expedition** | გუნდური — საექსპედიციო ID-ით |
-
----
 
 ## Development
 
@@ -142,16 +158,14 @@ git clone https://github.com/Georgian-Cartographers-Association/GCA-btc-field-ap
 cd GCA-btc-field-app
 flutter pub get
 flutter gen-l10n
-flutter run                           # OS auto-detect
-flutter run -d windows                # Windows desktop
-flutter build apk --split-per-abi --release   # Android APKs
-flutter build appbundle --release             # AAB (Play Store)
-flutter build windows --release               # Windows
-flutter build linux --release                 # Linux
-flutter build web --release                   # Web
+flutter run                                        # OS auto-detect
+flutter run -d windows                             # Windows desktop
+flutter build apk --split-per-abi --release        # Android APKs (arm64, arm32, x86_64)
+flutter build appbundle --release                  # AAB (Google Play)
+flutter build windows --release                    # Windows
+flutter build linux --release                      # Linux
+flutter build web --release                        # Web
 ```
-
----
 
 ## CI/CD
 
@@ -162,11 +176,8 @@ flutter build web --release                   # Web
 | `build-linux` | `git tag v*` | AppImage + .deb + .rpm + SHA256 |
 
 ```bash
-# Release
 git tag v1.20.0 && git push origin v1.20.0
 ```
-
----
 
 ## არქიტექტურა
 
@@ -193,8 +204,6 @@ lib/
     └── pdf/                         # Methodology PDF viewer (164 გვ.)
 ```
 
----
-
 ## Tech Stack
 
 | Package | |
@@ -214,7 +223,28 @@ lib/
 | `go_router` | Navigation |
 | `flex_color_scheme` | Material 3 theming |
 
----
+## ციტირება · Citation
+
+თუ ამ პროგრამას კვლევაში იყენებთ, გთხოვთ, მიუთითოთ:
+
+If you use this software in your research, please cite it:
+
+```bibtex
+@software{btk_field_app,
+  author       = {Georgian Cartographers Association},
+  title        = {BTK Field App — ბტკ საველე აპლიკაცია},
+  year         = {2024--2026},
+  publisher    = {GitHub},
+  institution  = {Tbilisi State University, Georgian Cartographers Association},
+  url          = {https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app}
+}
+```
+
+> Georgian Cartographers Association. (2024–2026). *BTK Field App — ბტკ საველე აპლიკაცია* [Computer software]. Tbilisi State University. https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app
+
+## მადლობა · Acknowledgements
+
+ეს პროგრამა აგებულია ღია კოდის გეოსივრცული და Flutter-ის საზოგადოებებზე, მათ შორის: MapLibre / flutter_map, Firebase, sqflite, Riverpod, GoRouter, Noto Sans Georgian, და სხვა. სრული სია `pubspec.yaml`-ში.
 
 ## ლიტერატურა
 
@@ -222,10 +252,14 @@ lib/
 - ბერუჩაშვილი ნ. *ბუნებრივ-ტერიტორიული კომპლექსების ლანდშაფტურ-გეოფიზიკური კვლევისა და მდგომარეობათა კარტოგრაფირების მეთოდიკა.* თბ., 1983
 - გორდეზიანი თ. *ლანდშაფტური კარტოგრაფიის თეორიული საფუძვლები.* თბ., 2014
 
+## License
+
+[MIT](LICENSE)
+
 ---
 
 <div align="center">
 
-[Georgian Cartographers Association](https://github.com/Georgian-Cartographers-Association) · 2024–2026
+[Georgian Cartographers Association](https://github.com/Georgian-Cartographers-Association) · [Tbilisi State University](https://tsu.ge) · 2024–2026
 
 </div>
