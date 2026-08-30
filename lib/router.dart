@@ -9,6 +9,7 @@ import 'features/pdf/ui/pdf_viewer_screen.dart';
 import 'features/records/ui/records_screen.dart';
 import 'features/settings/ui/settings_screen.dart';
 import 'features/form/ui/btk_form_screen.dart';
+import 'features/stats/ui/stats_screen.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
@@ -48,6 +49,10 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/pdf',
       builder: (_, _) => const PdfViewerScreen(),
+    ),
+    GoRoute(
+      path: '/stats',
+      builder: (_, _) => const StatsScreen(),
     ),
   ],
 );

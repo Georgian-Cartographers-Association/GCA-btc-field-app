@@ -639,6 +639,25 @@ class ExportService {
     final pJson = utf8.encode(jsonEncode(photosMeta));
     archive.addFile(ArchiveFile('photos.json', pJson.length, pJson));
 
+    // GPS tracks that overlap with record dates
+    final List<Map<String, dynamic>> tracksMeta = [];
+    if (!kIsWeb) {
+      final recordDays = records
+          .map((r) => DateUtils.dateOnly(r.date))
+          .toSet();
+      final allTracks = await BtkDatabase.getAllTracks();
+      for (final t in allTracks) {
+        if (!recordDays.contains(DateUtils.dateOnly(t.startedAt))) continue;
+        if (t.points.isEmpty) continue;
+        final gpxBytes = utf8.encode(buildGpx(t));
+        final arcName = 'tracks/${t.id}.gpx';
+        archive.addFile(ArchiveFile(arcName, gpxBytes.length, gpxBytes));
+        tracksMeta.add({...t.toMap(), 'archive_path': arcName});
+      }
+    }
+    final tJson = utf8.encode(jsonEncode(tracksMeta));
+    archive.addFile(ArchiveFile('tracks.json', tJson.length, tJson));
+
     final zipBytes = Uint8List.fromList(ZipEncoder().encode(archive));
     final filename = records.length == 1
         ? 'btk_${_label(records.first)}_${_fmtDate(records.first.date)}.btkz'
@@ -664,10 +683,14 @@ class ExportService {
       if (path == null) return;
       if (isDesktop) await File(path).writeAsBytes(zipBytes);
       if (context.mounted) {
+        final suffix = [
+          if (photosMeta.isNotEmpty) '${photosMeta.length} ფოტო',
+          if (tracksMeta.isNotEmpty) '${tracksMeta.length} GPS ტრეკი',
+        ].join(', ');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(isDesktop
               ? 'შენახულია: $path'
-              : 'ექსპორტირებულია (${photosMeta.length} ფოტო)'),
+              : 'ექსპორტირებულია${suffix.isNotEmpty ? ' ($suffix)' : ''}'),
           duration: const Duration(seconds: 4),
         ));
       }
@@ -680,7 +703,7 @@ class ExportService {
   }
 
   /// Returns null if user cancels.
-  static Future<({List<BtkRecord> records, int photoCount})?> parseBtkzFile() async {
+  static Future<({List<BtkRecord> records, int photoCount, int trackCount})?> parseBtkzFile() async {
     final isDesktop = !kIsWeb &&
         (Platform.isWindows || Platform.isLinux || Platform.isMacOS);
     final result = await FilePicker.platform.pickFiles(
@@ -736,6 +759,25 @@ class ExportService {
       }
     }
 
-    return (records: records, photoCount: photoCount);
+    // Restore GPS tracks
+    int trackCount = 0;
+    final tFile = archive.findFile('tracks.json');
+    if (tFile != null && !kIsWeb) {
+      final meta = jsonDecode(utf8.decode(tFile.content as List<int>)) as List;
+      for (final m in meta) {
+        try {
+          final t = GpsTrack.fromMap({
+            'id': m['id'] as String,
+            'started_at': m['started_at'] as String,
+            'ended_at': m['ended_at'],
+            'points_json': m['points_json'] as String,
+          });
+          await BtkDatabase.insertTrack(t);
+          trackCount++;
+        } catch (_) {}
+      }
+    }
+
+    return (records: records, photoCount: photoCount, trackCount: trackCount);
   }
 }

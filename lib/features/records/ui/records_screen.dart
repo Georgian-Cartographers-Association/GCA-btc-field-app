@@ -5,6 +5,7 @@ import '../../../models/btk_record.dart';
 import '../domain/btk_provider.dart';
 import '../../../data/services/analytics_service.dart';
 import '../../../data/services/export_service.dart';
+import '../../../data/services/update_service.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../settings/domain/settings_provider.dart';
 
@@ -20,6 +21,14 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
   final _searchCtrl = TextEditingController();
   bool _selectionMode = false;
   final Set<String> _selected = {};
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) UpdateService.checkAndNotify(context);
+    });
+  }
 
   @override
   void dispose() {
@@ -194,10 +203,13 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
         final imported =
             await ref.read(btkProvider.notifier).importRecords(r.records);
         if (mounted) {
+          final parts = [
+            '${imported.added + imported.updated} ჩანაწერი',
+            if (r.photoCount > 0) '${r.photoCount} ფოტო',
+            if (r.trackCount > 0) '${r.trackCount} GPS ტრეკი',
+          ].join(', ');
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(
-                '${imported.added + imported.updated} ჩანაწერი, '
-                '${r.photoCount} ფოტო შემოიტანა'),
+            content: Text('$parts შემოიტანა'),
             duration: const Duration(seconds: 4),
           ));
         }
@@ -287,6 +299,11 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
           : AppBar(
               title: const Text('შენახული ჩანაწერები'),
               actions: [
+                IconButton(
+                  icon: const Icon(Icons.bar_chart_outlined),
+                  tooltip: 'სტატისტიკა',
+                  onPressed: () => context.push('/stats'),
+                ),
                 IconButton(
                   icon: const Icon(Icons.upload_file_outlined),
                   tooltip: 'იმპორტი',

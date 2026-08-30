@@ -47,6 +47,9 @@ jobs:
       - name: Build APKs (split by ABI)
         run: flutter build apk --split-per-abi --release
 
+      - name: Build AAB (Play Store)
+        run: flutter build appbundle --release
+
       - name: Rename APKs
         run: |
           cd build/app/outputs/flutter-apk
@@ -69,6 +72,7 @@ jobs:
             build/app/outputs/flutter-apk/btk-android-arm64.apk
             build/app/outputs/flutter-apk/btk-android-arm32.apk
             build/app/outputs/flutter-apk/btk-android-x86_64.apk
+            build/app/outputs/bundle/release/app-release.aab
             build/app/outputs/flutter-apk/checksums-android.txt
           body: |
             ## ბტკ საველე აპლიკაცია ${{ github.ref_name }}
