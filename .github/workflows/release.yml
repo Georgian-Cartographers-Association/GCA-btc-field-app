@@ -55,15 +55,24 @@ jobs:
           body: |
             ## ბტკ საველე აპლიკაცია ${{ github.ref_name }}
 
-            ### Android ინსტალაცია
+            ### Android
             1. ჩამოტვირთეთ `app-release.apk`
-            2. Android → Settings → Install unknown apps → ჩართეთ
+            2. Settings → Install unknown apps → ჩართეთ
             3. APK გაუშვით
 
-            ### Windows ინსტალაცია
+            ### Windows
             1. ჩამოტვირთეთ `btk-windows.zip`
-            2. გახსენით zip
-            3. გაუშვით `btk_field_app.exe`
+            2. გახსენით zip და გაუშვით `btk_field_app.exe`
+
+            ### Linux — Debian/Ubuntu
+            ```bash
+            sudo dpkg -i btk-linux-*.deb && sudo apt-get install -f
+            ```
+
+            ### Linux — Fedora/RHEL
+            ```bash
+            sudo dnf install btk-linux-*.rpm
+            ```
 
             ### ცვლილებები
             ${{ github.event.head_commit.message }}
@@ -104,3 +113,111 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: btk-windows.zip
+
+  build-linux:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Linux build dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y \
+            libgtk-3-dev libblkid-dev liblzma-dev \
+            libsecret-1-dev libjsoncpp-dev \
+            cmake ninja-build clang alien
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.7'
+          channel: 'stable'
+          cache: true
+
+      - name: Enable Linux desktop
+        run: flutter config --enable-linux-desktop
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate localizations
+        run: flutter gen-l10n
+
+      - name: Build Linux
+        run: flutter build linux --release
+
+      - name: Extract version
+        id: ver
+        run: |
+          echo "VERSION=$(grep '^version:' pubspec.yaml | cut -d' ' -f2 | cut -d'+' -f1)" >> $GITHUB_OUTPUT
+
+      - name: Package .deb
+        run: |
+          V=${{ steps.ver.outputs.VERSION }}
+          PKG=btk-field-app_${V}_amd64
+          mkdir -p ${PKG}/DEBIAN
+          mkdir -p ${PKG}/usr/bin
+          mkdir -p ${PKG}/usr/lib/btk-field-app
+          mkdir -p ${PKG}/usr/share/applications
+
+          cp -r build/linux/x64/release/bundle/. ${PKG}/usr/lib/btk-field-app/
+
+          printf '#!/bin/bash\nexec /usr/lib/btk-field-app/btk_field_app "$@"\n' \
+            > ${PKG}/usr/bin/btk-field-app
+          chmod +x ${PKG}/usr/bin/btk-field-app
+
+          cat > ${PKG}/usr/share/applications/btk-field-app.desktop <<EOF
+          [Desktop Entry]
+          Name=BTK Field App
+          Comment=Georgian landscape field survey tool
+          Exec=/usr/bin/btk-field-app
+          Terminal=false
+          Type=Application
+          Categories=Science;Geography;
+          EOF
+
+          cat > ${PKG}/DEBIAN/control <<EOF
+          Package: btk-field-app
+          Version: ${V}
+          Section: science
+          Priority: optional
+          Architecture: amd64
+          Depends: libgtk-3-0, libblkid1, liblzma5, libsecret-1-0
+          Maintainer: Georgian Cartographers Association <info@gca.ge>
+          Description: BTK Field App
+           Georgian landscape field survey tool.
+          EOF
+
+          dpkg-deb --build ${PKG}
+          mv ${PKG}.deb btk-linux-${V}.deb
+
+      - name: Convert .deb → .rpm
+        run: |
+          V=${{ steps.ver.outputs.VERSION }}
+          sudo alien --rpm btk-linux-${V}.deb
+          mv btk-field-app-*.x86_64.rpm btk-linux-${V}.rpm || \
+          mv btk-field-app_*.x86_64.rpm btk-linux-${V}.rpm
+
+      - name: Upload Linux builds to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            btk-linux-*.deb
+            btk-linux-*.rpm
+          body: |
+            ### Linux ინსტალაცია
+
+            **Debian/Ubuntu (.deb):**
+            ```bash
+            sudo dpkg -i btk-linux-VERSION.deb
+            sudo apt-get install -f   # dependencies
+            ```
+
+            **Fedora/RHEL (.rpm):**
+            ```bash
+            sudo rpm -i btk-linux-VERSION.rpm
+            # ან
+            sudo dnf install btk-linux-VERSION.rpm
+            ```
