@@ -3,11 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../settings/domain/settings_provider.dart';
 import '../../../data/services/sync_service.dart';
+import '../../../l10n/localized_text.dart';
 
 class AuthFormState {
   final bool isLogin;
   final bool busy;
-  final String? error;
+  final LocalizedText? error;
   final bool obscure;
 
   const AuthFormState({
@@ -26,7 +27,7 @@ class AuthFormState {
       AuthFormState(
         isLogin: isLogin ?? this.isLogin,
         busy: busy ?? this.busy,
-        error: error == _keep ? this.error : error as String?,
+        error: error == _keep ? this.error : error as LocalizedText?,
         obscure: obscure ?? this.obscure,
       );
 }
@@ -62,8 +63,7 @@ class AuthFormNotifier extends StateNotifier<AuthFormState> {
           await FirebaseAuth.instance.signOut();
           state = state.copyWith(
             busy: false,
-            error: 'წვდომა შეზღუდულია. '
-                'ადმინისტრატორს მიმართეთ ამ ელ-ფოსტის დასამატებლად.',
+            error: (l10n) => l10n.accessDenied,
           );
           return null;
         }
@@ -74,8 +74,7 @@ class AuthFormNotifier extends StateNotifier<AuthFormState> {
         if (!allowed) {
           state = state.copyWith(
             busy: false,
-            error: 'წვდომა შეზღუდულია. '
-                'ადმინისტრატორს მიმართეთ ამ ელ-ფოსტის დასამატებლად.',
+            error: (l10n) => l10n.accessDenied,
           );
           return null;
         }
@@ -88,21 +87,16 @@ class AuthFormNotifier extends StateNotifier<AuthFormState> {
       state = state.copyWith(busy: false);
       return cred.user!.uid;
     } on FirebaseAuthException catch (e) {
-      final knownMsg = _authError(e.code);
-      final displayMsg = knownMsg.startsWith('შეცდომა (')
-          ? '$knownMsg${e.message != null ? '\n${e.message}' : ''}'
-          : knownMsg;
-      state = state.copyWith(busy: false, error: displayMsg);
+      state = state.copyWith(busy: false, error: _authError(e));
       return null;
     } on FirebaseException catch (e) {
-      final msg = e.code == 'permission-denied'
-          ? 'Firestore Rules შეცდომა — '
-              'allowed_users კოლექციაზე "allow read: if true" გახსენით.'
-          : 'DB შეცდომა (${e.code})';
+      final LocalizedText msg = e.code == 'permission-denied'
+          ? (l10n) => l10n.authRulesError
+          : (l10n) => l10n.authDbError(e.code);
       state = state.copyWith(busy: false, error: msg);
       return null;
     } catch (_) {
-      state = state.copyWith(busy: false, error: 'სისტემური შეცდომა');
+      state = state.copyWith(busy: false, error: (l10n) => l10n.authSystemError);
       return null;
     }
   }
@@ -128,7 +122,7 @@ class AuthFormNotifier extends StateNotifier<AuthFormState> {
   /// Returns the email used on success, null on failure (error set in state).
   Future<String?> forgotPassword(String email) async {
     if (email.trim().isEmpty) {
-      state = state.copyWith(error: 'ჯერ შეიყვანეთ ელ-ფოსტა');
+      state = state.copyWith(error: (l10n) => l10n.authEnterEmailFirst);
       return null;
     }
     state = state.copyWith(busy: true, error: null);
@@ -138,14 +132,10 @@ class AuthFormNotifier extends StateNotifier<AuthFormState> {
       state = state.copyWith(busy: false);
       return email.trim();
     } on FirebaseAuthException catch (e) {
-      final knownMsg = _authError(e.code);
-      final displayMsg = knownMsg.startsWith('შეცდომა (')
-          ? '$knownMsg${e.message != null ? '\n${e.message}' : ''}'
-          : knownMsg;
-      state = state.copyWith(busy: false, error: displayMsg);
+      state = state.copyWith(busy: false, error: _authError(e));
       return null;
     } catch (_) {
-      state = state.copyWith(busy: false, error: 'სისტემური შეცდომა');
+      state = state.copyWith(busy: false, error: (l10n) => l10n.authSystemError);
       return null;
     }
   }
@@ -163,23 +153,24 @@ class AuthFormNotifier extends StateNotifier<AuthFormState> {
     }
   }
 
-  String _authError(String code) => switch (code) {
+  LocalizedText _authError(FirebaseAuthException e) => switch (e.code) {
         // Login errors — old + new Firebase SDK codes
-        'user-not-found' => 'მომხმარებელი ვერ მოიძებნა',
-        'wrong-password' => 'პაროლი არასწორია',
-        'invalid-credential' => 'ელ-ფოსტა ან პაროლი არასწორია',
-        'invalid-login-credentials' => 'ელ-ფოსტა ან პაროლი არასწორია',
-        'INVALID_LOGIN_CREDENTIALS' => 'ელ-ფოსტა ან პაროლი არასწორია',
+        'user-not-found' => (l10n) => l10n.authUserNotFound,
+        'wrong-password' => (l10n) => l10n.authWrongPassword,
+        'invalid-credential' => (l10n) => l10n.authInvalidCredential,
+        'invalid-login-credentials' => (l10n) => l10n.authInvalidCredential,
+        'INVALID_LOGIN_CREDENTIALS' => (l10n) => l10n.authInvalidCredential,
         // Registration errors
-        'email-already-in-use' => 'ეს ელ-ფოსტა უკვე გამოყენებულია',
-        'weak-password' => 'პაროლი ძალიან სუსტია (მინ. 6 სიმბოლო)',
-        'invalid-email' => 'ელ-ფოსტის ფორმატი არასწორია',
-        'operation-not-allowed' => 'ეს შესვლის მეთოდი გათიშულია',
+        'email-already-in-use' => (l10n) => l10n.authEmailInUse,
+        'weak-password' => (l10n) => l10n.authWeakPassword,
+        'invalid-email' => (l10n) => l10n.authInvalidEmail,
+        'operation-not-allowed' => (l10n) => l10n.authMethodDisabled,
         // General
-        'user-disabled' => 'ანგარიში დაბლოკილია',
-        'too-many-requests' => 'ძალიან ბევრი მცდელობა — ცოტა ხანი დაიცადეთ',
-        'network-request-failed' => 'ქსელის შეცდომა — შეამოწმეთ ინტერნეტი',
-        _ => 'შეცდომა ($code)',
+        'user-disabled' => (l10n) => l10n.authUserDisabled,
+        'too-many-requests' => (l10n) => l10n.authTooManyRequests,
+        'network-request-failed' => (l10n) => l10n.authNetworkError,
+        _ => (l10n) =>
+            '${l10n.authErrorCode(e.code)}${e.message != null ? '\n${e.message}' : ''}',
       };
 }
 

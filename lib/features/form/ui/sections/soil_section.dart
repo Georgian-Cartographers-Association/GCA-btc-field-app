@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../../models/btk_record.dart';
 import '../../domain/photo_provider.dart';
 import '../widgets/section_photo_panel.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 class SoilSection extends ConsumerStatefulWidget {
   final BtkRecord record;
@@ -83,6 +84,7 @@ class _SoilSectionState extends ConsumerState<SoilSection> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final r = widget.record;
     final photos = ref.watch(photoProvider(_photoKey));
     final notifier = ref.read(photoProvider(_photoKey).notifier);
@@ -92,13 +94,13 @@ class _SoilSectionState extends ConsumerState<SoilSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _sectionHeader(context, 'ნიადაგი'),
+          _sectionHeader(context, l10n.soil),
           const SizedBox(height: 12),
           TextField(
             controller: _soilTypeNameCtrl,
             onChanged: (v) => _upd(r..soilTypeName = v),
-            decoration: const InputDecoration(
-              labelText: 'ნიადაგის ტიპის სახელწოდება',
+            decoration: InputDecoration(
+              labelText: l10n.soilTypeName,
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               isDense: true,
@@ -109,8 +111,8 @@ class _SoilSectionState extends ConsumerState<SoilSection> {
             controller: _soilProfileDescCtrl,
             onChanged: (v) => _upd(r..soilProfileDesc = v),
             maxLines: 3,
-            decoration: const InputDecoration(
-              labelText: 'ნიადაგის პროფილის მორფ. დახასიათება',
+            decoration: InputDecoration(
+              labelText: l10n.soilProfileDescShort,
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               isDense: true,
@@ -120,7 +122,7 @@ class _SoilSectionState extends ConsumerState<SoilSection> {
 
           // ── Soil profile photos ─────────────────────────────────────
           SectionPhotoPanel(
-            label: 'მორფ. დახასიათების ფოტოები',
+            label: l10n.morphDescPhotos,
             photos: photos,
             onCamera: () => notifier.addFromSource(ImageSource.camera, context),
             onGallery: () => notifier.addFromSource(ImageSource.gallery, context),
@@ -130,7 +132,7 @@ class _SoilSectionState extends ConsumerState<SoilSection> {
                 builder: (_) => SectionFullScreenGallery(
                   photos: photos,
                   initialIndex: i,
-                  title: 'ნიადაგი',
+                  title: l10n.soil,
                 ),
               ),
             ),
@@ -141,15 +143,14 @@ class _SoilSectionState extends ConsumerState<SoilSection> {
           ),
 
           const SizedBox(height: 16),
-          Text('გენეტიკური ჰორიზონტები',
+          Text(l10n.soilHorizons,
               style: Theme.of(context)
                   .textTheme
                   .titleSmall
                   ?.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Text(
-            'ფ.=ფერი  მ.შ.=მექ.შედგ.  სტ.=სტრ.  ფ.=ფ-ნ.  სმ.=სიმკვ.  '
-            'ახ.=ახ-ნ.  ხ.=ხ-ნ.  ტ.=ტ-ბა  ჰ.=ჰ-ს.  ქ.=ქ.საზ.',
+            l10n.soilLegend,
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: 8),
@@ -166,8 +167,8 @@ class _SoilSectionState extends ConsumerState<SoilSection> {
                     child: TextField(
                       controller: cs[0],
                       onChanged: (v) => h.horizon = v,
-                      decoration: const InputDecoration(
-                        labelText: 'ჰ-ტი',
+                      decoration: InputDecoration(
+                        labelText: l10n.horizonShort,
                         border: OutlineInputBorder(),
                         contentPadding:
                             EdgeInsets.symmetric(horizontal: 8, vertical: 6),
@@ -181,8 +182,8 @@ class _SoilSectionState extends ConsumerState<SoilSection> {
                       controller: cs[1],
                       onChanged: (v) => h.description = v,
                       maxLines: 2,
-                      decoration: const InputDecoration(
-                        labelText: 'დახასიათება',
+                      decoration: InputDecoration(
+                        labelText: l10n.description,
                         border: OutlineInputBorder(),
                         contentPadding:
                             EdgeInsets.symmetric(horizontal: 8, vertical: 6),
@@ -202,14 +203,14 @@ class _SoilSectionState extends ConsumerState<SoilSection> {
           TextButton.icon(
             onPressed: _addHorizon,
             icon: const Icon(Icons.add),
-            label: const Text('ჰორიზონტის დამატება'),
+            label: Text(l10n.addHorizon),
           ),
           const SizedBox(height: 16),
           TextField(
             controller: _geohorizonIndexCtrl,
             onChanged: (v) => _upd(r..geohorizonIndex = v),
-            decoration: const InputDecoration(
-              labelText: 'გეოჰორიზონტის ინდექსი',
+            decoration: InputDecoration(
+              labelText: l10n.geohorizonIndex,
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               isDense: true,
@@ -219,8 +220,8 @@ class _SoilSectionState extends ConsumerState<SoilSection> {
           TextField(
             controller: _soilSurfaceFormationCtrl,
             onChanged: (v) => _upd(r..soilSurfaceFormation = v),
-            decoration: const InputDecoration(
-              labelText: 'ნიადაგ ზედაპ. ფორმაციის ტიპი',
+            decoration: InputDecoration(
+              labelText: l10n.soilSurfaceFormationShort,
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               isDense: true,

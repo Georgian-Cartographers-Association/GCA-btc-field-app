@@ -580,4 +580,1000 @@ class AppLocalizationsKa extends AppLocalizations {
   String deleteAccountFailed(String error) {
     return 'ანგარიში ვერ წაიშალა: $error';
   }
+
+  @override
+  String get close => 'დახურვა';
+
+  @override
+  String get search => 'ძებნა';
+
+  @override
+  String get searchEllipsis => 'ძებნა...';
+
+  @override
+  String get error => 'შეცდომა';
+
+  @override
+  String get unknownError => 'უცნობი შეცდომა';
+
+  @override
+  String get ok => 'კარგი';
+
+  @override
+  String get name => 'სახელი';
+
+  @override
+  String get type => 'ტიპი';
+
+  @override
+  String get description => 'დახასიათება';
+
+  @override
+  String get zoomIn => 'გადიდება';
+
+  @override
+  String get copied => 'კოპირებულია';
+
+  @override
+  String get copiedClipboard => 'კოპირებულია 📋';
+
+  @override
+  String get statistics => 'სტატისტიკა';
+
+  @override
+  String get photos => 'ფოტოები';
+
+  @override
+  String get camera => 'კამერა';
+
+  @override
+  String get gallery => 'გალერეა';
+
+  @override
+  String get recordDuplicated => 'ჩანაწერი გადაიწერა ✓';
+
+  @override
+  String get fileType => 'ფაილის ტიპი';
+
+  @override
+  String get btkFileTitle => 'ბტკ ჩანაწერი (.btk)';
+
+  @override
+  String get btkFileSub => 'ტექსტური მონაცემები';
+
+  @override
+  String get btkzFileTitle => 'ბტკ ფოტოებით (.btkz)';
+
+  @override
+  String get btkzFileSub => 'ჩანაწერები + ფოტოები';
+
+  @override
+  String get deleteRecordConfirm => 'დარწმუნებული ხართ ამ ჩანაწერის წაშლაში?';
+
+  @override
+  String get exportBtc => 'ბტკ ექსპორტი';
+
+  @override
+  String get savedRecords => 'შენახული ჩანაწერები';
+
+  @override
+  String get importAction => 'იმპორტი';
+
+  @override
+  String get exportAction => 'ექსპორტი';
+
+  @override
+  String get pdfDocument => 'PDF დოკუმენტი';
+
+  @override
+  String get recordsSearchHint => 'ძებნა: სახელი, ID, ლოკაცია, თარიღი...';
+
+  @override
+  String get share => 'გაზიარება';
+
+  @override
+  String get saveAsFile => 'ფაილად შენახვა';
+
+  @override
+  String get pdfPreparing => 'PDF მზადდება...';
+
+  @override
+  String get duplicate => 'დუბლირება';
+
+  @override
+  String get dataLayers => 'მონაცემთა შრეები';
+
+  @override
+  String get rasters => 'რასტრები';
+
+  @override
+  String get webServices => 'ვებ სერვისები';
+
+  @override
+  String get fromDevice => 'მოწყობილობიდან (PNG/JPG/WebP/TIFF)';
+
+  @override
+  String get rasterBounds => 'რასტრის საზღვრები';
+
+  @override
+  String get boundNorth => 'ჩრდ. (N)';
+
+  @override
+  String get boundSouth => 'სამ. (S)';
+
+  @override
+  String get boundEast => 'აღმ. (E)';
+
+  @override
+  String get boundWest => 'დას. (W)';
+
+  @override
+  String get boundsExample => 'მაგ.: N:43.5  S:41.0  E:46.8  W:40.0';
+
+  @override
+  String get noRasterLayers => 'რასტრული შრეები არ არის';
+
+  @override
+  String get fromTemplate => 'შაბლონიდან';
+
+  @override
+  String get noWebServices => 'ვებ სერვისები არ არის';
+
+  @override
+  String get saveAsTemplate => 'შაბლონად შენახვა';
+
+  @override
+  String get deleteServiceConfirm => 'ამ სერვისის წაშლა გსურთ?';
+
+  @override
+  String get chooseTemplate => 'შაბლონის არჩევა';
+
+  @override
+  String get nameOptional => 'სახელი (სურვილისამებრ)';
+
+  @override
+  String get addService => 'სერვისის დამატება';
+
+  @override
+  String get editService => 'სერვისის რედ.';
+
+  @override
+  String get urlTemplate => 'URL შაბლონი';
+
+  @override
+  String get subdomains => 'Subdomains (მძიმით)';
+
+  @override
+  String get subdomainsHint => 'a,b,c  — სურვილისამებრ';
+
+  @override
+  String get wmsServiceUrl => 'WMS სერვისის URL';
+
+  @override
+  String get wmsLayers => 'შრეები (მძიმით)';
+
+  @override
+  String get wmsAutoRequest => 'WMS GetMap მოთხოვნა ავტომატურად შეიქმნება';
+
+  @override
+  String get zoomOutSmall => 'დაპატარავება';
+
+  @override
+  String get closeSearch => 'ძებნის დახურვა';
+
+  @override
+  String get notFound => 'ვერ მოიძებნა';
+
+  @override
+  String get previous => 'წინა';
+
+  @override
+  String get next => 'შემდეგი';
+
+  @override
+  String get goToPage => 'გვერდზე გადასვლა';
+
+  @override
+  String get goAction => 'გადასვლა';
+
+  @override
+  String get noRecordsYet => 'ჩანაწერები არ არის';
+
+  @override
+  String get statsTotal => 'სულ';
+
+  @override
+  String get statsNoGps => 'GPS გარეშე';
+
+  @override
+  String get statsLast6Months => 'ბოლო 6 თვე';
+
+  @override
+  String get statsGeoFormations => 'გეოლოგიური ფორმაციები';
+
+  @override
+  String get statsReliefTypes => 'რელიეფის ტიპები';
+
+  @override
+  String get statsSoilTypes => 'ნიადაგის ტიპები';
+
+  @override
+  String get resetPassword => 'პაროლის აღდგენა';
+
+  @override
+  String get sentCheck => 'გაიგზავნა ✓';
+
+  @override
+  String get screenSection => 'ეკრანი';
+
+  @override
+  String get exportCoordFormat => 'კოორდინატის ფორმატი (ექსპ.)';
+
+  @override
+  String get aboutSection => 'შესახებ';
+
+  @override
+  String get organizationLabel => 'ორგანიზაცია';
+
+  @override
+  String get universityLabel => 'უნივერსიტეტი';
+
+  @override
+  String get measureTool => 'გამზომი';
+
+  @override
+  String get undo => 'უკან (undo)';
+
+  @override
+  String get clear => 'გასუფთავება';
+
+  @override
+  String get measureCoords => 'კოორდ.';
+
+  @override
+  String get measureLine => 'ხაზი';
+
+  @override
+  String get measurePolygon => 'პოლიგ.';
+
+  @override
+  String get measureHintCoords => 'რუკაზე შეეხეთ კოორდინატების სანახავად';
+
+  @override
+  String get measureHintLine => 'შეეხეთ წერტილების დასამატებლად';
+
+  @override
+  String get measureHintPolygon => 'შეეხეთ პოლიგონის ასაგებად (მინ. 3 წ.)';
+
+  @override
+  String get measurePoints => 'წ.';
+
+  @override
+  String get measureLength => 'სიგრძე';
+
+  @override
+  String get measurePerimeter => 'პერიმეტრი';
+
+  @override
+  String get measureArea => 'ფართობი';
+
+  @override
+  String get layerControl => 'შრეების კონტროლი';
+
+  @override
+  String get baseMaps => 'ფონური რუკები';
+
+  @override
+  String get adminBoundaries => 'ადმინისტრაციული საზღვრები';
+
+  @override
+  String get layerRegions => 'მხარეები';
+
+  @override
+  String get layerMunicipalities => 'მუნიციპალიტეტები';
+
+  @override
+  String get fieldData => 'საველე მონაცემები';
+
+  @override
+  String get weatherForecast => 'ამინდის პროგნოზი';
+
+  @override
+  String get weatherLoadFailed => 'ამინდის ჩამოტვირთვა ვერ მოხდა';
+
+  @override
+  String get checkInternet => 'შეამოწმეთ ინტერნეტ კავშირი';
+
+  @override
+  String get retry => 'კვლავ ცდა';
+
+  @override
+  String get forecast24h => '24 საათის პროგნოზი';
+
+  @override
+  String get nextDays => 'მომდევნო დღეები';
+
+  @override
+  String get weatherCredit => 'ამინდი: ';
+
+  @override
+  String get placeCity => 'ქალაქი';
+
+  @override
+  String get placeVillage => 'სოფელი';
+
+  @override
+  String get placeAdmin => 'ადმინისტრაციული ერთეული';
+
+  @override
+  String get placeRegion => 'რეგიონი';
+
+  @override
+  String get placeSuburb => 'უბანი';
+
+  @override
+  String get placeRiver => 'მდინარე';
+
+  @override
+  String get placeMountain => 'მთა';
+
+  @override
+  String get placeOther => 'ადგილი';
+
+  @override
+  String get placeMunicipality => 'მუნიციპალიტეტი';
+
+  @override
+  String get mapSearchHint => 'ძებნა: სოფელი, ქალაქი, რეგიონი...';
+
+  @override
+  String get typeSearchTerm => 'ჩაწერეთ ძებნის სიტყვა';
+
+  @override
+  String get nothingFound => 'არაფერი მოიძებნა';
+
+  @override
+  String get inLayers => 'შრეებში';
+
+  @override
+  String get placesOsm => 'ადგილები (OSM)';
+
+  @override
+  String get gpsTrackFinished => 'GPS ტრეკი დასრულდა';
+
+  @override
+  String get distance => 'მანძილი';
+
+  @override
+  String get durationShort => 'ხანგრძლ.';
+
+  @override
+  String get trackPoints => 'წერტილი';
+
+  @override
+  String get downloadGpx => 'GPX-ის გადმოტვირთვა';
+
+  @override
+  String get tapMapToAddPoint => 'რუკაზე დააჭირეთ წერტილის დასამატებლად';
+
+  @override
+  String get georgia => 'საქართველო';
+
+  @override
+  String get savedCheck => 'შენახულია ✓';
+
+  @override
+  String get gpsOff => 'GPS გათიშულია';
+
+  @override
+  String get enableGps => 'GPS ჩართვა';
+
+  @override
+  String get locationBlocked => 'მდებარეობა აკრძალულია';
+
+  @override
+  String get recordChanged => 'ჩანაწერი შეიცვალა';
+
+  @override
+  String get unsavedChanges => 'ბოლო ცვლილებები ავტომატურად ჯერ არ შენახულა.';
+
+  @override
+  String get stay => 'დარჩენა';
+
+  @override
+  String get exitAction => 'გასვლა';
+
+  @override
+  String get saveAndExit => 'შენახვა და გასვლა';
+
+  @override
+  String get tabBasic => 'ძირითადი';
+
+  @override
+  String get tabPhysGeo => 'ფიზ.გეოგ.';
+
+  @override
+  String get tabVegetation => 'მცენარ.';
+
+  @override
+  String get tabGeomass => 'გეომასა';
+
+  @override
+  String get tabVertStruct => 'ვ.სტრ.';
+
+  @override
+  String get zoomOut => 'შემცირება';
+
+  @override
+  String get fullScreen => 'სრული ეკრანი';
+
+  @override
+  String get coordFormatHint => 'DD, DM ან DMS ფორმატი';
+
+  @override
+  String get utmMustBeNumbers => 'E და N რიცხვებია';
+
+  @override
+  String get outsideGeorgia => 'საქართველოს საზღვრების გარეთ';
+
+  @override
+  String get conversionError => 'კონვერტაციის შეცდომა';
+
+  @override
+  String get coordsWrittenToForm => 'კოორდინატები ფორმაში ჩაიწერა';
+
+  @override
+  String get coordConverter => 'კოორდინატების კონვერტერი';
+
+  @override
+  String get latitudeShort => 'განედი';
+
+  @override
+  String get longitudeShort => 'გრძედი';
+
+  @override
+  String get writeToForm => 'ჩაწერა ფორმაში';
+
+  @override
+  String get enterCoordsAnyFormat =>
+      'შეიყვანეთ კოორდინატები ნებისმიერ ფორმატში';
+
+  @override
+  String get convert => 'კონვერტაცია';
+
+  @override
+  String get writeToFormDd => 'ჩაწერა ფორმაში (DD)';
+
+  @override
+  String get coordsOutsideGeorgia =>
+      'კოორდინატები საქართველოს საზღვრების გარეთ';
+
+  @override
+  String get numbersOnly => 'მხოლოდ რიცხვი';
+
+  @override
+  String get altitudeRange => '−500 … 9000 მ';
+
+  @override
+  String get btkFullTitle => 'ბუნებრივ-ტერიტორიული კომპლექსის (ბტკ) აღწერა';
+
+  @override
+  String get locationHint => 'მდებარეობის სახელი / აღწერა';
+
+  @override
+  String get altitudeM => 'სიმაღლე (მ)';
+
+  @override
+  String get aspectDeg => 'ასპექტი (°)';
+
+  @override
+  String get geomassHeader => 'გეომასების კვლევა — ბტკ-ის ვ.პ. მიწისზედა ნაწ.';
+
+  @override
+  String get treePhytomassHeader => 'ხე-მცენარეების ფიტომასა (ტ/ჰა)';
+
+  @override
+  String get rowShort => 'სტრიქ.';
+
+  @override
+  String get treeRowShort => 'ხე-მც. სტრიქ.';
+
+  @override
+  String get gmSection => 'სექ.';
+
+  @override
+  String get gmDepth => 'სიღ.';
+
+  @override
+  String get gmPedBulk => 'პედ.მოც.';
+
+  @override
+  String get gmPedQty => 'პედ.რ.';
+
+  @override
+  String get gmLithQty => 'ლით.რ.';
+
+  @override
+  String get gmLithDens => 'ლით.სმ.';
+
+  @override
+  String get gmHydQty => 'ჰიდ.რ.';
+
+  @override
+  String get gmHydWet => 'ჰიდ.სვ.';
+
+  @override
+  String get gmHydDry => 'ჰიდ.მშ.';
+
+  @override
+  String get gmPhytWet => 'ფიტ.სვ.';
+
+  @override
+  String get gmPhytDry => 'ფიტ.მშ.';
+
+  @override
+  String get tpSpecies => 'სახ.';
+
+  @override
+  String get tpVolume => 'მ.წ.';
+
+  @override
+  String get tpWetWood => 'სვ.მ.';
+
+  @override
+  String get tpWetLeaves => 'სვ.ფ.';
+
+  @override
+  String get tpWetBranches => 'სვ.ტ.';
+
+  @override
+  String get tpWetRoots => 'სვ.ფეს.';
+
+  @override
+  String get tpWetTotal => 'სვ.ჯ.';
+
+  @override
+  String get tpDryWood => 'მშ.მ.';
+
+  @override
+  String get tpDryLeaves => 'მშ.ფ.';
+
+  @override
+  String get tpDryBranches => 'მშ.ტ.';
+
+  @override
+  String get tpDryRoots => 'მშ.ფეს.';
+
+  @override
+  String get tpDryTotal => 'მშ.ჯ.';
+
+  @override
+  String get vegTierShort => 'იარ.';
+
+  @override
+  String get vegHeightM => 'სიმ. (მ)';
+
+  @override
+  String get vegPhenShort => 'ფენოფ.';
+
+  @override
+  String get soilProfileDescShort => 'ნიადაგის პროფილის მორფ. დახასიათება';
+
+  @override
+  String get morphDescPhotos => 'მორფ. დახასიათების ფოტოები';
+
+  @override
+  String get horizonShort => 'ჰ-ტი';
+
+  @override
+  String get addHorizon => 'ჰორიზონტის დამატება';
+
+  @override
+  String get soilSurfaceFormationShort => 'ნიადაგ ზედაპ. ფორმაციის ტიპი';
+
+  @override
+  String get vertStructDescShort =>
+      'ვ.პ. მიწისზედა ნ. დამოკიდ. მიწისქვედა ნ.თ.';
+
+  @override
+  String get vertStructPhotos => 'ვ.ს. ფოტოები';
+
+  @override
+  String get deletePhoto => 'ფოტოს წაშლა';
+
+  @override
+  String get deletePhotoConfirm => 'გსურთ ამ ფოტოს წაშლა?';
+
+  @override
+  String get noPhotoAdded => 'ფოტო არ არის დამატებული';
+
+  @override
+  String get cameraOrGallery => 'კამერა ან გალერეა';
+
+  @override
+  String get noPhotoHint =>
+      'ფოტო არ არის. გადაიღეთ კამერით ან მიაბით გალერეიდან.';
+
+  @override
+  String get updateLater => 'შემდეგ';
+
+  @override
+  String get updateDownload => 'ჩამოტვირთვა';
+
+  @override
+  String get layersEmptyHelp =>
+      '📁 \"მოწყობილობიდან\" — ფაილი მოწყობილობიდან\n\n📦 assets-ბეჭდვა — catalog.json-ში:\n  \"file\": \"assets/rasters/map.png\"\n  ფორმატები: PNG · JPG · WebP · TIFF';
+
+  @override
+  String get resetPasswordPrompt =>
+      'შეიყვანეთ ელ-ფოსტა — გამოგიგზავნოთ განახლების ბმული.';
+
+  @override
+  String get soilLegend =>
+      'ფ.=ფერი  მ.შ.=მექ.შედგ.  სტ.=სტრ.  ფ.=ფ-ნ.  სმ.=სიმკვ.  ახ.=ახ-ნ.  ხ.=ხ-ნ.  ტ.=ტ-ბა  ჰ.=ჰ-ს.  ქ.=ქ.საზ.';
+
+  @override
+  String get otherUserChanged =>
+      '⚠️ სხვა მომხმარებელმა ჩანაწერი შეცვალა — თქვენი ვერსია შენახულია';
+
+  @override
+  String get gpsOffMessage =>
+      'კოორდინატების დასადგენად GPS (მდებარეობის სერვისი) ჩართული უნდა იყოს.';
+
+  @override
+  String get locationBlockedMessage =>
+      'აპლიკაციას მდებარეობაზე წვდომა არ აქვს. გახსენით პარამეტრები და ჩართეთ.';
+
+  @override
+  String get copySuffix => '(ასლი)';
+
+  @override
+  String get authUserNotFound => 'მომხმარებელი ვერ მოიძებნა';
+
+  @override
+  String get authWrongPassword => 'პაროლი არასწორია';
+
+  @override
+  String get authInvalidCredential => 'ელ-ფოსტა ან პაროლი არასწორია';
+
+  @override
+  String get authEmailInUse => 'ეს ელ-ფოსტა უკვე გამოყენებულია';
+
+  @override
+  String get authWeakPassword => 'პაროლი ძალიან სუსტია (მინ. 6 სიმბოლო)';
+
+  @override
+  String get authInvalidEmail => 'ელ-ფოსტის ფორმატი არასწორია';
+
+  @override
+  String get authMethodDisabled => 'ეს შესვლის მეთოდი გათიშულია';
+
+  @override
+  String get authUserDisabled => 'ანგარიში დაბლოკილია';
+
+  @override
+  String get authTooManyRequests =>
+      'ძალიან ბევრი მცდელობა — ცოტა ხანი დაიცადეთ';
+
+  @override
+  String get authNetworkError => 'ქსელის შეცდომა — შეამოწმეთ ინტერნეტი';
+
+  @override
+  String get authSystemError => 'სისტემური შეცდომა';
+
+  @override
+  String get authEnterEmailFirst => 'ჯერ შეიყვანეთ ელ-ფოსტა';
+
+  @override
+  String get authRulesError =>
+      'Firestore Rules შეცდომა — allowed_users კოლექციაზე \"allow read: if true\" გახსენით.';
+
+  @override
+  String get fileReadFailed => 'ფაილი ვერ წაიკითხა';
+
+  @override
+  String get invalidBtkFile => 'არასწორი .btk ფაილის ფორმატი';
+
+  @override
+  String get invalidBtkzFile => 'არასწორი .btkz ფორმატი';
+
+  @override
+  String get shareRecordsGeoJson => 'ბტკ ჩანაწერები — GeoJSON';
+
+  @override
+  String get shareRecordsCsv => 'ბტკ ჩანაწერები — CSV';
+
+  @override
+  String get shareRecordsKml => 'ბტკ KML';
+
+  @override
+  String get savePdfTitle => 'PDF შენახვა';
+
+  @override
+  String get pdfSaved => 'PDF შენახულია';
+
+  @override
+  String get exportBtkTitle => 'ბტკ ჩანაწერების ექსპორტი';
+
+  @override
+  String get exportBtkzTitle => 'ბტკ ჩანაწერები + ფოტოები';
+
+  @override
+  String get exported => 'ექსპორტირებულია';
+
+  @override
+  String get unitKm => 'კმ';
+
+  @override
+  String get unitM => 'მ';
+
+  @override
+  String get unitKm2 => 'კმ²';
+
+  @override
+  String get unitM2 => 'მ²';
+
+  @override
+  String get unitHa => 'ჰა';
+
+  @override
+  String get unitMps => 'მ/წ';
+
+  @override
+  String get unitMm => 'მმ';
+
+  @override
+  String get unitHour => 'სთ';
+
+  @override
+  String get unitMin => 'წთ';
+
+  @override
+  String get unitSec => 'წმ';
+
+  @override
+  String get windN => 'ჩ';
+
+  @override
+  String get windNE => 'ჩ-აღ';
+
+  @override
+  String get windE => 'აღ';
+
+  @override
+  String get windSE => 'სამ-აღ';
+
+  @override
+  String get windS => 'სამ';
+
+  @override
+  String get windSW => 'სამ-დ';
+
+  @override
+  String get windW => 'დ';
+
+  @override
+  String get windNW => 'ჩ-დ';
+
+  @override
+  String get today => 'დღეს';
+
+  @override
+  String get tomorrow => 'ხვალ';
+
+  @override
+  String get daySun => 'კვირა';
+
+  @override
+  String get dayMon => 'ორშ';
+
+  @override
+  String get dayTue => 'სამშ';
+
+  @override
+  String get dayWed => 'ოთხ';
+
+  @override
+  String get dayThu => 'ხუთ';
+
+  @override
+  String get dayFri => 'პარ';
+
+  @override
+  String get daySat => 'შაბ';
+
+  @override
+  String get wxThunder => 'ჭექა-ქუხილი';
+
+  @override
+  String get wxHeavyRain => 'ძლიერი წვიმა';
+
+  @override
+  String get wxRain => 'წვიმა';
+
+  @override
+  String get wxSleet => 'თოვა-წვიმა';
+
+  @override
+  String get wxSnow => 'თოვლი';
+
+  @override
+  String get wxFog => 'ნისლი';
+
+  @override
+  String get wxClear => 'მოწმენდილი';
+
+  @override
+  String get wxFair => 'ნათელი';
+
+  @override
+  String get wxPartlyCloudy => 'ნაწილობრივ ღრუბლიანი';
+
+  @override
+  String get wxOvercast => 'მოღრუბლული';
+
+  @override
+  String get wxCloudy => 'ღრუბლიანი';
+
+  @override
+  String get wxUnknown => 'ამინდი';
+
+  @override
+  String get monthJan => 'იანვ';
+
+  @override
+  String get monthFeb => 'თებ';
+
+  @override
+  String get monthMar => 'მარ';
+
+  @override
+  String get monthApr => 'აპრ';
+
+  @override
+  String get monthMay => 'მაი';
+
+  @override
+  String get monthJun => 'ივნ';
+
+  @override
+  String get monthJul => 'ივლ';
+
+  @override
+  String get monthAug => 'აგვ';
+
+  @override
+  String get monthSep => 'სექ';
+
+  @override
+  String get monthOct => 'ოქტ';
+
+  @override
+  String get monthNov => 'ნოე';
+
+  @override
+  String get monthDec => 'დეკ';
+
+  @override
+  String errorWithDetail(String detail) {
+    return 'შეცდომა: $detail';
+  }
+
+  @override
+  String authErrorCode(String code) {
+    return 'შეცდომა ($code)';
+  }
+
+  @override
+  String authDbError(String code) {
+    return 'DB შეცდომა ($code)';
+  }
+
+  @override
+  String resetLinkSent(String email) {
+    return 'პაროლის განახლების ბმული გამოიგზავნა:\n\n$email\n\nშეამოწმეთ ელ-ფოსტა (spam-საც).';
+  }
+
+  @override
+  String deleteRecordsConfirm(int count) {
+    return '$count ჩანაწერი საბოლოოდ წაიშლება?';
+  }
+
+  @override
+  String recordsCount(int count) {
+    return '$count ჩანაწერი';
+  }
+
+  @override
+  String photosCount(int count) {
+    return '$count ფოტო';
+  }
+
+  @override
+  String tracksCount(int count) {
+    return '$count GPS ტრეკი';
+  }
+
+  @override
+  String importedParts(String parts) {
+    return '$parts შემოიტანა';
+  }
+
+  @override
+  String importedSummary(int total, int added, int updated) {
+    return '$total ჩანაწერი შემოიტანა ($added ახალი, $updated განახლდა)';
+  }
+
+  @override
+  String queryNotFound(String query) {
+    return '\"$query\" — არ მოიძებნა';
+  }
+
+  @override
+  String btkNumber(String id) {
+    return 'ბტკ #$id';
+  }
+
+  @override
+  String templateSaved(String name) {
+    return '\"$name\" შაბლონებში შეინახა ✓';
+  }
+
+  @override
+  String pageOf(int current, int total) {
+    return 'გვ. $current / $total';
+  }
+
+  @override
+  String pageRange(int count) {
+    return 'გვ. (1–$count)';
+  }
+
+  @override
+  String recordsOnMap(int count) {
+    return 'ჩანაწერები რუქაზე ($count)';
+  }
+
+  @override
+  String recordsDownloaded(int count) {
+    return '$count ჩანაწერი გადმოიწერა ✓';
+  }
+
+  @override
+  String photoOpenFailed(String error) {
+    return 'ფოტო ვერ გაიხსნა: $error';
+  }
+
+  @override
+  String photoSaveFailed(String error) {
+    return 'ფოტო ვერ შეინახა: $error';
+  }
+
+  @override
+  String newVersionAvailable(String version) {
+    return 'ახალი ვერსია v$version ხელმისაწვდომია';
+  }
+
+  @override
+  String savedAtPath(String path) {
+    return 'შენახულია: $path';
+  }
+
+  @override
+  String exportedWith(String details) {
+    return 'ექსპორტირებულია ($details)';
+  }
+
+  @override
+  String shareGpsTrack(String date) {
+    return 'GPS ტრეკი — $date';
+  }
+
+  @override
+  String shareBtkFile(String filename) {
+    return 'ბტკ — $filename';
+  }
+
+  @override
+  String get photoLabel => 'ფოტო';
 }

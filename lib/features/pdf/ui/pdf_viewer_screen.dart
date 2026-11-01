@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../../core/constants.dart';
 import '../../settings/domain/settings_provider.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 class PdfViewerScreen extends ConsumerStatefulWidget {
   final bool embedded;
@@ -92,6 +93,7 @@ class _PdfViewerScreenState extends ConsumerState<PdfViewerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final saved = ref.read(settingsProvider).pdfPage;
 
     final viewer = SfPdfViewer.asset(
@@ -110,30 +112,30 @@ class _PdfViewerScreenState extends ConsumerState<PdfViewerScreen> {
     return Scaffold(
       appBar: AppBar(
         title:
-            _searchOpen ? _searchBar() : const Text('მეთოდური მითითება'),
+            _searchOpen ? _searchBar() : Text(l10n.methodology),
         actions: [
           if (_loaded && !_searchOpen) ...[
             IconButton(
               icon: const Icon(Icons.zoom_in),
-              tooltip: 'გადიდება',
+              tooltip: l10n.zoomIn,
               onPressed: _zoomIn,
             ),
             IconButton(
               icon: const Icon(Icons.zoom_out),
-              tooltip: 'დაპატარავება',
+              tooltip: l10n.zoomOutSmall,
               onPressed: _zoomOut,
             ),
           ],
           if (_loaded)
             IconButton(
               icon: Icon(_searchOpen ? Icons.search_off : Icons.search),
-              tooltip: _searchOpen ? 'ძებნის დახურვა' : 'ძებნა',
+              tooltip: _searchOpen ? l10n.closeSearch : l10n.search,
               onPressed: _toggleSearch,
             ),
           if (_loaded && !_searchOpen)
             IconButton(
               icon: const Icon(Icons.info_outline),
-              tooltip: 'გვ. ${_ctrl.pageNumber} / ${_ctrl.pageCount}',
+              tooltip: l10n.pageOf(_ctrl.pageNumber, _ctrl.pageCount),
               onPressed: _showPageJump,
             ),
         ],
@@ -150,7 +152,7 @@ class _PdfViewerScreenState extends ConsumerState<PdfViewerScreen> {
                       Text(
                         _searchTotal > 0
                             ? '$_searchCurrent / $_searchTotal'
-                            : 'ვერ მოიძებნა',
+                            : l10n.notFound,
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                       const Spacer(),
@@ -159,7 +161,7 @@ class _PdfViewerScreenState extends ConsumerState<PdfViewerScreen> {
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
                         onPressed: _searchTotal > 0 ? _prevResult : null,
-                        tooltip: 'წინა',
+                        tooltip: l10n.previous,
                       ),
                       const SizedBox(width: 12),
                       IconButton(
@@ -167,7 +169,7 @@ class _PdfViewerScreenState extends ConsumerState<PdfViewerScreen> {
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
                         onPressed: _searchTotal > 0 ? _nextResult : null,
-                        tooltip: 'შემდეგი',
+                        tooltip: l10n.next,
                       ),
                     ],
                   ),
@@ -183,8 +185,8 @@ class _PdfViewerScreenState extends ConsumerState<PdfViewerScreen> {
         controller: _searchCtrl,
         autofocus: true,
         textInputAction: TextInputAction.search,
-        decoration: const InputDecoration(
-          hintText: 'ძებნა...',
+        decoration: InputDecoration(
+          hintText: AppLocalizations.of(context)!.searchEllipsis,
           border: InputBorder.none,
           hintStyle: TextStyle(color: Colors.white70),
         ),
@@ -196,23 +198,24 @@ class _PdfViewerScreenState extends ConsumerState<PdfViewerScreen> {
       );
 
   void _showPageJump() {
+    final l10n = AppLocalizations.of(context)!;
     final ctrl = TextEditingController(text: _ctrl.pageNumber.toString());
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('გვერდზე გადასვლა'),
+        title: Text(l10n.goToPage),
         content: TextField(
           controller: ctrl,
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
-            labelText: 'გვ. (1–${_ctrl.pageCount})',
+            labelText: l10n.pageRange(_ctrl.pageCount),
             border: const OutlineInputBorder(),
           ),
         ),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('გაუქმება')),
+              child: Text(l10n.cancel)),
           ElevatedButton(
             onPressed: () {
               final p = int.tryParse(ctrl.text);
@@ -221,7 +224,7 @@ class _PdfViewerScreenState extends ConsumerState<PdfViewerScreen> {
               }
               Navigator.pop(ctx);
             },
-            child: const Text('გადასვლა'),
+            child: Text(l10n.goAction),
           ),
         ],
       ),

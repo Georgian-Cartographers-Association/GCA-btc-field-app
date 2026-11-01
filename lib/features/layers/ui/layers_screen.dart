@@ -10,6 +10,7 @@ import '../../../models/tile_service.dart';
 import '../../raster/domain/raster_provider.dart';
 import '../../map/domain/tile_service_provider.dart';
 import '../../../data/services/analytics_service.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 class LayersScreen extends ConsumerStatefulWidget {
   const LayersScreen({super.key});
@@ -36,14 +37,15 @@ class _LayersScreenState extends ConsumerState<LayersScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('მონაცემთა შრეები'),
+        title: Text(l10n.dataLayers),
         bottom: TabBar(
           controller: _tabs,
-          tabs: const [
-            Tab(icon: Icon(Icons.image_outlined), text: 'რასტრები'),
-            Tab(icon: Icon(Icons.public), text: 'ვებ სერვისები'),
+          tabs: [
+            Tab(icon: Icon(Icons.image_outlined), text: l10n.rasters),
+            Tab(icon: Icon(Icons.public), text: l10n.webServices),
           ],
         ),
       ),
@@ -74,6 +76,7 @@ class _RasterTabState extends ConsumerState<_RasterTab> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final layers = ref.watch(rasterProvider);
     final notifier = ref.read(rasterProvider.notifier);
 
@@ -92,7 +95,7 @@ class _RasterTabState extends ConsumerState<_RasterTab> {
                       child: CircularProgressIndicator(
                           strokeWidth: 2, color: Colors.white))
                   : const Icon(Icons.folder_open_outlined),
-              label: const Text('მოწყობილობიდან (PNG/JPG/WebP/TIFF)'),
+              label: Text(l10n.fromDevice),
               onPressed: _picking ? null : () => _pickRasterFile(context),
             ),
           ),
@@ -246,6 +249,7 @@ class _RasterTabState extends ConsumerState<_RasterTab> {
   /// Returns (name, north, south, east, west) or null if cancelled.
   Future<(String, double, double, double, double)?> _showBoundsDialog(
       BuildContext context, String filename) {
+        final l10n = AppLocalizations.of(context)!;
     final nameCtrl =
         TextEditingController(text: filename.replaceAll(RegExp(r'\.\w+$'), ''));
     final nCtrl = TextEditingController();
@@ -256,35 +260,35 @@ class _RasterTabState extends ConsumerState<_RasterTab> {
     return showDialog<(String, double, double, double, double)>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('რასტრის საზღვრები'),
+        title: Text(l10n.rasterBounds),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _BoundsField(controller: nameCtrl, label: 'სახელი'),
+              _BoundsField(controller: nameCtrl, label: l10n.name),
               const SizedBox(height: 8),
               Row(children: [
                 Expanded(
                     child: _BoundsField(
-                        controller: nCtrl, label: 'ჩრდ. (N)', isNum: true)),
+                        controller: nCtrl, label: l10n.boundNorth, isNum: true)),
                 const SizedBox(width: 8),
                 Expanded(
                     child: _BoundsField(
-                        controller: sCtrl, label: 'სამ. (S)', isNum: true)),
+                        controller: sCtrl, label: l10n.boundSouth, isNum: true)),
               ]),
               const SizedBox(height: 8),
               Row(children: [
                 Expanded(
                     child: _BoundsField(
-                        controller: eCtrl, label: 'აღმ. (E)', isNum: true)),
+                        controller: eCtrl, label: l10n.boundEast, isNum: true)),
                 const SizedBox(width: 8),
                 Expanded(
                     child: _BoundsField(
-                        controller: wCtrl, label: 'დას. (W)', isNum: true)),
+                        controller: wCtrl, label: l10n.boundWest, isNum: true)),
               ]),
               const SizedBox(height: 4),
               Text(
-                'მაგ.: N:43.5  S:41.0  E:46.8  W:40.0',
+                l10n.boundsExample,
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall
@@ -296,7 +300,7 @@ class _RasterTabState extends ConsumerState<_RasterTab> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('გაუქმება')),
+              child: Text(l10n.cancel)),
           ElevatedButton(
             onPressed: () {
               final n = double.tryParse(nCtrl.text.trim());
@@ -307,7 +311,7 @@ class _RasterTabState extends ConsumerState<_RasterTab> {
               final name = nameCtrl.text.trim().isEmpty ? filename : nameCtrl.text.trim();
               Navigator.pop(ctx, (name, n, s, e, w));
             },
-            child: const Text('დამატება'),
+            child: Text(l10n.addEmail),
           ),
         ],
       ),
@@ -340,6 +344,7 @@ class _BoundsField extends StatelessWidget {
 class _EmptyRasterHint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -348,7 +353,7 @@ class _EmptyRasterHint extends StatelessWidget {
           children: [
             Icon(Icons.image_search, size: 72, color: Colors.grey.shade400),
             const SizedBox(height: 16),
-            Text('რასტრული შრეები არ არის',
+            Text(l10n.noRasterLayers,
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
             Container(
@@ -358,10 +363,7 @@ class _EmptyRasterHint extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                '📁 "მოწყობილობიდან" — ფაილი მოწყობილობიდან\n\n'
-                '📦 assets-ბეჭდვა — catalog.json-ში:\n'
-                '  "file": "assets/rasters/map.png"\n'
-                '  ფორმატები: PNG · JPG · WebP · TIFF',
+                l10n.layersEmptyHelp,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     fontFamily: 'monospace', color: Colors.grey.shade700),
               ),
@@ -382,6 +384,7 @@ class _TileServiceTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final services = ref.watch(tileServiceProvider);
     final notifier = ref.read(tileServiceProvider.notifier);
 
@@ -395,7 +398,7 @@ class _TileServiceTab extends ConsumerWidget {
               Expanded(
                 child: OutlinedButton.icon(
                   icon: const Icon(Icons.playlist_add),
-                  label: const Text('შაბლონიდან'),
+                  label: Text(l10n.fromTemplate),
                   onPressed: () => _showTemplateDialog(context, ref),
                 ),
               ),
@@ -421,7 +424,7 @@ class _TileServiceTab extends ConsumerWidget {
                     children: [
                       Icon(Icons.public, size: 64, color: Colors.grey.shade400),
                       const SizedBox(height: 12),
-                      Text('ვებ სერვისები არ არის',
+                      Text(l10n.noWebServices,
                           style: Theme.of(context).textTheme.titleMedium),
                       const SizedBox(height: 4),
                       const Text('XYZ · WMTS · WMS',
@@ -489,25 +492,25 @@ class _TileServiceTab extends ConsumerWidget {
                                     }
                                   },
                                   itemBuilder: (_) => [
-                                    const PopupMenuItem(
+                                    PopupMenuItem(
                                         value: 'edit',
                                         child: ListTile(
                                             dense: true,
                                             leading: Icon(Icons.edit_outlined),
-                                            title: Text('რედაქტირება'))),
-                                    const PopupMenuItem(
+                                            title: Text(l10n.editRecord))),
+                                    PopupMenuItem(
                                         value: 'template',
                                         child: ListTile(
                                             dense: true,
                                             leading: Icon(Icons.bookmark_add_outlined),
-                                            title: Text('შაბლონად შენახვა'))),
-                                    const PopupMenuItem(
+                                            title: Text(l10n.saveAsTemplate))),
+                                    PopupMenuItem(
                                         value: 'delete',
                                         child: ListTile(
                                             dense: true,
                                             leading: Icon(Icons.delete_outline,
                                                 color: Colors.red),
-                                            title: Text('წაშლა',
+                                            title: Text(l10n.delete,
                                                 style: TextStyle(
                                                     color: Colors.red)))),
                                   ],
@@ -594,26 +597,28 @@ class _TileServiceTab extends ConsumerWidget {
   }
 
   Future<void> _saveAsTemplate(BuildContext context, TileService svc) async {
+    final l10n = AppLocalizations.of(context)!;
     await TileServiceNotifier.saveAsTemplate(svc);
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text('"${svc.name}" შაბლონებში შეინახა ✓'),
+            content: Text(l10n.templateSaved(svc.name)),
             duration: const Duration(seconds: 2)),
       );
     }
   }
 
   void _confirmDelete(BuildContext context, WidgetRef ref, String id) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('წაშლა'),
-        content: const Text('ამ სერვისის წაშლა გსურთ?'),
+        title: Text(l10n.delete),
+        content: Text(l10n.deleteServiceConfirm),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('არა')),
+              child: Text(l10n.no)),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             onPressed: () {
@@ -621,7 +626,7 @@ class _TileServiceTab extends ConsumerWidget {
               Navigator.pop(ctx);
             },
             child:
-                const Text('წაშლა', style: TextStyle(color: Colors.white)),
+                Text(l10n.delete, style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -666,6 +671,7 @@ class _TemplateSheetState extends State<_TemplateSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: EdgeInsets.fromLTRB(
           16, 16, 16, MediaQuery.of(context).viewInsets.bottom + 16),
@@ -683,7 +689,7 @@ class _TemplateSheetState extends State<_TemplateSheet> {
             ),
           ),
           const SizedBox(height: 12),
-          Text('შაბლონის არჩევა',
+          Text(l10n.chooseTemplate,
               style: Theme.of(context)
                   .textTheme
                   .titleMedium
@@ -753,8 +759,8 @@ class _TemplateSheetState extends State<_TemplateSheet> {
           const SizedBox(height: 8),
           TextField(
             controller: _nameCtrl,
-            decoration: const InputDecoration(
-              labelText: 'სახელი (სურვილისამებრ)',
+            decoration: InputDecoration(
+              labelText: l10n.nameOptional,
               border: OutlineInputBorder(),
               isDense: true,
             ),
@@ -769,7 +775,7 @@ class _TemplateSheetState extends State<_TemplateSheet> {
                         _templates[_selected!],
                         _nameCtrl.text.trim(),
                       ),
-              child: const Text('დამატება'),
+              child: Text(l10n.addEmail),
             ),
           ),
         ],
@@ -820,18 +826,19 @@ class _TileServiceDialogState extends State<_TileServiceDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return AlertDialog(
-      title: Text(widget.initial == null ? 'სერვისის დამატება' : 'სერვისის რედ.'),
+      title: Text(widget.initial == null ? l10n.addService : l10n.editService),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _field(_nameCtrl, 'სახელი'),
+            _field(_nameCtrl, l10n.name),
             const SizedBox(height: 12),
 
             // Type selector
-            Text('ტიპი', style: Theme.of(context).textTheme.labelMedium),
+            Text(l10n.type, style: Theme.of(context).textTheme.labelMedium),
             const SizedBox(height: 4),
             SegmentedButton<ServiceType>(
               segments: const [
@@ -844,20 +851,20 @@ class _TileServiceDialogState extends State<_TileServiceDialog> {
             const SizedBox(height: 10),
 
             if (_type == ServiceType.xyz) ...[
-              _field(_urlCtrl, 'URL შაბლონი',
+              _field(_urlCtrl, l10n.urlTemplate,
                   hint: 'https://example.com/{z}/{x}/{y}.png'),
               const SizedBox(height: 10),
-              _field(_subCtrl, 'Subdomains (მძიმით)',
-                  hint: 'a,b,c  — სურვილისამებრ'),
+              _field(_subCtrl, l10n.subdomains,
+                  hint: l10n.subdomainsHint),
             ] else ...[
-              _field(_urlCtrl, 'WMS სერვისის URL',
+              _field(_urlCtrl, l10n.wmsServiceUrl,
                   hint: 'https://example.com/wms'),
               const SizedBox(height: 10),
-              _field(_wmsLayersCtrl, 'შრეები (მძიმით)',
+              _field(_wmsLayersCtrl, l10n.wmsLayers,
                   hint: 'layer1,layer2'),
               const SizedBox(height: 6),
               Text(
-                'WMS GetMap მოთხოვნა ავტომატურად შეიქმნება',
+                l10n.wmsAutoRequest,
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall
@@ -870,10 +877,10 @@ class _TileServiceDialogState extends State<_TileServiceDialog> {
       actions: [
         TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('გაუქმება')),
+            child: Text(l10n.cancel)),
         ElevatedButton(
           onPressed: _save,
-          child: const Text('შენახვა'),
+          child: Text(l10n.save),
         ),
       ],
     );

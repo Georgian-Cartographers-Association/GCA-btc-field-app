@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../../utils/coord_converter.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 /// Collapsible coordinate converter with two directions:
 ///   1. DD / DM / DMS → all formats (DD, DM, DMS, UTM37N, UTM38N)
@@ -83,26 +84,28 @@ class _CoordConverterWidgetState extends State<CoordConverterWidget> {
   }
 
   void _parseForwardInputs() {
+    final l10n = AppLocalizations.of(context)!;
     final lat = CoordConverter.parseCoord(_inputLatCtrl.text);
     final lon = CoordConverter.parseCoord(_inputLonCtrl.text);
     setState(() {
       _parsedLat = lat;
       _parsedLon = lon;
       _latErr = lat == null && _inputLatCtrl.text.isNotEmpty
-          ? 'DD, DM ან DMS ფორმატი'
+          ? l10n.coordFormatHint
           : null;
       _lonErr = lon == null && _inputLonCtrl.text.isNotEmpty
-          ? 'DD, DM ან DMS ფორმატი'
+          ? l10n.coordFormatHint
           : null;
     });
   }
 
   void _convertFromUtm() {
+    final l10n = AppLocalizations.of(context)!;
     final e = double.tryParse(_eastingCtrl.text.replaceAll(' ', ''));
     final n = double.tryParse(_northingCtrl.text.replaceAll(' ', ''));
     if (e == null || n == null) {
       setState(() {
-        _utmErr = 'E და N რიცხვებია';
+        _utmErr = l10n.utmMustBeNumbers;
         _utmResultLat = null;
         _utmResultLon = null;
       });
@@ -116,11 +119,11 @@ class _CoordConverterWidgetState extends State<CoordConverterWidget> {
       setState(() {
         _utmResultLat = lat;
         _utmResultLon = lon;
-        _utmErr = inBounds ? null : 'საქართველოს საზღვრების გარეთ';
+        _utmErr = inBounds ? null : l10n.outsideGeorgia;
       });
     } catch (_) {
       setState(() {
-        _utmErr = 'კონვერტაციის შეცდომა';
+        _utmErr = l10n.conversionError;
         _utmResultLat = null;
         _utmResultLon = null;
       });
@@ -128,9 +131,10 @@ class _CoordConverterWidgetState extends State<CoordConverterWidget> {
   }
 
   void _applyCoords(double lat, double lon) {
+    final l10n = AppLocalizations.of(context)!;
     widget.onApply(lat, lon);
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('კოორდინატები ფორმაში ჩაიწერა'),
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(l10n.coordsWrittenToForm),
       duration: Duration(seconds: 2),
       behavior: SnackBarBehavior.floating,
     ));
@@ -138,6 +142,7 @@ class _CoordConverterWidgetState extends State<CoordConverterWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final scheme = Theme.of(context).colorScheme;
 
     return Card(
@@ -160,7 +165,7 @@ class _CoordConverterWidgetState extends State<CoordConverterWidget> {
                   Icon(Icons.swap_horiz, size: 18, color: scheme.primary),
                   const SizedBox(width: 8),
                   Text(
-                    'კოორდინატების კონვერტერი',
+                    l10n.coordConverter,
                     style: Theme.of(context)
                         .textTheme
                         .labelLarge
@@ -224,6 +229,7 @@ class _CoordConverterWidgetState extends State<CoordConverterWidget> {
   // ── Mode 1: DD / DM / DMS → all formats ───────────────────────────────
 
   Widget _buildForwardMode(BuildContext context, ColorScheme scheme) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -237,7 +243,7 @@ class _CoordConverterWidgetState extends State<CoordConverterWidget> {
                 textInputAction: TextInputAction.next,
                 onChanged: (_) => _parseForwardInputs(),
                 decoration: InputDecoration(
-                  labelText: 'განედი',
+                  labelText: l10n.latitudeShort,
                   hintText: 'DD / DM / DMS',
                   errorText: _latErr,
                   border: const OutlineInputBorder(),
@@ -256,7 +262,7 @@ class _CoordConverterWidgetState extends State<CoordConverterWidget> {
                 onChanged: (_) => _parseForwardInputs(),
                 onSubmitted: (_) => _parseForwardInputs(),
                 decoration: InputDecoration(
-                  labelText: 'გრძედი',
+                  labelText: l10n.longitudeShort,
                   hintText: 'DD / DM / DMS',
                   errorText: _lonErr,
                   border: const OutlineInputBorder(),
@@ -274,11 +280,11 @@ class _CoordConverterWidgetState extends State<CoordConverterWidget> {
           const SizedBox(height: 12),
           FilledButton.tonal(
             onPressed: () => _applyCoords(_parsedLat!, _parsedLon!),
-            child: const Text('ჩაწერა ფორმაში'),
+            child: Text(l10n.writeToForm),
           ),
         ] else
           Text(
-            'შეიყვანეთ კოორდინატები ნებისმიერ ფორმატში',
+            l10n.enterCoordsAnyFormat,
             style: Theme.of(context)
                 .textTheme
                 .bodySmall
@@ -333,6 +339,7 @@ class _CoordConverterWidgetState extends State<CoordConverterWidget> {
   // ── Mode 2: UTM → DD ───────────────────────────────────────────────────
 
   Widget _buildInverseMode(BuildContext context, ColorScheme scheme) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -409,7 +416,7 @@ class _CoordConverterWidgetState extends State<CoordConverterWidget> {
 
         FilledButton.tonal(
           onPressed: _convertFromUtm,
-          child: const Text('კონვერტაცია'),
+          child: Text(l10n.convert),
         ),
 
         if (_utmErr != null) ...[
@@ -423,7 +430,7 @@ class _CoordConverterWidgetState extends State<CoordConverterWidget> {
           const SizedBox(height: 8),
           FilledButton(
             onPressed: () => _applyCoords(_utmResultLat!, _utmResultLon!),
-            child: const Text('ჩაწერა ფორმაში (DD)'),
+            child: Text(l10n.writeToFormDd),
           ),
         ],
       ],
@@ -459,6 +466,7 @@ class _CoordConverterWidgetState extends State<CoordConverterWidget> {
   }
 
   Widget _boundsWarning(BuildContext context, {String? msg}) {
+    final l10n = AppLocalizations.of(context)!;
     final scheme = Theme.of(context).colorScheme;
     return Container(
       margin: const EdgeInsets.only(bottom: 6),
@@ -473,7 +481,7 @@ class _CoordConverterWidgetState extends State<CoordConverterWidget> {
           const SizedBox(width: 6),
           Expanded(
             child: Text(
-              msg ?? 'კოორდინატები საქართველოს საზღვრების გარეთ',
+              msg ?? l10n.coordsOutsideGeorgia,
               style: TextStyle(fontSize: 12, color: scheme.error),
             ),
           ),
@@ -495,14 +503,15 @@ class _ResultRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final scheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: GestureDetector(
         onTap: () {
           Clipboard.setData(ClipboardData(text: copy));
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('კოპირებულია'),
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(l10n.copied),
             duration: Duration(seconds: 1),
             behavior: SnackBarBehavior.floating,
           ));

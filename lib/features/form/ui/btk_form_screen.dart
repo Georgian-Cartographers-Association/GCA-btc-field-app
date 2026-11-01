@@ -77,6 +77,7 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
 
   // Explicit save — shows conflict warning in expedition mode
   Future<void> _save() async {
+    final l10n = AppLocalizations.of(context)!;
     _autoSaveTimer?.cancel();
     final conflict = await ref.read(btkProvider.notifier).update(_record);
     AnalyticsService.logRecordSaved();
@@ -84,9 +85,9 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
     setState(() => _dirty = false);
     if (conflict) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            '⚠️ სხვა მომხმარებელმა ჩანაწერი შეცვალა — თქვენი ვერსია შენახულია',
+            l10n.otherUserChanged,
           ),
           backgroundColor: Colors.orange,
           duration: Duration(seconds: 5),
@@ -94,13 +95,14 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('შენახულია ✓'), duration: Duration(seconds: 2)),
+        SnackBar(
+            content: Text(l10n.savedCheck), duration: Duration(seconds: 2)),
       );
     }
   }
 
   Future<void> _detectGps() async {
+    final l10n = AppLocalizations.of(context)!;
     // 1. Check if GPS hardware/service is enabled
     final serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
@@ -108,18 +110,17 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
       final open = await showDialog<bool>(
         context: context,
         builder: (_) => AlertDialog(
-          title: const Text('GPS გათიშულია'),
-          content: const Text(
-              'კოორდინატების დასადგენად GPS (მდებარეობის სერვისი) '
-              'ჩართული უნდა იყოს.'),
+          title: Text(l10n.gpsOff),
+          content: Text(
+              l10n.gpsOffMessage),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('გაუქმება'),
+              child: Text(l10n.cancel),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(context, true),
-              child: const Text('GPS ჩართვა'),
+              child: Text(l10n.enableGps),
             ),
           ],
         ),
@@ -138,18 +139,17 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
       final open = await showDialog<bool>(
         context: context,
         builder: (_) => AlertDialog(
-          title: const Text('მდებარეობა აკრძალულია'),
-          content: const Text(
-              'აპლიკაციას მდებარეობაზე წვდომა არ აქვს. '
-              'გახსენით პარამეტრები და ჩართეთ.'),
+          title: Text(l10n.locationBlocked),
+          content: Text(
+              l10n.locationBlockedMessage),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('გაუქმება'),
+              child: Text(l10n.cancel),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(context, true),
-              child: const Text('პარამეტრები'),
+              child: Text(l10n.settings),
             ),
           ],
         ),
@@ -160,8 +160,8 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
     if (perm == LocationPermission.denied) return;
 
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('კოორდინატების დადგენა...'),
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(l10n.locationDetecting),
         duration: Duration(seconds: 2)));
     final pos = await Geolocator.getCurrentPosition();
     if (!mounted) return;
@@ -273,7 +273,7 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
             ),
             IconButton(
               icon: const Icon(Icons.paste),
-              tooltip: 'ჩასმა',
+              tooltip: l10n.paste,
               onPressed: () async {
                 final data = await Clipboard.getData(Clipboard.kTextPlain);
                 if (data?.text != null) controller.text = data!.text!;
@@ -300,6 +300,7 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return PopScope(
       canPop: !_dirty,
       onPopInvokedWithResult: (didPop, _) async {
@@ -308,22 +309,22 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
         final choice = await showDialog<String>(
           context: context,
           builder: (_) => AlertDialog(
-            title: const Text('ჩანაწერი შეიცვალა'),
-            content: const Text(
-                'ბოლო ცვლილებები ავტომატურად ჯერ არ შენახულა.'),
+            title: Text(l10n.recordChanged),
+            content: Text(
+                l10n.unsavedChanges),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, 'stay'),
-                child: const Text('დარჩენა'),
+                child: Text(l10n.stay),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(context, 'discard'),
-                child: const Text('გასვლა',
+                child: Text(l10n.exitAction,
                     style: TextStyle(color: Colors.red)),
               ),
               FilledButton(
                 onPressed: () => Navigator.pop(context, 'save'),
-                child: const Text('შენახვა და გასვლა'),
+                child: Text(l10n.saveAndExit),
               ),
             ],
           ),
@@ -344,7 +345,7 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
         appBar: AppBar(
           title: Row(
             children: [
-              Text('ბტკ #${_record.id}'),
+              Text(l10n.btkNumber(_record.id)),
               if (_dirty) ...[
                 const SizedBox(width: 6),
                 Container(
@@ -384,16 +385,16 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
             controller: _tabController,
             isScrollable: true,
             tabs: [
-              const Tab(text: 'ძირითადი'),
-              const Tab(text: 'ფიზ.გეოგ.'),
-              const Tab(text: 'მცენარ.'),
-              const Tab(text: 'ნიადაგი'),
-              const Tab(text: 'გეომასა'),
-              const Tab(text: 'ვ.სტრ.'),
+              Tab(text: l10n.tabBasic),
+              Tab(text: l10n.tabPhysGeo),
+              Tab(text: l10n.tabVegetation),
+              Tab(text: l10n.soil),
+              Tab(text: l10n.tabGeomass),
+              Tab(text: l10n.tabVertStruct),
               if (!kIsWeb)
-                const Tab(
+                Tab(
                   icon: Icon(Icons.photo_library_outlined, size: 16),
-                  text: 'ფოტოები',
+                  text: l10n.photos,
                 ),
             ],
           ),
@@ -499,6 +500,7 @@ class _SplitViewState extends State<_SplitView> {
 
   // ── Narrow: full-width bottom panel with drag-to-resize ────────────────────
   Widget _buildNarrow(Size size) {
+    final l10n = AppLocalizations.of(context)!;
     final panelH = size.height * _narrowHeightFraction;
 
     return Stack(
@@ -560,7 +562,7 @@ class _SplitViewState extends State<_SplitView> {
                             // Quick-size buttons
                             _HeaderBtn(
                               icon: Icons.expand_less,
-                              tooltip: 'გადიდება',
+                              tooltip: l10n.zoomIn,
                               onTap: () => setState(() {
                                 _narrowHeightFraction =
                                     (_narrowHeightFraction + 0.15)
@@ -569,7 +571,7 @@ class _SplitViewState extends State<_SplitView> {
                             ),
                             _HeaderBtn(
                               icon: Icons.expand_more,
-                              tooltip: 'შემცირება',
+                              tooltip: l10n.zoomOut,
                               onTap: () => setState(() {
                                 _narrowHeightFraction =
                                     (_narrowHeightFraction - 0.15)
@@ -578,13 +580,13 @@ class _SplitViewState extends State<_SplitView> {
                             ),
                             _HeaderBtn(
                               icon: Icons.fullscreen,
-                              tooltip: 'სრული ეკრანი',
+                              tooltip: l10n.fullScreen,
                               onTap: () =>
                                   setState(() => _narrowHeightFraction = 0.94),
                             ),
                             _HeaderBtn(
                               icon: Icons.close,
-                              tooltip: 'დახურვა',
+                              tooltip: l10n.close,
                               onTap: widget.onClose,
                             ),
                           ],

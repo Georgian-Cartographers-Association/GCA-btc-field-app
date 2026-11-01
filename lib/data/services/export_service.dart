@@ -15,6 +15,7 @@ import '../../utils/coord_converter.dart';
 import '../../features/settings/domain/settings_provider.dart';
 import '../../models/gps_track.dart';
 import '../../database/btk_database.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class ExportService {
   // ─── CSV ─────────────────────────────────────────────────────────────────────
@@ -133,21 +134,22 @@ class ExportService {
     });
   }
 
-  static Future<void> shareGeoJson(List<BtkRecord> records) async {
+  static Future<void> shareGeoJson(
+      List<BtkRecord> records, AppLocalizations l10n) async {
     final json = buildGeoJson(records);
     final bytes = Uint8List.fromList(utf8.encode(json));
     final file = XFile.fromData(bytes,
         name: 'btk_records.geojson',
         mimeType: 'application/geo+json');
-    await Share.shareXFiles([file], subject: 'ბტკ ჩანაწერები — GeoJSON');
+    await Share.shareXFiles([file], subject: l10n.shareRecordsGeoJson);
   }
 
-  static Future<void> shareCsv(List<BtkRecord> records,
+  static Future<void> shareCsv(List<BtkRecord> records, AppLocalizations l10n,
       {ExportCoordFormat coordFormat = ExportCoordFormat.dd}) async {
     final csv = buildCsv(records, coordFormat: coordFormat);
     final bytes = Uint8List.fromList(utf8.encode(csv));
     final file = XFile.fromData(bytes, name: 'btk_records.csv', mimeType: 'text/csv');
-    await Share.shareXFiles([file], subject: 'ბტკ ჩანაწერები — CSV');
+    await Share.shareXFiles([file], subject: l10n.shareRecordsCsv);
   }
 
   // ─── PDF ─────────────────────────────────────────────────────────────────────
@@ -368,7 +370,7 @@ class ExportService {
     return buf.toString();
   }
 
-  static Future<void> shareGpx(GpsTrack track) async {
+  static Future<void> shareGpx(GpsTrack track, AppLocalizations l10n) async {
     final gpx = buildGpx(track);
     final bytes = Uint8List.fromList(utf8.encode(gpx));
     final dateStr =
@@ -376,10 +378,11 @@ class ExportService {
     final file = XFile.fromData(bytes,
         name: 'track_$dateStr.gpx',
         mimeType: 'application/gpx+xml');
-    await Share.shareXFiles([file], subject: 'GPS ტრეკი — $dateStr');
+    await Share.shareXFiles([file], subject: l10n.shareGpsTrack(dateStr));
   }
 
-  static Future<void> sharePdf(List<BtkRecord> records) async {
+  static Future<void> sharePdf(
+      List<BtkRecord> records, AppLocalizations l10n) async {
     final bytes = await buildPdf(records);
     final filename = _pdfFilename(records);
 
@@ -391,13 +394,14 @@ class ExportService {
       await file.writeAsBytes(bytes);
       await Share.shareXFiles(
         [XFile(file.path)],
-        subject: 'ბტკ — $filename',
+        subject: l10n.shareBtkFile(filename),
       );
     }
   }
 
   static Future<void> savePdf(
       List<BtkRecord> records, BuildContext context) async {
+        final l10n = AppLocalizations.of(context)!;
     final bytes = await buildPdf(records);
     final filename = _pdfFilename(records);
 
@@ -414,7 +418,7 @@ class ExportService {
       // Mobile: pass bytes so file_picker writes via SAF/document picker —
       // user sees system "Save to" dialog and picks Downloads, Drive, etc.
       final path = await FilePicker.platform.saveFile(
-        dialogTitle: 'PDF შენახვა',
+        dialogTitle: l10n.savePdfTitle,
         fileName: filename,
         type: isDesktop ? FileType.custom : FileType.any,
         allowedExtensions: isDesktop ? ['pdf'] : null,
@@ -428,7 +432,7 @@ class ExportService {
       }
 
       if (context.mounted) {
-        final msg = isDesktop ? 'შენახულია: $path' : 'PDF შენახულია';
+        final msg = isDesktop ? l10n.savedAtPath(path) : l10n.pdfSaved;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(msg), duration: const Duration(seconds: 4)),
         );
@@ -436,7 +440,7 @@ class ExportService {
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('შეცდომა: $e')),
+          SnackBar(content: Text(l10n.errorWithDetail('$e'))),
         );
       }
     }
@@ -473,6 +477,7 @@ class ExportService {
 
   static Future<void> exportBtk(
       List<BtkRecord> records, BuildContext context) async {
+        final l10n = AppLocalizations.of(context)!;
     final payload = jsonEncode({
       'btk_export_version': 1,
       'exported_at': DateTime.now().toIso8601String(),
@@ -495,7 +500,7 @@ class ExportService {
       final isDesktop =
           Platform.isWindows || Platform.isLinux || Platform.isMacOS;
       final path = await FilePicker.platform.saveFile(
-        dialogTitle: 'ბტკ ჩანაწერების ექსპორტი',
+        dialogTitle: l10n.exportBtkTitle,
         fileName: filename,
         type: isDesktop ? FileType.custom : FileType.any,
         allowedExtensions: isDesktop ? ['btk'] : null,
@@ -505,20 +510,20 @@ class ExportService {
       if (isDesktop) await File(path).writeAsBytes(bytes);
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(isDesktop ? 'შენახულია: $path' : 'ექსპორტირებულია'),
+          content: Text(isDesktop ? l10n.savedAtPath(path) : l10n.exported),
           duration: const Duration(seconds: 4),
         ));
       }
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('შეცდომა: $e')));
+            .showSnackBar(SnackBar(content: Text(l10n.errorWithDetail('$e'))));
       }
     }
   }
 
   /// Picks a .btk file and parses it. Returns null if user cancels.
-  static Future<List<BtkRecord>?> parseBtkFile() async {
+  static Future<List<BtkRecord>?> parseBtkFile(AppLocalizations l10n) async {
     // Android doesn't support custom MIME-less extensions via FileType.custom
     final isDesktop = !kIsWeb &&
         (Platform.isWindows || Platform.isLinux || Platform.isMacOS);
@@ -536,12 +541,12 @@ class ExportService {
     } else if (f.path != null) {
       content = await File(f.path!).readAsString();
     } else {
-      throw Exception('ფაილი ვერ წაიკითხა');
+      throw Exception(l10n.fileReadFailed);
     }
 
     final map = jsonDecode(content) as Map<String, dynamic>;
     if (map['btk_export_version'] == null || map['records'] == null) {
-      throw Exception('არასწორი .btk ფაილის ფორმატი');
+      throw Exception(l10n.invalidBtkFile);
     }
     final list = map['records'] as List<dynamic>;
     return list
@@ -587,7 +592,8 @@ class ExportService {
     return sb.toString();
   }
 
-  static Future<void> shareKml(List<BtkRecord> records) async {
+  static Future<void> shareKml(
+      List<BtkRecord> records, AppLocalizations l10n) async {
     final content = buildKml(records);
     final bytes = utf8.encode(content);
     final filename = 'btk_${_fmtDate(DateTime.now())}.kml';
@@ -601,13 +607,14 @@ class ExportService {
     final tmp = await getTemporaryDirectory();
     final file = File('${tmp.path}/$filename');
     await file.writeAsBytes(bytes);
-    await Share.shareXFiles([XFile(file.path)], subject: 'ბტკ KML');
+    await Share.shareXFiles([XFile(file.path)], subject: l10n.shareRecordsKml);
   }
 
   // ── .btkz (ZIP with photos) ──────────────────────────────────────────────────
 
   static Future<void> exportBtkz(
       List<BtkRecord> records, BuildContext context) async {
+        final l10n = AppLocalizations.of(context)!;
     final archive = Archive();
 
     // records.json
@@ -674,7 +681,7 @@ class ExportService {
       final isDesktop =
           Platform.isWindows || Platform.isLinux || Platform.isMacOS;
       final path = await FilePicker.platform.saveFile(
-        dialogTitle: 'ბტკ ჩანაწერები + ფოტოები',
+        dialogTitle: l10n.exportBtkzTitle,
         fileName: filename,
         type: isDesktop ? FileType.custom : FileType.any,
         allowedExtensions: isDesktop ? ['btkz'] : null,
@@ -684,26 +691,29 @@ class ExportService {
       if (isDesktop) await File(path).writeAsBytes(zipBytes);
       if (context.mounted) {
         final suffix = [
-          if (photosMeta.isNotEmpty) '${photosMeta.length} ფოტო',
-          if (tracksMeta.isNotEmpty) '${tracksMeta.length} GPS ტრეკი',
+          if (photosMeta.isNotEmpty) l10n.photosCount(photosMeta.length),
+          if (tracksMeta.isNotEmpty) l10n.tracksCount(tracksMeta.length),
         ].join(', ');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(isDesktop
-              ? 'შენახულია: $path'
-              : 'ექსპორტირებულია${suffix.isNotEmpty ? ' ($suffix)' : ''}'),
+              ? l10n.savedAtPath(path)
+              : suffix.isNotEmpty
+                  ? l10n.exportedWith(suffix)
+                  : l10n.exported),
           duration: const Duration(seconds: 4),
         ));
       }
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('შეცდომა: $e')));
+            .showSnackBar(SnackBar(content: Text(l10n.errorWithDetail('$e'))));
       }
     }
   }
 
   /// Returns null if user cancels.
-  static Future<({List<BtkRecord> records, int photoCount, int trackCount})?> parseBtkzFile() async {
+  static Future<({List<BtkRecord> records, int photoCount, int trackCount})?> parseBtkzFile(
+      AppLocalizations l10n) async {
     final isDesktop = !kIsWeb &&
         (Platform.isWindows || Platform.isLinux || Platform.isMacOS);
     final result = await FilePicker.platform.pickFiles(
@@ -720,13 +730,13 @@ class ExportService {
     } else if (f.path != null) {
       bytes = await File(f.path!).readAsBytes();
     } else {
-      throw Exception('ფაილი ვერ წაიკითხა');
+      throw Exception(l10n.fileReadFailed);
     }
 
     final archive = ZipDecoder().decodeBytes(bytes);
 
     final rFile = archive.findFile('records.json');
-    if (rFile == null) throw Exception('არასწორი .btkz ფორმატი');
+    if (rFile == null) throw Exception(l10n.invalidBtkzFile);
     final map = jsonDecode(utf8.decode(rFile.content as List<int>))
         as Map<String, dynamic>;
     final records = (map['records'] as List)

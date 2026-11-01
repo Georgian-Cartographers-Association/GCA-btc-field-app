@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../models/btk_record.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 class GeomassSection extends StatefulWidget {
   final BtkRecord record;
@@ -120,12 +121,13 @@ class _GeomassSectionState extends State<GeomassSection> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _header(context, 'გეომასების კვლევა — ბტკ-ის ვ.პ. მიწისზედა ნაწ.'),
+          _header(context, l10n.geomassHeader),
           const SizedBox(height: 12),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -136,18 +138,18 @@ class _GeomassSectionState extends State<GeomassSection> {
                       .primaryContainer
                       .withValues(alpha: 0.5)),
               columnSpacing: 8,
-              columns: const [
-                DataColumn(label: Text('სექ.', style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text('სიღ.', style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text('პედ.მოც.', style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text('პედ.რ.', style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text('ლით.რ.', style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text('ლით.სმ.', style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text('ჰიდ.რ.', style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text('ჰიდ.სვ.', style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text('ჰიდ.მშ.', style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text('ფიტ.სვ.', style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text('ფიტ.მშ.', style: TextStyle(fontSize: 11))),
+              columns: [
+                DataColumn(label: Text(l10n.gmSection, style: TextStyle(fontSize: 11))),
+                DataColumn(label: Text(l10n.gmDepth, style: TextStyle(fontSize: 11))),
+                DataColumn(label: Text(l10n.gmPedBulk, style: TextStyle(fontSize: 11))),
+                DataColumn(label: Text(l10n.gmPedQty, style: TextStyle(fontSize: 11))),
+                DataColumn(label: Text(l10n.gmLithQty, style: TextStyle(fontSize: 11))),
+                DataColumn(label: Text(l10n.gmLithDens, style: TextStyle(fontSize: 11))),
+                DataColumn(label: Text(l10n.gmHydQty, style: TextStyle(fontSize: 11))),
+                DataColumn(label: Text(l10n.gmHydWet, style: TextStyle(fontSize: 11))),
+                DataColumn(label: Text(l10n.gmHydDry, style: TextStyle(fontSize: 11))),
+                DataColumn(label: Text(l10n.gmPhytWet, style: TextStyle(fontSize: 11))),
+                DataColumn(label: Text(l10n.gmPhytDry, style: TextStyle(fontSize: 11))),
                 DataColumn(label: Text('', style: TextStyle(fontSize: 11))),
               ],
               rows: List.generate(widget.record.geomasses.length, (i) {
@@ -177,9 +179,9 @@ class _GeomassSectionState extends State<GeomassSection> {
           TextButton.icon(
               onPressed: _addRow,
               icon: const Icon(Icons.add),
-              label: const Text('სტრიქ.')),
+              label: Text(l10n.rowShort)),
           const SizedBox(height: 20),
-          _header(context, 'ხე-მცენარეების ფიტომასა (ტ/ჰა)'),
+          _header(context, l10n.treePhytomassHeader),
           const SizedBox(height: 8),
           TextField(
             controller: _expPlotSizeCtrl,
@@ -187,8 +189,8 @@ class _GeomassSectionState extends State<GeomassSection> {
               widget.record.experimentPlotSize = v;
               widget.onChanged(widget.record);
             },
-            decoration: const InputDecoration(
-              labelText: 'ექსპ. ნაკვ. ზომა',
+            decoration: InputDecoration(
+              labelText: l10n.experimentPlotSize,
               border: OutlineInputBorder(),
               isDense: true,
               contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -204,19 +206,19 @@ class _GeomassSectionState extends State<GeomassSection> {
                       .primaryContainer
                       .withValues(alpha: 0.5)),
               columnSpacing: 8,
-              columns: const [
-                DataColumn(label: Text('სახ.', style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text('მ.წ.', style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text('სვ.მ.', style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text('სვ.ფ.', style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text('სვ.ტ.', style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text('სვ.ფეს.', style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text('სვ.ჯ.', style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text('მშ.მ.', style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text('მშ.ფ.', style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text('მშ.ტ.', style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text('მშ.ფეს.', style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text('მშ.ჯ.', style: TextStyle(fontSize: 11))),
+              columns: [
+                DataColumn(label: Text(l10n.tpSpecies, style: TextStyle(fontSize: 11))),
+                DataColumn(label: Text(l10n.tpVolume, style: TextStyle(fontSize: 11))),
+                DataColumn(label: Text(l10n.tpWetWood, style: TextStyle(fontSize: 11))),
+                DataColumn(label: Text(l10n.tpWetLeaves, style: TextStyle(fontSize: 11))),
+                DataColumn(label: Text(l10n.tpWetBranches, style: TextStyle(fontSize: 11))),
+                DataColumn(label: Text(l10n.tpWetRoots, style: TextStyle(fontSize: 11))),
+                DataColumn(label: Text(l10n.tpWetTotal, style: TextStyle(fontSize: 11))),
+                DataColumn(label: Text(l10n.tpDryWood, style: TextStyle(fontSize: 11))),
+                DataColumn(label: Text(l10n.tpDryLeaves, style: TextStyle(fontSize: 11))),
+                DataColumn(label: Text(l10n.tpDryBranches, style: TextStyle(fontSize: 11))),
+                DataColumn(label: Text(l10n.tpDryRoots, style: TextStyle(fontSize: 11))),
+                DataColumn(label: Text(l10n.tpDryTotal, style: TextStyle(fontSize: 11))),
                 DataColumn(label: Text('', style: TextStyle(fontSize: 11))),
               ],
               rows: List.generate(widget.record.treePhytomass.length, (i) {
@@ -247,7 +249,7 @@ class _GeomassSectionState extends State<GeomassSection> {
           TextButton.icon(
               onPressed: _addTree,
               icon: const Icon(Icons.add),
-              label: const Text('ხე-მც. სტრიქ.')),
+              label: Text(l10n.treeRowShort)),
         ],
       ),
     );

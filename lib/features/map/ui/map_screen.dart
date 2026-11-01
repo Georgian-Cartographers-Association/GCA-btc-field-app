@@ -33,6 +33,7 @@ import '../../gps/domain/gps_track_provider.dart';
 import '../../settings/domain/settings_provider.dart';
 import '../../../data/services/analytics_service.dart';
 import '../../../data/services/export_service.dart';
+import '../../../l10n/localized_text.dart';
 
 class MapScreen extends ConsumerStatefulWidget {
   const MapScreen({super.key});
@@ -239,7 +240,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   Future<void> _buildSearchIndex() async {
     final index = <GeoSearchResult>[];
 
-    Future<void> load(String asset, String field, String label) async {
+    Future<void> load(String asset, String field, LocalizedText label) async {
       try {
         final raw = await rootBundle.loadString(asset);
         final features = (jsonDecode(raw) as Map)['features'] as List;
@@ -274,8 +275,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     }
 
     await Future.wait([
-      load(AppConstants.regionsGeojsonPath, 'REGION_ENG', 'რეგიონი'),
-      load(AppConstants.municipalitiesGeojsonPath, 'DISTR_ENG', 'მუნიციპალიტეტი'),
+      load(AppConstants.regionsGeojsonPath, 'REGION_ENG', (l10n) => l10n.placeRegion),
+      load(AppConstants.municipalitiesGeojsonPath, 'DISTR_ENG', (l10n) => l10n.placeMunicipality),
     ]);
     index.sort((a, b) => a.name.compareTo(b.name));
     if (mounted) setState(() => _searchIndex = index);
@@ -340,6 +341,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   // ── GPS Track finished sheet ──────────────────────────────────────────────
 
   void _showTrackFinishedSheet(BuildContext ctx, GpsTrack track) {
+    final l10n = AppLocalizations.of(context)!;
     double totalMeters = 0;
     if (track.points.length >= 2) {
       const calc = Distance();
@@ -358,13 +360,13 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     final m = duration.inMinutes.remainder(60);
     final s = duration.inSeconds.remainder(60);
     final durationStr = h > 0
-        ? '$h სთ $m წთ $s წმ'
+        ? '$h ${l10n.unitHour} $m ${l10n.unitMin} $s ${l10n.unitSec}'
         : m > 0
-            ? '$m წთ $s წმ'
-            : '$s წმ';
+            ? '$m ${l10n.unitMin} $s ${l10n.unitSec}'
+            : '$s ${l10n.unitSec}';
     final distStr = totalMeters >= 1000
-        ? '${(totalMeters / 1000).toStringAsFixed(2)} კმ'
-        : '${totalMeters.toStringAsFixed(0)} მ';
+        ? '${(totalMeters / 1000).toStringAsFixed(2)} ${l10n.unitKm}'
+        : '${totalMeters.toStringAsFixed(0)} ${l10n.unitM}';
 
     showModalBottomSheet(
       context: ctx,
@@ -379,7 +381,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
             Row(children: [
               const Icon(Icons.route, size: 28),
               const SizedBox(width: 12),
-              Text('GPS ტრეკი დასრულდა',
+              Text(l10n.gpsTrackFinished,
                   style: Theme.of(ctx)
                       .textTheme
                       .titleLarge
@@ -390,15 +392,15 @@ class _MapScreenState extends ConsumerState<MapScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _TrackStat(
-                    label: 'მანძილი',
+                    label: l10n.distance,
                     value: distStr,
                     icon: Icons.straighten),
                 _TrackStat(
-                    label: 'ხანგრძლ.',
+                    label: l10n.durationShort,
                     value: durationStr,
                     icon: Icons.timer_outlined),
                 _TrackStat(
-                    label: 'წერტილი',
+                    label: l10n.trackPoints,
                     value: '${track.points.length}',
                     icon: Icons.location_on_outlined),
               ],
@@ -408,7 +410,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
               Expanded(
                 child: OutlinedButton.icon(
                   icon: const Icon(Icons.close),
-                  label: const Text('დახურვა'),
+                  label: Text(l10n.close),
                   onPressed: () => Navigator.pop(ctx),
                 ),
               ),
@@ -416,10 +418,10 @@ class _MapScreenState extends ConsumerState<MapScreen> {
               Expanded(
                 child: ElevatedButton.icon(
                   icon: const Icon(Icons.download_outlined),
-                  label: const Text('GPX-ის გადმოტვირთვა'),
+                  label: Text(l10n.downloadGpx),
                   onPressed: () async {
                     Navigator.pop(ctx);
-                    await ExportService.shareGpx(track);
+                    await ExportService.shareGpx(track, l10n);
                     AnalyticsService.logGpxExported();
                   },
                 ),
@@ -435,6 +437,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final layers = ref.watch(mapLayersProvider);
     final records = ref.watch(btkProvider);
     final measuring = _measureMode != MeasureMode.none;
@@ -577,7 +580,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: Text(
-                      'რუკაზე დააჭირეთ წერტილის დასამატებლად',
+                      l10n.tapMapToAddPoint,
                       style: TextStyle(
                           color: Theme.of(context)
                               .colorScheme
@@ -604,7 +607,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
               children: [
                 _MapButton(
                   icon: Icons.search,
-                  tooltip: 'ძებნა',
+                  tooltip: l10n.search,
                   onTap: _openSearch,
                 ),
                 const SizedBox(height: 16),
@@ -687,7 +690,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 const SizedBox(height: 8),
                 _MapButton(
                   icon: Icons.zoom_out_map,
-                  tooltip: 'საქართველო',
+                  tooltip: l10n.georgia,
                   onTap: _fitToGeorgia,
                 ),
                 const SizedBox(height: 8),

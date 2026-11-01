@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:latlong2/latlong.dart';
 import '../../../../utils/measurement_service.dart';
 import '../../../../utils/utm_service.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 class MeasurementPanel extends StatelessWidget {
   final MeasureMode mode;
@@ -24,6 +25,7 @@ class MeasurementPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final scheme = Theme.of(context).colorScheme;
     return Material(
       elevation: 8,
@@ -41,7 +43,7 @@ class MeasurementPanel extends StatelessWidget {
                 Icon(Icons.straighten, size: 16, color: scheme.primary),
                 const SizedBox(width: 6),
                 Text(
-                  'გამზომი',
+                  l10n.measureTool,
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: scheme.primary,
@@ -53,7 +55,7 @@ class MeasurementPanel extends StatelessWidget {
                     icon: const Icon(Icons.undo, size: 20),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
-                    tooltip: 'უკან (undo)',
+                    tooltip: l10n.undo,
                     onPressed: onUndo,
                   ),
                   const SizedBox(width: 12),
@@ -61,7 +63,7 @@ class MeasurementPanel extends StatelessWidget {
                     icon: const Icon(Icons.delete_outline, size: 20),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
-                    tooltip: 'გასუფთავება',
+                    tooltip: l10n.clear,
                     onPressed: onClear,
                   ),
                   const SizedBox(width: 12),
@@ -70,7 +72,7 @@ class MeasurementPanel extends StatelessWidget {
                   icon: const Icon(Icons.close, size: 20),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
-                  tooltip: 'დახურვა',
+                  tooltip: l10n.close,
                   onPressed: onClose,
                 ),
               ],
@@ -84,7 +86,7 @@ class MeasurementPanel extends StatelessWidget {
                 Expanded(
                   child: _ModeButton(
                     icon: Icons.location_on_outlined,
-                    label: 'კოორდ.',
+                    label: l10n.measureCoords,
                     active: mode == MeasureMode.coordinate,
                     onTap: () => onModeChanged(MeasureMode.coordinate),
                   ),
@@ -93,7 +95,7 @@ class MeasurementPanel extends StatelessWidget {
                 Expanded(
                   child: _ModeButton(
                     icon: Icons.straighten,
-                    label: 'ხაზი',
+                    label: l10n.measureLine,
                     active: mode == MeasureMode.line,
                     onTap: () => onModeChanged(MeasureMode.line),
                   ),
@@ -102,7 +104,7 @@ class MeasurementPanel extends StatelessWidget {
                 Expanded(
                   child: _ModeButton(
                     icon: Icons.hexagon_outlined,
-                    label: 'პოლიგ.',
+                    label: l10n.measurePolygon,
                     active: mode == MeasureMode.polygon,
                     onTap: () => onModeChanged(MeasureMode.polygon),
                   ),
@@ -114,7 +116,7 @@ class MeasurementPanel extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: Text(
-                  _hint(mode),
+                  _hint(mode, AppLocalizations.of(context)!),
                   style: Theme.of(context)
                       .textTheme
                       .bodySmall
@@ -134,14 +136,14 @@ class MeasurementPanel extends StatelessWidget {
     );
   }
 
-  String _hint(MeasureMode m) {
+  String _hint(MeasureMode m, AppLocalizations l10n) {
     switch (m) {
       case MeasureMode.coordinate:
-        return 'რუკაზე შეეხეთ კოორდინატების სანახავად';
+        return l10n.measureHintCoords;
       case MeasureMode.line:
-        return 'შეეხეთ წერტილების დასამატებლად';
+        return l10n.measureHintLine;
       case MeasureMode.polygon:
-        return 'შეეხეთ პოლიგონის ასაგებად (მინ. 3 წ.)';
+        return l10n.measureHintPolygon;
       case MeasureMode.none:
         return '';
     }
@@ -176,30 +178,32 @@ class MeasurementPanel extends StatelessWidget {
   }
 
   Widget _buildLineResults(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (points.length < 2) {
       return _ResultRow(
-          label: 'წ.', value: '${points.length}', copyValue: '${points.length}');
+          label: l10n.measurePoints, value: '${points.length}', copyValue: '${points.length}');
     }
     final len = MeasurementService.totalLength(points);
-    final lenStr = MeasurementService.formatLength(len);
-    return _ResultRow(label: 'სიგრძე', value: lenStr, copyValue: lenStr);
+    final lenStr = MeasurementService.formatLength(len, l10n);
+    return _ResultRow(label: l10n.measureLength, value: lenStr, copyValue: lenStr);
   }
 
   Widget _buildPolygonResults(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final rows = <Widget>[];
     rows.add(_ResultRow(
-        label: 'წ.',
+        label: l10n.measurePoints,
         value: '${points.length}',
         copyValue: '${points.length}'));
     if (points.length >= 2) {
       final per = MeasurementService.polygonPerimeter(points);
-      final perStr = MeasurementService.formatLength(per);
-      rows.add(_ResultRow(label: 'პერიმეტრი', value: perStr, copyValue: perStr));
+      final perStr = MeasurementService.formatLength(per, l10n);
+      rows.add(_ResultRow(label: l10n.measurePerimeter, value: perStr, copyValue: perStr));
     }
     if (points.length >= 3) {
       final area = MeasurementService.polygonArea(points);
-      final areaStr = MeasurementService.formatArea(area);
-      rows.add(_ResultRow(label: 'ფართობი', value: areaStr, copyValue: areaStr));
+      final areaStr = MeasurementService.formatArea(area, l10n);
+      rows.add(_ResultRow(label: l10n.measureArea, value: areaStr, copyValue: areaStr));
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -270,14 +274,15 @@ class _ResultRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: GestureDetector(
         onTap: () {
           Clipboard.setData(ClipboardData(text: copyValue));
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('კოპირებულია 📋'),
+            SnackBar(
+              content: Text(l10n.copiedClipboard),
               duration: Duration(seconds: 1),
               behavior: SnackBarBehavior.floating,
             ),

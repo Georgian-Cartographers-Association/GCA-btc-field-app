@@ -1207,6 +1207,1878 @@ abstract class AppLocalizations {
   /// In ka, this message translates to:
   /// **'ანგარიში ვერ წაიშალა: {error}'**
   String deleteAccountFailed(String error);
+
+  /// No description provided for @close.
+  ///
+  /// In ka, this message translates to:
+  /// **'დახურვა'**
+  String get close;
+
+  /// No description provided for @search.
+  ///
+  /// In ka, this message translates to:
+  /// **'ძებნა'**
+  String get search;
+
+  /// No description provided for @searchEllipsis.
+  ///
+  /// In ka, this message translates to:
+  /// **'ძებნა...'**
+  String get searchEllipsis;
+
+  /// No description provided for @error.
+  ///
+  /// In ka, this message translates to:
+  /// **'შეცდომა'**
+  String get error;
+
+  /// No description provided for @unknownError.
+  ///
+  /// In ka, this message translates to:
+  /// **'უცნობი შეცდომა'**
+  String get unknownError;
+
+  /// No description provided for @ok.
+  ///
+  /// In ka, this message translates to:
+  /// **'კარგი'**
+  String get ok;
+
+  /// No description provided for @name.
+  ///
+  /// In ka, this message translates to:
+  /// **'სახელი'**
+  String get name;
+
+  /// No description provided for @type.
+  ///
+  /// In ka, this message translates to:
+  /// **'ტიპი'**
+  String get type;
+
+  /// No description provided for @description.
+  ///
+  /// In ka, this message translates to:
+  /// **'დახასიათება'**
+  String get description;
+
+  /// No description provided for @zoomIn.
+  ///
+  /// In ka, this message translates to:
+  /// **'გადიდება'**
+  String get zoomIn;
+
+  /// No description provided for @copied.
+  ///
+  /// In ka, this message translates to:
+  /// **'კოპირებულია'**
+  String get copied;
+
+  /// No description provided for @copiedClipboard.
+  ///
+  /// In ka, this message translates to:
+  /// **'კოპირებულია 📋'**
+  String get copiedClipboard;
+
+  /// No description provided for @statistics.
+  ///
+  /// In ka, this message translates to:
+  /// **'სტატისტიკა'**
+  String get statistics;
+
+  /// No description provided for @photos.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფოტოები'**
+  String get photos;
+
+  /// No description provided for @camera.
+  ///
+  /// In ka, this message translates to:
+  /// **'კამერა'**
+  String get camera;
+
+  /// No description provided for @gallery.
+  ///
+  /// In ka, this message translates to:
+  /// **'გალერეა'**
+  String get gallery;
+
+  /// No description provided for @recordDuplicated.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩანაწერი გადაიწერა ✓'**
+  String get recordDuplicated;
+
+  /// No description provided for @fileType.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფაილის ტიპი'**
+  String get fileType;
+
+  /// No description provided for @btkFileTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'ბტკ ჩანაწერი (.btk)'**
+  String get btkFileTitle;
+
+  /// No description provided for @btkFileSub.
+  ///
+  /// In ka, this message translates to:
+  /// **'ტექსტური მონაცემები'**
+  String get btkFileSub;
+
+  /// No description provided for @btkzFileTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'ბტკ ფოტოებით (.btkz)'**
+  String get btkzFileTitle;
+
+  /// No description provided for @btkzFileSub.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩანაწერები + ფოტოები'**
+  String get btkzFileSub;
+
+  /// No description provided for @deleteRecordConfirm.
+  ///
+  /// In ka, this message translates to:
+  /// **'დარწმუნებული ხართ ამ ჩანაწერის წაშლაში?'**
+  String get deleteRecordConfirm;
+
+  /// No description provided for @exportBtc.
+  ///
+  /// In ka, this message translates to:
+  /// **'ბტკ ექსპორტი'**
+  String get exportBtc;
+
+  /// No description provided for @savedRecords.
+  ///
+  /// In ka, this message translates to:
+  /// **'შენახული ჩანაწერები'**
+  String get savedRecords;
+
+  /// No description provided for @importAction.
+  ///
+  /// In ka, this message translates to:
+  /// **'იმპორტი'**
+  String get importAction;
+
+  /// No description provided for @exportAction.
+  ///
+  /// In ka, this message translates to:
+  /// **'ექსპორტი'**
+  String get exportAction;
+
+  /// No description provided for @pdfDocument.
+  ///
+  /// In ka, this message translates to:
+  /// **'PDF დოკუმენტი'**
+  String get pdfDocument;
+
+  /// No description provided for @recordsSearchHint.
+  ///
+  /// In ka, this message translates to:
+  /// **'ძებნა: სახელი, ID, ლოკაცია, თარიღი...'**
+  String get recordsSearchHint;
+
+  /// No description provided for @share.
+  ///
+  /// In ka, this message translates to:
+  /// **'გაზიარება'**
+  String get share;
+
+  /// No description provided for @saveAsFile.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფაილად შენახვა'**
+  String get saveAsFile;
+
+  /// No description provided for @pdfPreparing.
+  ///
+  /// In ka, this message translates to:
+  /// **'PDF მზადდება...'**
+  String get pdfPreparing;
+
+  /// No description provided for @duplicate.
+  ///
+  /// In ka, this message translates to:
+  /// **'დუბლირება'**
+  String get duplicate;
+
+  /// No description provided for @dataLayers.
+  ///
+  /// In ka, this message translates to:
+  /// **'მონაცემთა შრეები'**
+  String get dataLayers;
+
+  /// No description provided for @rasters.
+  ///
+  /// In ka, this message translates to:
+  /// **'რასტრები'**
+  String get rasters;
+
+  /// No description provided for @webServices.
+  ///
+  /// In ka, this message translates to:
+  /// **'ვებ სერვისები'**
+  String get webServices;
+
+  /// No description provided for @fromDevice.
+  ///
+  /// In ka, this message translates to:
+  /// **'მოწყობილობიდან (PNG/JPG/WebP/TIFF)'**
+  String get fromDevice;
+
+  /// No description provided for @rasterBounds.
+  ///
+  /// In ka, this message translates to:
+  /// **'რასტრის საზღვრები'**
+  String get rasterBounds;
+
+  /// No description provided for @boundNorth.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩრდ. (N)'**
+  String get boundNorth;
+
+  /// No description provided for @boundSouth.
+  ///
+  /// In ka, this message translates to:
+  /// **'სამ. (S)'**
+  String get boundSouth;
+
+  /// No description provided for @boundEast.
+  ///
+  /// In ka, this message translates to:
+  /// **'აღმ. (E)'**
+  String get boundEast;
+
+  /// No description provided for @boundWest.
+  ///
+  /// In ka, this message translates to:
+  /// **'დას. (W)'**
+  String get boundWest;
+
+  /// No description provided for @boundsExample.
+  ///
+  /// In ka, this message translates to:
+  /// **'მაგ.: N:43.5  S:41.0  E:46.8  W:40.0'**
+  String get boundsExample;
+
+  /// No description provided for @noRasterLayers.
+  ///
+  /// In ka, this message translates to:
+  /// **'რასტრული შრეები არ არის'**
+  String get noRasterLayers;
+
+  /// No description provided for @fromTemplate.
+  ///
+  /// In ka, this message translates to:
+  /// **'შაბლონიდან'**
+  String get fromTemplate;
+
+  /// No description provided for @noWebServices.
+  ///
+  /// In ka, this message translates to:
+  /// **'ვებ სერვისები არ არის'**
+  String get noWebServices;
+
+  /// No description provided for @saveAsTemplate.
+  ///
+  /// In ka, this message translates to:
+  /// **'შაბლონად შენახვა'**
+  String get saveAsTemplate;
+
+  /// No description provided for @deleteServiceConfirm.
+  ///
+  /// In ka, this message translates to:
+  /// **'ამ სერვისის წაშლა გსურთ?'**
+  String get deleteServiceConfirm;
+
+  /// No description provided for @chooseTemplate.
+  ///
+  /// In ka, this message translates to:
+  /// **'შაბლონის არჩევა'**
+  String get chooseTemplate;
+
+  /// No description provided for @nameOptional.
+  ///
+  /// In ka, this message translates to:
+  /// **'სახელი (სურვილისამებრ)'**
+  String get nameOptional;
+
+  /// No description provided for @addService.
+  ///
+  /// In ka, this message translates to:
+  /// **'სერვისის დამატება'**
+  String get addService;
+
+  /// No description provided for @editService.
+  ///
+  /// In ka, this message translates to:
+  /// **'სერვისის რედ.'**
+  String get editService;
+
+  /// No description provided for @urlTemplate.
+  ///
+  /// In ka, this message translates to:
+  /// **'URL შაბლონი'**
+  String get urlTemplate;
+
+  /// No description provided for @subdomains.
+  ///
+  /// In ka, this message translates to:
+  /// **'Subdomains (მძიმით)'**
+  String get subdomains;
+
+  /// No description provided for @subdomainsHint.
+  ///
+  /// In ka, this message translates to:
+  /// **'a,b,c  — სურვილისამებრ'**
+  String get subdomainsHint;
+
+  /// No description provided for @wmsServiceUrl.
+  ///
+  /// In ka, this message translates to:
+  /// **'WMS სერვისის URL'**
+  String get wmsServiceUrl;
+
+  /// No description provided for @wmsLayers.
+  ///
+  /// In ka, this message translates to:
+  /// **'შრეები (მძიმით)'**
+  String get wmsLayers;
+
+  /// No description provided for @wmsAutoRequest.
+  ///
+  /// In ka, this message translates to:
+  /// **'WMS GetMap მოთხოვნა ავტომატურად შეიქმნება'**
+  String get wmsAutoRequest;
+
+  /// No description provided for @zoomOutSmall.
+  ///
+  /// In ka, this message translates to:
+  /// **'დაპატარავება'**
+  String get zoomOutSmall;
+
+  /// No description provided for @closeSearch.
+  ///
+  /// In ka, this message translates to:
+  /// **'ძებნის დახურვა'**
+  String get closeSearch;
+
+  /// No description provided for @notFound.
+  ///
+  /// In ka, this message translates to:
+  /// **'ვერ მოიძებნა'**
+  String get notFound;
+
+  /// No description provided for @previous.
+  ///
+  /// In ka, this message translates to:
+  /// **'წინა'**
+  String get previous;
+
+  /// No description provided for @next.
+  ///
+  /// In ka, this message translates to:
+  /// **'შემდეგი'**
+  String get next;
+
+  /// No description provided for @goToPage.
+  ///
+  /// In ka, this message translates to:
+  /// **'გვერდზე გადასვლა'**
+  String get goToPage;
+
+  /// No description provided for @goAction.
+  ///
+  /// In ka, this message translates to:
+  /// **'გადასვლა'**
+  String get goAction;
+
+  /// No description provided for @noRecordsYet.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩანაწერები არ არის'**
+  String get noRecordsYet;
+
+  /// No description provided for @statsTotal.
+  ///
+  /// In ka, this message translates to:
+  /// **'სულ'**
+  String get statsTotal;
+
+  /// No description provided for @statsNoGps.
+  ///
+  /// In ka, this message translates to:
+  /// **'GPS გარეშე'**
+  String get statsNoGps;
+
+  /// No description provided for @statsLast6Months.
+  ///
+  /// In ka, this message translates to:
+  /// **'ბოლო 6 თვე'**
+  String get statsLast6Months;
+
+  /// No description provided for @statsGeoFormations.
+  ///
+  /// In ka, this message translates to:
+  /// **'გეოლოგიური ფორმაციები'**
+  String get statsGeoFormations;
+
+  /// No description provided for @statsReliefTypes.
+  ///
+  /// In ka, this message translates to:
+  /// **'რელიეფის ტიპები'**
+  String get statsReliefTypes;
+
+  /// No description provided for @statsSoilTypes.
+  ///
+  /// In ka, this message translates to:
+  /// **'ნიადაგის ტიპები'**
+  String get statsSoilTypes;
+
+  /// No description provided for @resetPassword.
+  ///
+  /// In ka, this message translates to:
+  /// **'პაროლის აღდგენა'**
+  String get resetPassword;
+
+  /// No description provided for @sentCheck.
+  ///
+  /// In ka, this message translates to:
+  /// **'გაიგზავნა ✓'**
+  String get sentCheck;
+
+  /// No description provided for @screenSection.
+  ///
+  /// In ka, this message translates to:
+  /// **'ეკრანი'**
+  String get screenSection;
+
+  /// No description provided for @exportCoordFormat.
+  ///
+  /// In ka, this message translates to:
+  /// **'კოორდინატის ფორმატი (ექსპ.)'**
+  String get exportCoordFormat;
+
+  /// No description provided for @aboutSection.
+  ///
+  /// In ka, this message translates to:
+  /// **'შესახებ'**
+  String get aboutSection;
+
+  /// No description provided for @organizationLabel.
+  ///
+  /// In ka, this message translates to:
+  /// **'ორგანიზაცია'**
+  String get organizationLabel;
+
+  /// No description provided for @universityLabel.
+  ///
+  /// In ka, this message translates to:
+  /// **'უნივერსიტეტი'**
+  String get universityLabel;
+
+  /// No description provided for @measureTool.
+  ///
+  /// In ka, this message translates to:
+  /// **'გამზომი'**
+  String get measureTool;
+
+  /// No description provided for @undo.
+  ///
+  /// In ka, this message translates to:
+  /// **'უკან (undo)'**
+  String get undo;
+
+  /// No description provided for @clear.
+  ///
+  /// In ka, this message translates to:
+  /// **'გასუფთავება'**
+  String get clear;
+
+  /// No description provided for @measureCoords.
+  ///
+  /// In ka, this message translates to:
+  /// **'კოორდ.'**
+  String get measureCoords;
+
+  /// No description provided for @measureLine.
+  ///
+  /// In ka, this message translates to:
+  /// **'ხაზი'**
+  String get measureLine;
+
+  /// No description provided for @measurePolygon.
+  ///
+  /// In ka, this message translates to:
+  /// **'პოლიგ.'**
+  String get measurePolygon;
+
+  /// No description provided for @measureHintCoords.
+  ///
+  /// In ka, this message translates to:
+  /// **'რუკაზე შეეხეთ კოორდინატების სანახავად'**
+  String get measureHintCoords;
+
+  /// No description provided for @measureHintLine.
+  ///
+  /// In ka, this message translates to:
+  /// **'შეეხეთ წერტილების დასამატებლად'**
+  String get measureHintLine;
+
+  /// No description provided for @measureHintPolygon.
+  ///
+  /// In ka, this message translates to:
+  /// **'შეეხეთ პოლიგონის ასაგებად (მინ. 3 წ.)'**
+  String get measureHintPolygon;
+
+  /// No description provided for @measurePoints.
+  ///
+  /// In ka, this message translates to:
+  /// **'წ.'**
+  String get measurePoints;
+
+  /// No description provided for @measureLength.
+  ///
+  /// In ka, this message translates to:
+  /// **'სიგრძე'**
+  String get measureLength;
+
+  /// No description provided for @measurePerimeter.
+  ///
+  /// In ka, this message translates to:
+  /// **'პერიმეტრი'**
+  String get measurePerimeter;
+
+  /// No description provided for @measureArea.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფართობი'**
+  String get measureArea;
+
+  /// No description provided for @layerControl.
+  ///
+  /// In ka, this message translates to:
+  /// **'შრეების კონტროლი'**
+  String get layerControl;
+
+  /// No description provided for @baseMaps.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფონური რუკები'**
+  String get baseMaps;
+
+  /// No description provided for @adminBoundaries.
+  ///
+  /// In ka, this message translates to:
+  /// **'ადმინისტრაციული საზღვრები'**
+  String get adminBoundaries;
+
+  /// No description provided for @layerRegions.
+  ///
+  /// In ka, this message translates to:
+  /// **'მხარეები'**
+  String get layerRegions;
+
+  /// No description provided for @layerMunicipalities.
+  ///
+  /// In ka, this message translates to:
+  /// **'მუნიციპალიტეტები'**
+  String get layerMunicipalities;
+
+  /// No description provided for @fieldData.
+  ///
+  /// In ka, this message translates to:
+  /// **'საველე მონაცემები'**
+  String get fieldData;
+
+  /// No description provided for @weatherForecast.
+  ///
+  /// In ka, this message translates to:
+  /// **'ამინდის პროგნოზი'**
+  String get weatherForecast;
+
+  /// No description provided for @weatherLoadFailed.
+  ///
+  /// In ka, this message translates to:
+  /// **'ამინდის ჩამოტვირთვა ვერ მოხდა'**
+  String get weatherLoadFailed;
+
+  /// No description provided for @checkInternet.
+  ///
+  /// In ka, this message translates to:
+  /// **'შეამოწმეთ ინტერნეტ კავშირი'**
+  String get checkInternet;
+
+  /// No description provided for @retry.
+  ///
+  /// In ka, this message translates to:
+  /// **'კვლავ ცდა'**
+  String get retry;
+
+  /// No description provided for @forecast24h.
+  ///
+  /// In ka, this message translates to:
+  /// **'24 საათის პროგნოზი'**
+  String get forecast24h;
+
+  /// No description provided for @nextDays.
+  ///
+  /// In ka, this message translates to:
+  /// **'მომდევნო დღეები'**
+  String get nextDays;
+
+  /// No description provided for @weatherCredit.
+  ///
+  /// In ka, this message translates to:
+  /// **'ამინდი: '**
+  String get weatherCredit;
+
+  /// No description provided for @placeCity.
+  ///
+  /// In ka, this message translates to:
+  /// **'ქალაქი'**
+  String get placeCity;
+
+  /// No description provided for @placeVillage.
+  ///
+  /// In ka, this message translates to:
+  /// **'სოფელი'**
+  String get placeVillage;
+
+  /// No description provided for @placeAdmin.
+  ///
+  /// In ka, this message translates to:
+  /// **'ადმინისტრაციული ერთეული'**
+  String get placeAdmin;
+
+  /// No description provided for @placeRegion.
+  ///
+  /// In ka, this message translates to:
+  /// **'რეგიონი'**
+  String get placeRegion;
+
+  /// No description provided for @placeSuburb.
+  ///
+  /// In ka, this message translates to:
+  /// **'უბანი'**
+  String get placeSuburb;
+
+  /// No description provided for @placeRiver.
+  ///
+  /// In ka, this message translates to:
+  /// **'მდინარე'**
+  String get placeRiver;
+
+  /// No description provided for @placeMountain.
+  ///
+  /// In ka, this message translates to:
+  /// **'მთა'**
+  String get placeMountain;
+
+  /// No description provided for @placeOther.
+  ///
+  /// In ka, this message translates to:
+  /// **'ადგილი'**
+  String get placeOther;
+
+  /// No description provided for @placeMunicipality.
+  ///
+  /// In ka, this message translates to:
+  /// **'მუნიციპალიტეტი'**
+  String get placeMunicipality;
+
+  /// No description provided for @mapSearchHint.
+  ///
+  /// In ka, this message translates to:
+  /// **'ძებნა: სოფელი, ქალაქი, რეგიონი...'**
+  String get mapSearchHint;
+
+  /// No description provided for @typeSearchTerm.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩაწერეთ ძებნის სიტყვა'**
+  String get typeSearchTerm;
+
+  /// No description provided for @nothingFound.
+  ///
+  /// In ka, this message translates to:
+  /// **'არაფერი მოიძებნა'**
+  String get nothingFound;
+
+  /// No description provided for @inLayers.
+  ///
+  /// In ka, this message translates to:
+  /// **'შრეებში'**
+  String get inLayers;
+
+  /// No description provided for @placesOsm.
+  ///
+  /// In ka, this message translates to:
+  /// **'ადგილები (OSM)'**
+  String get placesOsm;
+
+  /// No description provided for @gpsTrackFinished.
+  ///
+  /// In ka, this message translates to:
+  /// **'GPS ტრეკი დასრულდა'**
+  String get gpsTrackFinished;
+
+  /// No description provided for @distance.
+  ///
+  /// In ka, this message translates to:
+  /// **'მანძილი'**
+  String get distance;
+
+  /// No description provided for @durationShort.
+  ///
+  /// In ka, this message translates to:
+  /// **'ხანგრძლ.'**
+  String get durationShort;
+
+  /// No description provided for @trackPoints.
+  ///
+  /// In ka, this message translates to:
+  /// **'წერტილი'**
+  String get trackPoints;
+
+  /// No description provided for @downloadGpx.
+  ///
+  /// In ka, this message translates to:
+  /// **'GPX-ის გადმოტვირთვა'**
+  String get downloadGpx;
+
+  /// No description provided for @tapMapToAddPoint.
+  ///
+  /// In ka, this message translates to:
+  /// **'რუკაზე დააჭირეთ წერტილის დასამატებლად'**
+  String get tapMapToAddPoint;
+
+  /// No description provided for @georgia.
+  ///
+  /// In ka, this message translates to:
+  /// **'საქართველო'**
+  String get georgia;
+
+  /// No description provided for @savedCheck.
+  ///
+  /// In ka, this message translates to:
+  /// **'შენახულია ✓'**
+  String get savedCheck;
+
+  /// No description provided for @gpsOff.
+  ///
+  /// In ka, this message translates to:
+  /// **'GPS გათიშულია'**
+  String get gpsOff;
+
+  /// No description provided for @enableGps.
+  ///
+  /// In ka, this message translates to:
+  /// **'GPS ჩართვა'**
+  String get enableGps;
+
+  /// No description provided for @locationBlocked.
+  ///
+  /// In ka, this message translates to:
+  /// **'მდებარეობა აკრძალულია'**
+  String get locationBlocked;
+
+  /// No description provided for @recordChanged.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩანაწერი შეიცვალა'**
+  String get recordChanged;
+
+  /// No description provided for @unsavedChanges.
+  ///
+  /// In ka, this message translates to:
+  /// **'ბოლო ცვლილებები ავტომატურად ჯერ არ შენახულა.'**
+  String get unsavedChanges;
+
+  /// No description provided for @stay.
+  ///
+  /// In ka, this message translates to:
+  /// **'დარჩენა'**
+  String get stay;
+
+  /// No description provided for @exitAction.
+  ///
+  /// In ka, this message translates to:
+  /// **'გასვლა'**
+  String get exitAction;
+
+  /// No description provided for @saveAndExit.
+  ///
+  /// In ka, this message translates to:
+  /// **'შენახვა და გასვლა'**
+  String get saveAndExit;
+
+  /// No description provided for @tabBasic.
+  ///
+  /// In ka, this message translates to:
+  /// **'ძირითადი'**
+  String get tabBasic;
+
+  /// No description provided for @tabPhysGeo.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფიზ.გეოგ.'**
+  String get tabPhysGeo;
+
+  /// No description provided for @tabVegetation.
+  ///
+  /// In ka, this message translates to:
+  /// **'მცენარ.'**
+  String get tabVegetation;
+
+  /// No description provided for @tabGeomass.
+  ///
+  /// In ka, this message translates to:
+  /// **'გეომასა'**
+  String get tabGeomass;
+
+  /// No description provided for @tabVertStruct.
+  ///
+  /// In ka, this message translates to:
+  /// **'ვ.სტრ.'**
+  String get tabVertStruct;
+
+  /// No description provided for @zoomOut.
+  ///
+  /// In ka, this message translates to:
+  /// **'შემცირება'**
+  String get zoomOut;
+
+  /// No description provided for @fullScreen.
+  ///
+  /// In ka, this message translates to:
+  /// **'სრული ეკრანი'**
+  String get fullScreen;
+
+  /// No description provided for @coordFormatHint.
+  ///
+  /// In ka, this message translates to:
+  /// **'DD, DM ან DMS ფორმატი'**
+  String get coordFormatHint;
+
+  /// No description provided for @utmMustBeNumbers.
+  ///
+  /// In ka, this message translates to:
+  /// **'E და N რიცხვებია'**
+  String get utmMustBeNumbers;
+
+  /// No description provided for @outsideGeorgia.
+  ///
+  /// In ka, this message translates to:
+  /// **'საქართველოს საზღვრების გარეთ'**
+  String get outsideGeorgia;
+
+  /// No description provided for @conversionError.
+  ///
+  /// In ka, this message translates to:
+  /// **'კონვერტაციის შეცდომა'**
+  String get conversionError;
+
+  /// No description provided for @coordsWrittenToForm.
+  ///
+  /// In ka, this message translates to:
+  /// **'კოორდინატები ფორმაში ჩაიწერა'**
+  String get coordsWrittenToForm;
+
+  /// No description provided for @coordConverter.
+  ///
+  /// In ka, this message translates to:
+  /// **'კოორდინატების კონვერტერი'**
+  String get coordConverter;
+
+  /// No description provided for @latitudeShort.
+  ///
+  /// In ka, this message translates to:
+  /// **'განედი'**
+  String get latitudeShort;
+
+  /// No description provided for @longitudeShort.
+  ///
+  /// In ka, this message translates to:
+  /// **'გრძედი'**
+  String get longitudeShort;
+
+  /// No description provided for @writeToForm.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩაწერა ფორმაში'**
+  String get writeToForm;
+
+  /// No description provided for @enterCoordsAnyFormat.
+  ///
+  /// In ka, this message translates to:
+  /// **'შეიყვანეთ კოორდინატები ნებისმიერ ფორმატში'**
+  String get enterCoordsAnyFormat;
+
+  /// No description provided for @convert.
+  ///
+  /// In ka, this message translates to:
+  /// **'კონვერტაცია'**
+  String get convert;
+
+  /// No description provided for @writeToFormDd.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩაწერა ფორმაში (DD)'**
+  String get writeToFormDd;
+
+  /// No description provided for @coordsOutsideGeorgia.
+  ///
+  /// In ka, this message translates to:
+  /// **'კოორდინატები საქართველოს საზღვრების გარეთ'**
+  String get coordsOutsideGeorgia;
+
+  /// No description provided for @numbersOnly.
+  ///
+  /// In ka, this message translates to:
+  /// **'მხოლოდ რიცხვი'**
+  String get numbersOnly;
+
+  /// No description provided for @altitudeRange.
+  ///
+  /// In ka, this message translates to:
+  /// **'−500 … 9000 მ'**
+  String get altitudeRange;
+
+  /// No description provided for @btkFullTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'ბუნებრივ-ტერიტორიული კომპლექსის (ბტკ) აღწერა'**
+  String get btkFullTitle;
+
+  /// No description provided for @locationHint.
+  ///
+  /// In ka, this message translates to:
+  /// **'მდებარეობის სახელი / აღწერა'**
+  String get locationHint;
+
+  /// No description provided for @altitudeM.
+  ///
+  /// In ka, this message translates to:
+  /// **'სიმაღლე (მ)'**
+  String get altitudeM;
+
+  /// No description provided for @aspectDeg.
+  ///
+  /// In ka, this message translates to:
+  /// **'ასპექტი (°)'**
+  String get aspectDeg;
+
+  /// No description provided for @geomassHeader.
+  ///
+  /// In ka, this message translates to:
+  /// **'გეომასების კვლევა — ბტკ-ის ვ.პ. მიწისზედა ნაწ.'**
+  String get geomassHeader;
+
+  /// No description provided for @treePhytomassHeader.
+  ///
+  /// In ka, this message translates to:
+  /// **'ხე-მცენარეების ფიტომასა (ტ/ჰა)'**
+  String get treePhytomassHeader;
+
+  /// No description provided for @rowShort.
+  ///
+  /// In ka, this message translates to:
+  /// **'სტრიქ.'**
+  String get rowShort;
+
+  /// No description provided for @treeRowShort.
+  ///
+  /// In ka, this message translates to:
+  /// **'ხე-მც. სტრიქ.'**
+  String get treeRowShort;
+
+  /// No description provided for @gmSection.
+  ///
+  /// In ka, this message translates to:
+  /// **'სექ.'**
+  String get gmSection;
+
+  /// No description provided for @gmDepth.
+  ///
+  /// In ka, this message translates to:
+  /// **'სიღ.'**
+  String get gmDepth;
+
+  /// No description provided for @gmPedBulk.
+  ///
+  /// In ka, this message translates to:
+  /// **'პედ.მოც.'**
+  String get gmPedBulk;
+
+  /// No description provided for @gmPedQty.
+  ///
+  /// In ka, this message translates to:
+  /// **'პედ.რ.'**
+  String get gmPedQty;
+
+  /// No description provided for @gmLithQty.
+  ///
+  /// In ka, this message translates to:
+  /// **'ლით.რ.'**
+  String get gmLithQty;
+
+  /// No description provided for @gmLithDens.
+  ///
+  /// In ka, this message translates to:
+  /// **'ლით.სმ.'**
+  String get gmLithDens;
+
+  /// No description provided for @gmHydQty.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჰიდ.რ.'**
+  String get gmHydQty;
+
+  /// No description provided for @gmHydWet.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჰიდ.სვ.'**
+  String get gmHydWet;
+
+  /// No description provided for @gmHydDry.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჰიდ.მშ.'**
+  String get gmHydDry;
+
+  /// No description provided for @gmPhytWet.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფიტ.სვ.'**
+  String get gmPhytWet;
+
+  /// No description provided for @gmPhytDry.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფიტ.მშ.'**
+  String get gmPhytDry;
+
+  /// No description provided for @tpSpecies.
+  ///
+  /// In ka, this message translates to:
+  /// **'სახ.'**
+  String get tpSpecies;
+
+  /// No description provided for @tpVolume.
+  ///
+  /// In ka, this message translates to:
+  /// **'მ.წ.'**
+  String get tpVolume;
+
+  /// No description provided for @tpWetWood.
+  ///
+  /// In ka, this message translates to:
+  /// **'სვ.მ.'**
+  String get tpWetWood;
+
+  /// No description provided for @tpWetLeaves.
+  ///
+  /// In ka, this message translates to:
+  /// **'სვ.ფ.'**
+  String get tpWetLeaves;
+
+  /// No description provided for @tpWetBranches.
+  ///
+  /// In ka, this message translates to:
+  /// **'სვ.ტ.'**
+  String get tpWetBranches;
+
+  /// No description provided for @tpWetRoots.
+  ///
+  /// In ka, this message translates to:
+  /// **'სვ.ფეს.'**
+  String get tpWetRoots;
+
+  /// No description provided for @tpWetTotal.
+  ///
+  /// In ka, this message translates to:
+  /// **'სვ.ჯ.'**
+  String get tpWetTotal;
+
+  /// No description provided for @tpDryWood.
+  ///
+  /// In ka, this message translates to:
+  /// **'მშ.მ.'**
+  String get tpDryWood;
+
+  /// No description provided for @tpDryLeaves.
+  ///
+  /// In ka, this message translates to:
+  /// **'მშ.ფ.'**
+  String get tpDryLeaves;
+
+  /// No description provided for @tpDryBranches.
+  ///
+  /// In ka, this message translates to:
+  /// **'მშ.ტ.'**
+  String get tpDryBranches;
+
+  /// No description provided for @tpDryRoots.
+  ///
+  /// In ka, this message translates to:
+  /// **'მშ.ფეს.'**
+  String get tpDryRoots;
+
+  /// No description provided for @tpDryTotal.
+  ///
+  /// In ka, this message translates to:
+  /// **'მშ.ჯ.'**
+  String get tpDryTotal;
+
+  /// No description provided for @vegTierShort.
+  ///
+  /// In ka, this message translates to:
+  /// **'იარ.'**
+  String get vegTierShort;
+
+  /// No description provided for @vegHeightM.
+  ///
+  /// In ka, this message translates to:
+  /// **'სიმ. (მ)'**
+  String get vegHeightM;
+
+  /// No description provided for @vegPhenShort.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფენოფ.'**
+  String get vegPhenShort;
+
+  /// No description provided for @soilProfileDescShort.
+  ///
+  /// In ka, this message translates to:
+  /// **'ნიადაგის პროფილის მორფ. დახასიათება'**
+  String get soilProfileDescShort;
+
+  /// No description provided for @morphDescPhotos.
+  ///
+  /// In ka, this message translates to:
+  /// **'მორფ. დახასიათების ფოტოები'**
+  String get morphDescPhotos;
+
+  /// No description provided for @horizonShort.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჰ-ტი'**
+  String get horizonShort;
+
+  /// No description provided for @addHorizon.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჰორიზონტის დამატება'**
+  String get addHorizon;
+
+  /// No description provided for @soilSurfaceFormationShort.
+  ///
+  /// In ka, this message translates to:
+  /// **'ნიადაგ ზედაპ. ფორმაციის ტიპი'**
+  String get soilSurfaceFormationShort;
+
+  /// No description provided for @vertStructDescShort.
+  ///
+  /// In ka, this message translates to:
+  /// **'ვ.პ. მიწისზედა ნ. დამოკიდ. მიწისქვედა ნ.თ.'**
+  String get vertStructDescShort;
+
+  /// No description provided for @vertStructPhotos.
+  ///
+  /// In ka, this message translates to:
+  /// **'ვ.ს. ფოტოები'**
+  String get vertStructPhotos;
+
+  /// No description provided for @deletePhoto.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფოტოს წაშლა'**
+  String get deletePhoto;
+
+  /// No description provided for @deletePhotoConfirm.
+  ///
+  /// In ka, this message translates to:
+  /// **'გსურთ ამ ფოტოს წაშლა?'**
+  String get deletePhotoConfirm;
+
+  /// No description provided for @noPhotoAdded.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფოტო არ არის დამატებული'**
+  String get noPhotoAdded;
+
+  /// No description provided for @cameraOrGallery.
+  ///
+  /// In ka, this message translates to:
+  /// **'კამერა ან გალერეა'**
+  String get cameraOrGallery;
+
+  /// No description provided for @noPhotoHint.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფოტო არ არის. გადაიღეთ კამერით ან მიაბით გალერეიდან.'**
+  String get noPhotoHint;
+
+  /// No description provided for @updateLater.
+  ///
+  /// In ka, this message translates to:
+  /// **'შემდეგ'**
+  String get updateLater;
+
+  /// No description provided for @updateDownload.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩამოტვირთვა'**
+  String get updateDownload;
+
+  /// No description provided for @layersEmptyHelp.
+  ///
+  /// In ka, this message translates to:
+  /// **'📁 \"მოწყობილობიდან\" — ფაილი მოწყობილობიდან\n\n📦 assets-ბეჭდვა — catalog.json-ში:\n  \"file\": \"assets/rasters/map.png\"\n  ფორმატები: PNG · JPG · WebP · TIFF'**
+  String get layersEmptyHelp;
+
+  /// No description provided for @resetPasswordPrompt.
+  ///
+  /// In ka, this message translates to:
+  /// **'შეიყვანეთ ელ-ფოსტა — გამოგიგზავნოთ განახლების ბმული.'**
+  String get resetPasswordPrompt;
+
+  /// No description provided for @soilLegend.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფ.=ფერი  მ.შ.=მექ.შედგ.  სტ.=სტრ.  ფ.=ფ-ნ.  სმ.=სიმკვ.  ახ.=ახ-ნ.  ხ.=ხ-ნ.  ტ.=ტ-ბა  ჰ.=ჰ-ს.  ქ.=ქ.საზ.'**
+  String get soilLegend;
+
+  /// No description provided for @otherUserChanged.
+  ///
+  /// In ka, this message translates to:
+  /// **'⚠️ სხვა მომხმარებელმა ჩანაწერი შეცვალა — თქვენი ვერსია შენახულია'**
+  String get otherUserChanged;
+
+  /// No description provided for @gpsOffMessage.
+  ///
+  /// In ka, this message translates to:
+  /// **'კოორდინატების დასადგენად GPS (მდებარეობის სერვისი) ჩართული უნდა იყოს.'**
+  String get gpsOffMessage;
+
+  /// No description provided for @locationBlockedMessage.
+  ///
+  /// In ka, this message translates to:
+  /// **'აპლიკაციას მდებარეობაზე წვდომა არ აქვს. გახსენით პარამეტრები და ჩართეთ.'**
+  String get locationBlockedMessage;
+
+  /// No description provided for @copySuffix.
+  ///
+  /// In ka, this message translates to:
+  /// **'(ასლი)'**
+  String get copySuffix;
+
+  /// No description provided for @authUserNotFound.
+  ///
+  /// In ka, this message translates to:
+  /// **'მომხმარებელი ვერ მოიძებნა'**
+  String get authUserNotFound;
+
+  /// No description provided for @authWrongPassword.
+  ///
+  /// In ka, this message translates to:
+  /// **'პაროლი არასწორია'**
+  String get authWrongPassword;
+
+  /// No description provided for @authInvalidCredential.
+  ///
+  /// In ka, this message translates to:
+  /// **'ელ-ფოსტა ან პაროლი არასწორია'**
+  String get authInvalidCredential;
+
+  /// No description provided for @authEmailInUse.
+  ///
+  /// In ka, this message translates to:
+  /// **'ეს ელ-ფოსტა უკვე გამოყენებულია'**
+  String get authEmailInUse;
+
+  /// No description provided for @authWeakPassword.
+  ///
+  /// In ka, this message translates to:
+  /// **'პაროლი ძალიან სუსტია (მინ. 6 სიმბოლო)'**
+  String get authWeakPassword;
+
+  /// No description provided for @authInvalidEmail.
+  ///
+  /// In ka, this message translates to:
+  /// **'ელ-ფოსტის ფორმატი არასწორია'**
+  String get authInvalidEmail;
+
+  /// No description provided for @authMethodDisabled.
+  ///
+  /// In ka, this message translates to:
+  /// **'ეს შესვლის მეთოდი გათიშულია'**
+  String get authMethodDisabled;
+
+  /// No description provided for @authUserDisabled.
+  ///
+  /// In ka, this message translates to:
+  /// **'ანგარიში დაბლოკილია'**
+  String get authUserDisabled;
+
+  /// No description provided for @authTooManyRequests.
+  ///
+  /// In ka, this message translates to:
+  /// **'ძალიან ბევრი მცდელობა — ცოტა ხანი დაიცადეთ'**
+  String get authTooManyRequests;
+
+  /// No description provided for @authNetworkError.
+  ///
+  /// In ka, this message translates to:
+  /// **'ქსელის შეცდომა — შეამოწმეთ ინტერნეტი'**
+  String get authNetworkError;
+
+  /// No description provided for @authSystemError.
+  ///
+  /// In ka, this message translates to:
+  /// **'სისტემური შეცდომა'**
+  String get authSystemError;
+
+  /// No description provided for @authEnterEmailFirst.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჯერ შეიყვანეთ ელ-ფოსტა'**
+  String get authEnterEmailFirst;
+
+  /// No description provided for @authRulesError.
+  ///
+  /// In ka, this message translates to:
+  /// **'Firestore Rules შეცდომა — allowed_users კოლექციაზე \"allow read: if true\" გახსენით.'**
+  String get authRulesError;
+
+  /// No description provided for @fileReadFailed.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფაილი ვერ წაიკითხა'**
+  String get fileReadFailed;
+
+  /// No description provided for @invalidBtkFile.
+  ///
+  /// In ka, this message translates to:
+  /// **'არასწორი .btk ფაილის ფორმატი'**
+  String get invalidBtkFile;
+
+  /// No description provided for @invalidBtkzFile.
+  ///
+  /// In ka, this message translates to:
+  /// **'არასწორი .btkz ფორმატი'**
+  String get invalidBtkzFile;
+
+  /// No description provided for @shareRecordsGeoJson.
+  ///
+  /// In ka, this message translates to:
+  /// **'ბტკ ჩანაწერები — GeoJSON'**
+  String get shareRecordsGeoJson;
+
+  /// No description provided for @shareRecordsCsv.
+  ///
+  /// In ka, this message translates to:
+  /// **'ბტკ ჩანაწერები — CSV'**
+  String get shareRecordsCsv;
+
+  /// No description provided for @shareRecordsKml.
+  ///
+  /// In ka, this message translates to:
+  /// **'ბტკ KML'**
+  String get shareRecordsKml;
+
+  /// No description provided for @savePdfTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'PDF შენახვა'**
+  String get savePdfTitle;
+
+  /// No description provided for @pdfSaved.
+  ///
+  /// In ka, this message translates to:
+  /// **'PDF შენახულია'**
+  String get pdfSaved;
+
+  /// No description provided for @exportBtkTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'ბტკ ჩანაწერების ექსპორტი'**
+  String get exportBtkTitle;
+
+  /// No description provided for @exportBtkzTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'ბტკ ჩანაწერები + ფოტოები'**
+  String get exportBtkzTitle;
+
+  /// No description provided for @exported.
+  ///
+  /// In ka, this message translates to:
+  /// **'ექსპორტირებულია'**
+  String get exported;
+
+  /// No description provided for @unitKm.
+  ///
+  /// In ka, this message translates to:
+  /// **'კმ'**
+  String get unitKm;
+
+  /// No description provided for @unitM.
+  ///
+  /// In ka, this message translates to:
+  /// **'მ'**
+  String get unitM;
+
+  /// No description provided for @unitKm2.
+  ///
+  /// In ka, this message translates to:
+  /// **'კმ²'**
+  String get unitKm2;
+
+  /// No description provided for @unitM2.
+  ///
+  /// In ka, this message translates to:
+  /// **'მ²'**
+  String get unitM2;
+
+  /// No description provided for @unitHa.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჰა'**
+  String get unitHa;
+
+  /// No description provided for @unitMps.
+  ///
+  /// In ka, this message translates to:
+  /// **'მ/წ'**
+  String get unitMps;
+
+  /// No description provided for @unitMm.
+  ///
+  /// In ka, this message translates to:
+  /// **'მმ'**
+  String get unitMm;
+
+  /// No description provided for @unitHour.
+  ///
+  /// In ka, this message translates to:
+  /// **'სთ'**
+  String get unitHour;
+
+  /// No description provided for @unitMin.
+  ///
+  /// In ka, this message translates to:
+  /// **'წთ'**
+  String get unitMin;
+
+  /// No description provided for @unitSec.
+  ///
+  /// In ka, this message translates to:
+  /// **'წმ'**
+  String get unitSec;
+
+  /// No description provided for @windN.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩ'**
+  String get windN;
+
+  /// No description provided for @windNE.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩ-აღ'**
+  String get windNE;
+
+  /// No description provided for @windE.
+  ///
+  /// In ka, this message translates to:
+  /// **'აღ'**
+  String get windE;
+
+  /// No description provided for @windSE.
+  ///
+  /// In ka, this message translates to:
+  /// **'სამ-აღ'**
+  String get windSE;
+
+  /// No description provided for @windS.
+  ///
+  /// In ka, this message translates to:
+  /// **'სამ'**
+  String get windS;
+
+  /// No description provided for @windSW.
+  ///
+  /// In ka, this message translates to:
+  /// **'სამ-დ'**
+  String get windSW;
+
+  /// No description provided for @windW.
+  ///
+  /// In ka, this message translates to:
+  /// **'დ'**
+  String get windW;
+
+  /// No description provided for @windNW.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩ-დ'**
+  String get windNW;
+
+  /// No description provided for @today.
+  ///
+  /// In ka, this message translates to:
+  /// **'დღეს'**
+  String get today;
+
+  /// No description provided for @tomorrow.
+  ///
+  /// In ka, this message translates to:
+  /// **'ხვალ'**
+  String get tomorrow;
+
+  /// No description provided for @daySun.
+  ///
+  /// In ka, this message translates to:
+  /// **'კვირა'**
+  String get daySun;
+
+  /// No description provided for @dayMon.
+  ///
+  /// In ka, this message translates to:
+  /// **'ორშ'**
+  String get dayMon;
+
+  /// No description provided for @dayTue.
+  ///
+  /// In ka, this message translates to:
+  /// **'სამშ'**
+  String get dayTue;
+
+  /// No description provided for @dayWed.
+  ///
+  /// In ka, this message translates to:
+  /// **'ოთხ'**
+  String get dayWed;
+
+  /// No description provided for @dayThu.
+  ///
+  /// In ka, this message translates to:
+  /// **'ხუთ'**
+  String get dayThu;
+
+  /// No description provided for @dayFri.
+  ///
+  /// In ka, this message translates to:
+  /// **'პარ'**
+  String get dayFri;
+
+  /// No description provided for @daySat.
+  ///
+  /// In ka, this message translates to:
+  /// **'შაბ'**
+  String get daySat;
+
+  /// No description provided for @wxThunder.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჭექა-ქუხილი'**
+  String get wxThunder;
+
+  /// No description provided for @wxHeavyRain.
+  ///
+  /// In ka, this message translates to:
+  /// **'ძლიერი წვიმა'**
+  String get wxHeavyRain;
+
+  /// No description provided for @wxRain.
+  ///
+  /// In ka, this message translates to:
+  /// **'წვიმა'**
+  String get wxRain;
+
+  /// No description provided for @wxSleet.
+  ///
+  /// In ka, this message translates to:
+  /// **'თოვა-წვიმა'**
+  String get wxSleet;
+
+  /// No description provided for @wxSnow.
+  ///
+  /// In ka, this message translates to:
+  /// **'თოვლი'**
+  String get wxSnow;
+
+  /// No description provided for @wxFog.
+  ///
+  /// In ka, this message translates to:
+  /// **'ნისლი'**
+  String get wxFog;
+
+  /// No description provided for @wxClear.
+  ///
+  /// In ka, this message translates to:
+  /// **'მოწმენდილი'**
+  String get wxClear;
+
+  /// No description provided for @wxFair.
+  ///
+  /// In ka, this message translates to:
+  /// **'ნათელი'**
+  String get wxFair;
+
+  /// No description provided for @wxPartlyCloudy.
+  ///
+  /// In ka, this message translates to:
+  /// **'ნაწილობრივ ღრუბლიანი'**
+  String get wxPartlyCloudy;
+
+  /// No description provided for @wxOvercast.
+  ///
+  /// In ka, this message translates to:
+  /// **'მოღრუბლული'**
+  String get wxOvercast;
+
+  /// No description provided for @wxCloudy.
+  ///
+  /// In ka, this message translates to:
+  /// **'ღრუბლიანი'**
+  String get wxCloudy;
+
+  /// No description provided for @wxUnknown.
+  ///
+  /// In ka, this message translates to:
+  /// **'ამინდი'**
+  String get wxUnknown;
+
+  /// No description provided for @monthJan.
+  ///
+  /// In ka, this message translates to:
+  /// **'იანვ'**
+  String get monthJan;
+
+  /// No description provided for @monthFeb.
+  ///
+  /// In ka, this message translates to:
+  /// **'თებ'**
+  String get monthFeb;
+
+  /// No description provided for @monthMar.
+  ///
+  /// In ka, this message translates to:
+  /// **'მარ'**
+  String get monthMar;
+
+  /// No description provided for @monthApr.
+  ///
+  /// In ka, this message translates to:
+  /// **'აპრ'**
+  String get monthApr;
+
+  /// No description provided for @monthMay.
+  ///
+  /// In ka, this message translates to:
+  /// **'მაი'**
+  String get monthMay;
+
+  /// No description provided for @monthJun.
+  ///
+  /// In ka, this message translates to:
+  /// **'ივნ'**
+  String get monthJun;
+
+  /// No description provided for @monthJul.
+  ///
+  /// In ka, this message translates to:
+  /// **'ივლ'**
+  String get monthJul;
+
+  /// No description provided for @monthAug.
+  ///
+  /// In ka, this message translates to:
+  /// **'აგვ'**
+  String get monthAug;
+
+  /// No description provided for @monthSep.
+  ///
+  /// In ka, this message translates to:
+  /// **'სექ'**
+  String get monthSep;
+
+  /// No description provided for @monthOct.
+  ///
+  /// In ka, this message translates to:
+  /// **'ოქტ'**
+  String get monthOct;
+
+  /// No description provided for @monthNov.
+  ///
+  /// In ka, this message translates to:
+  /// **'ნოე'**
+  String get monthNov;
+
+  /// No description provided for @monthDec.
+  ///
+  /// In ka, this message translates to:
+  /// **'დეკ'**
+  String get monthDec;
+
+  /// No description provided for @errorWithDetail.
+  ///
+  /// In ka, this message translates to:
+  /// **'შეცდომა: {detail}'**
+  String errorWithDetail(String detail);
+
+  /// No description provided for @authErrorCode.
+  ///
+  /// In ka, this message translates to:
+  /// **'შეცდომა ({code})'**
+  String authErrorCode(String code);
+
+  /// No description provided for @authDbError.
+  ///
+  /// In ka, this message translates to:
+  /// **'DB შეცდომა ({code})'**
+  String authDbError(String code);
+
+  /// No description provided for @resetLinkSent.
+  ///
+  /// In ka, this message translates to:
+  /// **'პაროლის განახლების ბმული გამოიგზავნა:\n\n{email}\n\nშეამოწმეთ ელ-ფოსტა (spam-საც).'**
+  String resetLinkSent(String email);
+
+  /// No description provided for @deleteRecordsConfirm.
+  ///
+  /// In ka, this message translates to:
+  /// **'{count} ჩანაწერი საბოლოოდ წაიშლება?'**
+  String deleteRecordsConfirm(int count);
+
+  /// No description provided for @recordsCount.
+  ///
+  /// In ka, this message translates to:
+  /// **'{count} ჩანაწერი'**
+  String recordsCount(int count);
+
+  /// No description provided for @photosCount.
+  ///
+  /// In ka, this message translates to:
+  /// **'{count} ფოტო'**
+  String photosCount(int count);
+
+  /// No description provided for @tracksCount.
+  ///
+  /// In ka, this message translates to:
+  /// **'{count} GPS ტრეკი'**
+  String tracksCount(int count);
+
+  /// No description provided for @importedParts.
+  ///
+  /// In ka, this message translates to:
+  /// **'{parts} შემოიტანა'**
+  String importedParts(String parts);
+
+  /// No description provided for @importedSummary.
+  ///
+  /// In ka, this message translates to:
+  /// **'{total} ჩანაწერი შემოიტანა ({added} ახალი, {updated} განახლდა)'**
+  String importedSummary(int total, int added, int updated);
+
+  /// No description provided for @queryNotFound.
+  ///
+  /// In ka, this message translates to:
+  /// **'\"{query}\" — არ მოიძებნა'**
+  String queryNotFound(String query);
+
+  /// No description provided for @btkNumber.
+  ///
+  /// In ka, this message translates to:
+  /// **'ბტკ #{id}'**
+  String btkNumber(String id);
+
+  /// No description provided for @templateSaved.
+  ///
+  /// In ka, this message translates to:
+  /// **'\"{name}\" შაბლონებში შეინახა ✓'**
+  String templateSaved(String name);
+
+  /// No description provided for @pageOf.
+  ///
+  /// In ka, this message translates to:
+  /// **'გვ. {current} / {total}'**
+  String pageOf(int current, int total);
+
+  /// No description provided for @pageRange.
+  ///
+  /// In ka, this message translates to:
+  /// **'გვ. (1–{count})'**
+  String pageRange(int count);
+
+  /// No description provided for @recordsOnMap.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩანაწერები რუქაზე ({count})'**
+  String recordsOnMap(int count);
+
+  /// No description provided for @recordsDownloaded.
+  ///
+  /// In ka, this message translates to:
+  /// **'{count} ჩანაწერი გადმოიწერა ✓'**
+  String recordsDownloaded(int count);
+
+  /// No description provided for @photoOpenFailed.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფოტო ვერ გაიხსნა: {error}'**
+  String photoOpenFailed(String error);
+
+  /// No description provided for @photoSaveFailed.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფოტო ვერ შეინახა: {error}'**
+  String photoSaveFailed(String error);
+
+  /// No description provided for @newVersionAvailable.
+  ///
+  /// In ka, this message translates to:
+  /// **'ახალი ვერსია v{version} ხელმისაწვდომია'**
+  String newVersionAvailable(String version);
+
+  /// No description provided for @savedAtPath.
+  ///
+  /// In ka, this message translates to:
+  /// **'შენახულია: {path}'**
+  String savedAtPath(String path);
+
+  /// No description provided for @exportedWith.
+  ///
+  /// In ka, this message translates to:
+  /// **'ექსპორტირებულია ({details})'**
+  String exportedWith(String details);
+
+  /// No description provided for @shareGpsTrack.
+  ///
+  /// In ka, this message translates to:
+  /// **'GPS ტრეკი — {date}'**
+  String shareGpsTrack(String date);
+
+  /// No description provided for @shareBtkFile.
+  ///
+  /// In ka, this message translates to:
+  /// **'ბტკ — {filename}'**
+  String shareBtkFile(String filename);
+
+  /// No description provided for @photoLabel.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფოტო'**
+  String get photoLabel;
 }
 
 class _AppLocalizationsDelegate

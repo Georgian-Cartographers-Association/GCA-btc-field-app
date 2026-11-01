@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../../models/btk_record.dart';
 import '../../domain/photo_provider.dart';
 import '../widgets/section_photo_panel.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 class VerticalStructureSection extends ConsumerStatefulWidget {
   final BtkRecord record;
@@ -47,6 +48,7 @@ class _VerticalStructureSectionState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final r = widget.record;
     final photos = ref.watch(photoProvider(_photoKey));
     final notifier = ref.read(photoProvider(_photoKey).notifier);
@@ -56,13 +58,13 @@ class _VerticalStructureSectionState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _vsHeader(context, 'ბტკ-ის ვერტიკალური სტრუქტურა'),
+          _vsHeader(context, l10n.verticalStructure),
           const SizedBox(height: 16),
           TextField(
             controller: _typeNameCtrl,
             onChanged: (v) => widget.onChanged(r..vertStructTypeName = v),
-            decoration: const InputDecoration(
-              labelText: 'ვ.ს. ტიპის სახელწოდება',
+            decoration: InputDecoration(
+              labelText: l10n.vertStructTypeName,
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               isDense: true,
@@ -75,8 +77,8 @@ class _VerticalStructureSectionState
                 child: TextField(
                   controller: _indexCtrl,
                   onChanged: (v) => widget.onChanged(r..vertStructIndex = v),
-                  decoration: const InputDecoration(
-                    labelText: 'ინდექსი',
+                  decoration: InputDecoration(
+                    labelText: l10n.vertStructIndex,
                     border: OutlineInputBorder(),
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -89,8 +91,8 @@ class _VerticalStructureSectionState
                 child: TextField(
                   controller: _heightCtrl,
                   onChanged: (v) => widget.onChanged(r..vertStructHeight = v),
-                  decoration: const InputDecoration(
-                    labelText: 'სიმაღლე',
+                  decoration: InputDecoration(
+                    labelText: l10n.vegHeight,
                     border: OutlineInputBorder(),
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -105,8 +107,8 @@ class _VerticalStructureSectionState
             controller: _descCtrl,
             onChanged: (v) => widget.onChanged(r..vertStructDesc = v),
             maxLines: 4,
-            decoration: const InputDecoration(
-              labelText: 'ვ.პ. მიწისზედა ნ. დამოკიდ. მიწისქვედა ნ.თ.',
+            decoration: InputDecoration(
+              labelText: l10n.vertStructDescShort,
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               isDense: true,
@@ -116,7 +118,7 @@ class _VerticalStructureSectionState
 
           // ── Vert-struct photos ──────────────────────────────────────
           SectionPhotoPanel(
-            label: 'ვ.ს. ფოტოები',
+            label: l10n.vertStructPhotos,
             photos: photos,
             onCamera: () => notifier.addFromSource(ImageSource.camera, context),
             onGallery: () => notifier.addFromSource(ImageSource.gallery, context),
@@ -126,7 +128,7 @@ class _VerticalStructureSectionState
                 builder: (_) => SectionFullScreenGallery(
                   photos: photos,
                   initialIndex: i,
-                  title: 'ვ.სტრ.',
+                  title: l10n.tabVertStruct,
                 ),
               ),
             ),

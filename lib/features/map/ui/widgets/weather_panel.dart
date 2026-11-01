@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../../models/weather_data.dart';
 import '../../../../data/services/weather_service.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 /// Centered dialog that shows yr.no weather for the given coordinates.
 /// Opened via [showWeatherDialog] — NOT a bottom sheet.
@@ -64,6 +65,7 @@ class _WeatherPanelState extends State<WeatherPanel> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return SingleChildScrollView(
@@ -79,7 +81,7 @@ class _WeatherPanelState extends State<WeatherPanel> {
                 Icon(Icons.cloud_outlined, color: colorScheme.primary, size: 20),
                 const SizedBox(width: 8),
                 Text(
-                  'ამინდის პროგნოზი',
+                  l10n.weatherForecast,
                   style: Theme.of(context)
                       .textTheme
                       .titleMedium
@@ -96,7 +98,7 @@ class _WeatherPanelState extends State<WeatherPanel> {
                 const SizedBox(width: 4),
                 IconButton(
                   icon: const Icon(Icons.refresh, size: 20),
-                  tooltip: 'განახლება',
+                  tooltip: l10n.refresh,
                   onPressed: () {
                     WeatherService.clearCache();
                     _fetch();
@@ -245,7 +247,7 @@ class _ErrorView extends StatelessWidget {
                   size: 52, color: Colors.grey.shade400),
               const SizedBox(height: 12),
               Text(
-                'ამინდის ჩამოტვირთვა ვერ მოხდა',
+                AppLocalizations.of(context)!.weatherLoadFailed,
                 style: TextStyle(
                     color: Colors.grey.shade600,
                     fontWeight: FontWeight.w500),
@@ -253,7 +255,7 @@ class _ErrorView extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               Text(
-                'შეამოწმეთ ინტერნეტ კავშირი',
+                AppLocalizations.of(context)!.checkInternet,
                 style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
                 textAlign: TextAlign.center,
               ),
@@ -261,7 +263,7 @@ class _ErrorView extends StatelessWidget {
               OutlinedButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh, size: 18),
-                label: const Text('კვლავ ცდა'),
+                label: Text(AppLocalizations.of(context)!.retry),
               ),
             ],
           ),
@@ -277,6 +279,7 @@ class _WeatherContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final cur = data.current;
     final colorScheme = Theme.of(context).colorScheme;
     final tempColor = cur.temperature > 0 ? Colors.deepOrange : Colors.blue;
@@ -300,7 +303,7 @@ class _WeatherContent extends StatelessWidget {
                       style: const TextStyle(fontSize: 52, height: 1.1)),
                   const SizedBox(height: 4),
                   Text(
-                    WeatherData.symbolGeorgian(cur.symbolCode),
+                    WeatherData.symbolLabel(cur.symbolCode, l10n),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
@@ -318,13 +321,13 @@ class _WeatherContent extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   _InfoRow(Icons.air,
-                      '${cur.windSpeed.toStringAsFixed(1)} მ/წ  ${cur.windDirLabel}'),
+                      '${cur.windSpeed.toStringAsFixed(1)} ${l10n.unitMps}  ${cur.windDirLabel(l10n)}'),
                   const SizedBox(height: 4),
                   _InfoRow(Icons.water_drop_outlined, '${cur.humidity.round()}%'),
                   if (cur.precipitation > 0) ...[
                     const SizedBox(height: 4),
                     _InfoRow(Icons.umbrella_outlined,
-                        '${cur.precipitation.toStringAsFixed(1)} მმ'),
+                        '${cur.precipitation.toStringAsFixed(1)} ${l10n.unitMm}'),
                   ],
                 ],
               ),
@@ -335,7 +338,7 @@ class _WeatherContent extends StatelessWidget {
         const SizedBox(height: 16),
 
         // ── 24h forecast ────────────────────────────────────────────────────
-        _SectionLabel('24 საათის პროგნოზი', colorScheme),
+        _SectionLabel(l10n.forecast24h, colorScheme),
         const SizedBox(height: 8),
         SizedBox(
           height: 90,
@@ -355,7 +358,7 @@ class _WeatherContent extends StatelessWidget {
 
         // ── Multi-day ────────────────────────────────────────────────────────
         if (data.daily.isNotEmpty) ...[
-          _SectionLabel('მომდევნო დღეები', colorScheme),
+          _SectionLabel(l10n.nextDays, colorScheme),
           const SizedBox(height: 8),
           ...data.daily.map((day) => _DailyRow(day: day)),
           const SizedBox(height: 8),
@@ -365,7 +368,7 @@ class _WeatherContent extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            const Text('ამინდი: ',
+            Text(l10n.weatherCredit,
                 style: TextStyle(fontSize: 10, color: Colors.grey)),
             const Text(
               'yr.no / MET Norway',
@@ -430,6 +433,7 @@ class _ForecastTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final timeStr = DateFormat('HH:mm').format(hour.time.toLocal());
     final tempColor =
         hour.temperature > 0 ? Colors.deepOrange.shade400 : Colors.blue.shade400;
@@ -459,7 +463,7 @@ class _ForecastTile extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   color: tempColor)),
           if (hour.precipitation > 0)
-            Text('${hour.precipitation.toStringAsFixed(1)}მმ',
+            Text('${hour.precipitation.toStringAsFixed(1)}${l10n.unitMm}',
                 style: const TextStyle(fontSize: 9, color: Colors.blue))
           else
             const SizedBox(height: 10),
@@ -475,8 +479,9 @@ class _DailyRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
-    final isHighlighted = day.dayName == 'ხვალ' || day.dayName == 'დღეს';
+    final isHighlighted = day.isTomorrow || day.isToday;
     final hasRain = day.totalPrecip > 0.2;
 
     return Container(
@@ -493,7 +498,7 @@ class _DailyRow extends StatelessWidget {
           SizedBox(
             width: 48,
             child: Text(
-              day.dayName,
+              day.dayName(l10n),
               style: TextStyle(
                   fontSize: 13,
                   fontWeight:
@@ -504,7 +509,7 @@ class _DailyRow extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              WeatherData.symbolGeorgian(day.symbolCode),
+              WeatherData.symbolLabel(day.symbolCode, l10n),
               style: Theme.of(context).textTheme.bodySmall,
               overflow: TextOverflow.ellipsis,
             ),
@@ -512,7 +517,7 @@ class _DailyRow extends StatelessWidget {
           if (hasRain) ...[
             const Icon(Icons.water_drop_outlined, size: 13, color: Colors.blue),
             const SizedBox(width: 2),
-            Text('${day.totalPrecip.toStringAsFixed(0)}მმ',
+            Text('${day.totalPrecip.toStringAsFixed(0)}${l10n.unitMm}',
                 style: const TextStyle(fontSize: 11, color: Colors.blue)),
             const SizedBox(width: 8),
           ],

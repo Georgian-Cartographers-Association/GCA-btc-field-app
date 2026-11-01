@@ -3,11 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/constants.dart';
 import '../../settings/domain/settings_provider.dart';
+import '../../../l10n/localized_text.dart';
 
 class ExpeditionFormState {
   final bool busy;
   final String? createdCode;
-  final String? joinError;
+  final LocalizedText? joinError;
 
   const ExpeditionFormState({
     this.busy = false,
@@ -24,7 +25,7 @@ class ExpeditionFormState {
         busy: busy ?? this.busy,
         createdCode:
             createdCode == _keep ? this.createdCode : createdCode as String?,
-        joinError: joinError == _keep ? this.joinError : joinError as String?,
+        joinError: joinError == _keep ? this.joinError : joinError as LocalizedText?,
       );
 }
 
@@ -75,8 +76,8 @@ class ExpeditionFormNotifier extends StateNotifier<ExpeditionFormState> {
   Future<String?> join(String code) async {
     if (code.length != AppConstants.expeditionCodeLength) {
       state = state.copyWith(
-          joinError: 'კოდი უნდა შედგებოდეს '
-              '${AppConstants.expeditionCodeLength} სიმბოლოსგან');
+          joinError: (l10n) =>
+              l10n.invalidCode(AppConstants.expeditionCodeLength));
       return null;
     }
     state = state.copyWith(busy: true, joinError: null);
@@ -84,14 +85,14 @@ class ExpeditionFormNotifier extends StateNotifier<ExpeditionFormState> {
       final doc = await _expeditions.doc(code).get();
       if (!doc.exists) {
         state = state.copyWith(
-            busy: false, joinError: 'ასეთი ექსპედიცია არ მოიძებნა');
+            busy: false, joinError: (l10n) => l10n.expeditionNotFound);
         return null;
       }
       await _ref.read(settingsProvider.notifier).joinExpedition(code);
       state = state.copyWith(busy: false);
       return code;
     } catch (e) {
-      state = state.copyWith(busy: false, joinError: 'შეცდომა: $e');
+      state = state.copyWith(busy: false, joinError: (l10n) => l10n.errorWithDetail('$e'));
       return null;
     }
   }

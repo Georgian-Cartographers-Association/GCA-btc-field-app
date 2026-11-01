@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 import '../../../database/btk_database.dart';
 import '../../../models/photo.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 class PhotoNotifier extends StateNotifier<List<Photo>> {
   PhotoNotifier(this.recordId) : super([]) {
@@ -29,7 +30,7 @@ class PhotoNotifier extends StateNotifier<List<Photo>> {
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('ფოტო ვერ გაიხსნა: $e')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.photoOpenFailed('$e'))),
         );
       }
       return;
@@ -61,7 +62,7 @@ class PhotoNotifier extends StateNotifier<List<Photo>> {
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('ფოტო ვერ შეინახა: $e')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.photoSaveFailed('$e'))),
         );
       }
     }

@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:latlong2/latlong.dart';
 import 'utm_service.dart';
+import '../l10n/generated/app_localizations.dart';
 
 enum MeasureMode { none, coordinate, line, polygon }
 
@@ -42,18 +43,21 @@ class MeasurementService {
     return totalLength([...pts, pts.first]);
   }
 
-  static String formatLength(double m) {
-    if (m >= 1000) return '${_n(m / 1000, 3)} კმ';
-    return '${_n(m, 1)} მ';
+  static String formatLength(double m, AppLocalizations l10n) {
+    if (m >= 1000) return '${_n(m / 1000, 3)} ${l10n.unitKm}';
+    return '${_n(m, 1)} ${l10n.unitM}';
   }
 
-  static String formatArea(double m2) {
-    if (m2 >= 1000000) return '${_n(m2 / 1000000, 4)} კმ²';
-    if (m2 >= 10000) return '${_n(m2 / 10000, 2)} ჰა  (${_fmtM2(m2)})';
-    return _fmtM2(m2);
+  static String formatArea(double m2, AppLocalizations l10n) {
+    if (m2 >= 1000000) return '${_n(m2 / 1000000, 4)} ${l10n.unitKm2}';
+    if (m2 >= 10000) {
+      return '${_n(m2 / 10000, 2)} ${l10n.unitHa}  (${_fmtM2(m2, l10n)})';
+    }
+    return _fmtM2(m2, l10n);
   }
 
-  static String _fmtM2(double m2) => '${_n(m2, 1)} მ²';
+  static String _fmtM2(double m2, AppLocalizations l10n) =>
+      '${_n(m2, 1)} ${l10n.unitM2}';
 
   static String formatWgs84(double lat, double lon) =>
       '${lat.toStringAsFixed(6)}°${lat >= 0 ? "N" : "S"}   '

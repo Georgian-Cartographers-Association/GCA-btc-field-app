@@ -89,7 +89,7 @@ class SettingsScreen extends ConsumerWidget {
 
           // ── ეკრანი ────────────────────────────────────────────────
           if (!kIsWeb) ...[
-            const _SectionHeader('ეკრანი'),
+            _SectionHeader(l10n.screenSection),
             SwitchListTile(
               secondary: const Icon(Icons.screen_lock_portrait_outlined),
               title: Text(l10n.keepScreenOn),
@@ -104,7 +104,7 @@ class SettingsScreen extends ConsumerWidget {
           ],
 
           // -- export coord format --
-          const _SectionHeader('კოორდინატის ფორმატი (ექსპ.)'),
+          _SectionHeader(l10n.exportCoordFormat),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
             child: Wrap(
@@ -137,7 +137,7 @@ class SettingsScreen extends ConsumerWidget {
           const Divider(),
 
           // ── შესახებ ────────────────────────────────────────────────
-          const _SectionHeader('შესახებ'),
+          _SectionHeader(l10n.aboutSection),
 
           FutureBuilder<PackageInfo>(
             future: PackageInfo.fromPlatform(),
@@ -146,22 +146,22 @@ class SettingsScreen extends ConsumerWidget {
               final build = snapshot.data?.buildNumber ?? '';
               return ListTile(
                 leading: const Icon(Icons.info_outline),
-                title: const Text('ვერსია'),
+                title: Text(l10n.version),
                 subtitle: Text('$ver+$build'),
               );
             },
           ),
 
-          const ListTile(
+          ListTile(
             leading: Icon(Icons.business_outlined),
-            title: Text('ორგანიზაცია'),
+            title: Text(l10n.organizationLabel),
             subtitle: Text(
                 'ალ. ასლანიკაშვილის სახ.\nსაქართველოს კარტოგრაფთა ასოციაცია'),
           ),
 
-          const ListTile(
+          ListTile(
             leading: Icon(Icons.school_outlined),
-            title: Text('უნივერსიტეტი'),
+            title: Text(l10n.universityLabel),
             subtitle: Text('ი. ჯავახიშვილის სახ. თბილისის სახ. უნ-ტი'),
           ),
 
@@ -295,6 +295,7 @@ class _StorageSectionState extends ConsumerState<_StorageSection> {
   }
 
   Future<void> _downloadCloud() async {
+    final l10n = AppLocalizations.of(context)!;
     final user = ref.read(authProvider).valueOrNull;
     if (user == null) return;
     setState(() => _busy = true);
@@ -302,13 +303,13 @@ class _StorageSectionState extends ConsumerState<_StorageSection> {
       final count = await SyncService.downloadCloudToLocal(user.uid);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('$count ჩანაწერი გადმოიწერა ✓')),
+          SnackBar(content: Text(l10n.recordsDownloaded(count))),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('შეცდომა: $e')),
+          SnackBar(content: Text(l10n.errorWithDetail('$e'))),
         );
       }
     } finally {

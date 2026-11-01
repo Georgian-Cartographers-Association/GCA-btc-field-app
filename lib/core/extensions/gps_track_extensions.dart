@@ -1,11 +1,12 @@
 import 'package:latlong2/latlong.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../models/gps_track.dart';
 import 'duration_extensions.dart';
 
 extension GpsTrackX on GpsTrack {
-  /// Haversine distance across all track points, formatted as "1.23 კმ" or "456 მ".
-  String get formattedDistance {
-    if (points.length < 2) return '0 მ';
+  /// Haversine distance across all track points, formatted as "1.23 km" or "456 m".
+  String formattedDistance(AppLocalizations l10n) {
+    if (points.length < 2) return '0 ${l10n.unitM}';
     const calc = Distance();
     double total = 0;
     for (int i = 1; i < points.length; i++) {
@@ -15,13 +16,13 @@ extension GpsTrackX on GpsTrack {
       );
     }
     return total >= 1000
-        ? '${(total / 1000).toStringAsFixed(2)} კმ'
-        : '${total.toStringAsFixed(0)} მ';
+        ? '${(total / 1000).toStringAsFixed(2)} ${l10n.unitKm}'
+        : '${total.toStringAsFixed(0)} ${l10n.unitM}';
   }
 
   /// Formatted recording duration, or "—" if still active.
-  String get formattedDuration {
+  String formattedDuration(AppLocalizations l10n) {
     if (endedAt == null) return '—';
-    return endedAt!.difference(startedAt).toGeorgianString();
+    return endedAt!.difference(startedAt).toLocalizedString(l10n);
   }
 }
