@@ -1,14 +1,12 @@
 # Screenshots
 
-Place app screenshots here. Recommended names and sizes:
-
-| File | Screen | Recommended size |
+| File | Screen | Used in |
 |---|---|---|
-| `records.png` | ჩანაწერების სია (Records list) | 1080×2340 or 1920×1080 |
-| `form.png` | ბტკ ბლანკი (BTC Form) | 1080×2340 or 1920×1080 |
-| `map.png` | რუქა (Map view) | 1080×2340 or 1920×1080 |
-| `stats.png` | სტატისტიკა (Stats dashboard) | 1080×2340 or 1920×1080 |
-| `gps.png` | GPS ტრეკი (GPS Track) | 1080×2340 or 1920×1080 |
-| `export.png` | ექსპორტი (Export menu) | 1080×2340 or 1920×1080 |
+| `play/1_map_layers.png` | რუქა და ფენების პანელი | README, Google Play |
+| `play/2_record_form.png` | ბტკ ბლანკი | README, Google Play |
+| `play/3_records_list.png` | ჩანაწერების სია | README, Google Play |
+| `play/4_settings.png` | პარამეტრები | README, Google Play |
+| `desktop_map_measure.png` | ფართობის გაზომვა (Linux) | README |
+| `desktop_coord_converter.png` | კოორდინატების კონვერტერი (Linux) | README |
 
-After adding all 6 files, uncomment the `<table>` block in the root `README.md`.
+Google Play phone screenshots must be 9:16, so `play/` images are 1080×1920.
