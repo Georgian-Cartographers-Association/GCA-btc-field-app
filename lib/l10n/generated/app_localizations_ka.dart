@@ -561,4 +561,23 @@ class AppLocalizationsKa extends AppLocalizations {
 
   @override
   String get paramsShort => 'პარამ.';
+
+  @override
+  String get deleteAccount => 'ანგარიშის წაშლა';
+
+  @override
+  String get deleteAccountSub =>
+      'ანგარიში და ღრუბელში შენახული ჩანაწერები სამუდამოდ წაიშლება';
+
+  @override
+  String get deleteAccountWarning =>
+      'წაიშლება თქვენი ანგარიში და ღრუბელში შენახული ყველა ჩანაწერი. მოწყობილობაზე შენახული ჩანაწერები და ექსპედიციაში გაზიარებული ჩანაწერები დარჩება. ეს მოქმედება შეუქცევადია.\n\nდასადასტურებლად შეიყვანეთ პაროლი:';
+
+  @override
+  String get accountDeleted => 'ანგარიში წაიშალა';
+
+  @override
+  String deleteAccountFailed(String error) {
+    return 'ანგარიში ვერ წაიშალა: $error';
+  }
 }

@@ -10,6 +10,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import '../../../core/locale.dart';
 import '../../auth/domain/firebase_auth_provider.dart';
 import '../domain/settings_provider.dart';
+import '../../../data/services/account_service.dart';
 import '../../../data/services/sync_service.dart';
 import '../../../l10n/generated/app_localizations.dart';
 
@@ -337,6 +338,72 @@ class _StorageSectionState extends ConsumerState<_StorageSection> {
     await widget.notifier.setStorageMode(StorageMode.local);
   }
 
+  Future<void> _deleteAccount() async {
+    final l10n = AppLocalizations.of(context)!;
+    final passwordCtrl = TextEditingController();
+    final password = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.deleteAccount),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l10n.deleteAccountWarning),
+            const SizedBox(height: 12),
+            TextField(
+              controller: passwordCtrl,
+              obscureText: true,
+              autofocus: true,
+              decoration: InputDecoration(labelText: l10n.password),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(l10n.cancel)),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red, foregroundColor: Colors.white),
+            onPressed: () => Navigator.pop(ctx, passwordCtrl.text),
+            child: Text(l10n.deleteAccount),
+          ),
+        ],
+      ),
+    );
+    passwordCtrl.dispose();
+    if (password == null || password.isEmpty) return;
+
+    setState(() => _busy = true);
+    try {
+      await AccountService.deleteAccount(password);
+      await widget.notifier.setStorageMode(StorageMode.local);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.accountDeleted)),
+        );
+      }
+    } on FirebaseException catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.deleteAccountFailed(e.code))),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Widget _deleteAccountTile(AppLocalizations l10n) => ListTile(
+        leading: const Icon(Icons.delete_forever_outlined, color: Colors.red),
+        title: Text(l10n.deleteAccount,
+            style: const TextStyle(color: Colors.red)),
+        subtitle: Text(l10n.deleteAccountSub),
+        dense: true,
+        onTap: _busy ? null : _deleteAccount,
+      );
+
   // ── Build ─────────────────────────────────────────────────────────────────
 
   @override
@@ -421,6 +488,7 @@ class _StorageSectionState extends ConsumerState<_StorageSection> {
                 size: 14, color: Colors.grey),
             onTap: _switchToExpedition,
           ),
+          _deleteAccountTile(l10n),
         ],
 
         // ── Expedition mode ────────────────────────────────────────────
@@ -499,6 +567,7 @@ class _StorageSectionState extends ConsumerState<_StorageSection> {
             dense: true,
             onTap: _leaveExpedition,
           ),
+          if (user != null) _deleteAccountTile(l10n),
         ],
 
         // ── Local mode info ────────────────────────────────────────────

@@ -185,5 +185,12 @@
   "trackHistory": "ტრეკების ისტორია",
   "map": "რუკა",
   "methodologyShort": "მეთოდიკა",
-  "paramsShort": "პარამ."
+  "paramsShort": "პარამ.",
+
+  "deleteAccount": "ანგარიშის წაშლა",
+  "deleteAccountSub": "ანგარიში და ღრუბელში შენახული ჩანაწერები სამუდამოდ წაიშლება",
+  "deleteAccountWarning": "წაიშლება თქვენი ანგარიში და ღრუბელში შენახული ყველა ჩანაწერი. მოწყობილობაზე შენახული ჩანაწერები და ექსპედიციაში გაზიარებული ჩანაწერები დარჩება. ეს მოქმედება შეუქცევადია.\n\nდასადასტურებლად შეიყვანეთ პაროლი:",
+  "accountDeleted": "ანგარიში წაიშალა",
+  "deleteAccountFailed": "ანგარიში ვერ წაიშალა: {error}",
+  "@deleteAccountFailed": { "placeholders": { "error": { "type": "String" } } }
 }

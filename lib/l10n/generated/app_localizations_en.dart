@@ -560,4 +560,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get paramsShort => 'Params';
+
+  @override
+  String get deleteAccount => 'Delete account';
+
+  @override
+  String get deleteAccountSub =>
+      'Permanently delete your account and cloud records';
+
+  @override
+  String get deleteAccountWarning =>
+      'Your account and all records stored in the cloud will be deleted. Records stored on this device and records shared in an expedition are kept. This cannot be undone.\n\nEnter your password to confirm:';
+
+  @override
+  String get accountDeleted => 'Account deleted';
+
+  @override
+  String deleteAccountFailed(String error) {
+    return 'Could not delete account: $error';
+  }
 }
