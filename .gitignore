@@ -49,3 +49,15 @@ android/key.properties
 android/app/*.jks
 android/app/*.keystore
 android/app/*.b64
+android/app/*.p12
+**/key.properties
+**/*.jks
+**/*.keystore
+**/*.p12
+**/*.pepk
+**/upload-keystore*
+**/credentials.properties
+# Upload certificate is public but is kept with the key backup, not in the repo
+**/upload_certificate.pem
+**/upload_certificate.der
+/android/build/
