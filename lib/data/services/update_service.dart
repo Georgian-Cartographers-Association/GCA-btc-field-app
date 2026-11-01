@@ -13,7 +13,10 @@ class UpdateService {
   static bool _checked = false;
 
   static Future<void> checkAndNotify(BuildContext context) async {
-    if (kIsWeb || _checked) return;
+    // Google Play forbids pointing users to updates outside Play.
+    if (kIsWeb || defaultTargetPlatform == TargetPlatform.android || _checked) {
+      return;
+    }
     _checked = true;
     try {
       final info = await PackageInfo.fromPlatform();
