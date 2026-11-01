@@ -119,6 +119,13 @@ class _GeomassSectionState extends State<GeomassSection> {
     widget.onChanged(widget.record);
   }
 
+  // A table cell edits its row in place, so it must report the change itself or
+  // the edit gets no autosave and no unsaved-changes warning.
+  ValueChanged<String> _edit(void Function(String) set) => (v) {
+        set(v);
+        widget.onChanged(widget.record);
+      };
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -156,17 +163,17 @@ class _GeomassSectionState extends State<GeomassSection> {
                 final g = widget.record.geomasses[i];
                 final cs = _geoCtrls[i];
                 return DataRow(cells: [
-                  DataCell(_gcell(cs[0], (v) => g.section = v)),
-                  DataCell(_gcell(cs[1], (v) => g.depth = v)),
-                  DataCell(_gcell(cs[2], (v) => g.pedomassBulk = v)),
-                  DataCell(_gcell(cs[3], (v) => g.pedomassQty = v)),
-                  DataCell(_gcell(cs[4], (v) => g.lithomassQty = v)),
-                  DataCell(_gcell(cs[5], (v) => g.lithomassDensity = v)),
-                  DataCell(_gcell(cs[6], (v) => g.hydromassQty = v)),
-                  DataCell(_gcell(cs[7], (v) => g.hydromassWet = v)),
-                  DataCell(_gcell(cs[8], (v) => g.hydromassDry = v)),
-                  DataCell(_gcell(cs[9], (v) => g.phytomassWet = v)),
-                  DataCell(_gcell(cs[10], (v) => g.phytomassDry = v)),
+                  DataCell(_gcell(cs[0], _edit((v) => g.section = v))),
+                  DataCell(_gcell(cs[1], _edit((v) => g.depth = v))),
+                  DataCell(_gcell(cs[2], _edit((v) => g.pedomassBulk = v))),
+                  DataCell(_gcell(cs[3], _edit((v) => g.pedomassQty = v))),
+                  DataCell(_gcell(cs[4], _edit((v) => g.lithomassQty = v))),
+                  DataCell(_gcell(cs[5], _edit((v) => g.lithomassDensity = v))),
+                  DataCell(_gcell(cs[6], _edit((v) => g.hydromassQty = v))),
+                  DataCell(_gcell(cs[7], _edit((v) => g.hydromassWet = v))),
+                  DataCell(_gcell(cs[8], _edit((v) => g.hydromassDry = v))),
+                  DataCell(_gcell(cs[9], _edit((v) => g.phytomassWet = v))),
+                  DataCell(_gcell(cs[10], _edit((v) => g.phytomassDry = v))),
                   DataCell(IconButton(
                     icon: const Icon(Icons.remove_circle_outline,
                         size: 16, color: Colors.red),
@@ -225,18 +232,18 @@ class _GeomassSectionState extends State<GeomassSection> {
                 final t = widget.record.treePhytomass[i];
                 final cs = _treeCtrls[i];
                 return DataRow(cells: [
-                  DataCell(_gcell(cs[0], (v) => t.species = v, wide: true)),
-                  DataCell(_gcell(cs[1], (v) => t.bulkDensity = v)),
-                  DataCell(_gcell(cs[2], (v) => t.wetWood = v)),
-                  DataCell(_gcell(cs[3], (v) => t.wetLeaves = v)),
-                  DataCell(_gcell(cs[4], (v) => t.wetBranches = v)),
-                  DataCell(_gcell(cs[5], (v) => t.wetRoots = v)),
-                  DataCell(_gcell(cs[6], (v) => t.wetTotal = v)),
-                  DataCell(_gcell(cs[7], (v) => t.dryWood = v)),
-                  DataCell(_gcell(cs[8], (v) => t.dryLeaves = v)),
-                  DataCell(_gcell(cs[9], (v) => t.dryBranches = v)),
-                  DataCell(_gcell(cs[10], (v) => t.dryRoots = v)),
-                  DataCell(_gcell(cs[11], (v) => t.dryTotal = v)),
+                  DataCell(_gcell(cs[0], _edit((v) => t.species = v), wide: true)),
+                  DataCell(_gcell(cs[1], _edit((v) => t.bulkDensity = v))),
+                  DataCell(_gcell(cs[2], _edit((v) => t.wetWood = v))),
+                  DataCell(_gcell(cs[3], _edit((v) => t.wetLeaves = v))),
+                  DataCell(_gcell(cs[4], _edit((v) => t.wetBranches = v))),
+                  DataCell(_gcell(cs[5], _edit((v) => t.wetRoots = v))),
+                  DataCell(_gcell(cs[6], _edit((v) => t.wetTotal = v))),
+                  DataCell(_gcell(cs[7], _edit((v) => t.dryWood = v))),
+                  DataCell(_gcell(cs[8], _edit((v) => t.dryLeaves = v))),
+                  DataCell(_gcell(cs[9], _edit((v) => t.dryBranches = v))),
+                  DataCell(_gcell(cs[10], _edit((v) => t.dryRoots = v))),
+                  DataCell(_gcell(cs[11], _edit((v) => t.dryTotal = v))),
                   DataCell(IconButton(
                     icon: const Icon(Icons.remove_circle_outline,
                         size: 16, color: Colors.red),
