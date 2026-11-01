@@ -1,6 +1,6 @@
 ﻿import 'dart:convert';
 import 'dart:io' show Platform;
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kIsWeb, visibleForTesting;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -14,28 +14,39 @@ class BtkDatabase {
 
   static Future<Database> get database async {
     assert(!kIsWeb, 'BtkDatabase is not available on web');
-    _db ??= await _open();
+    _db ??= await _open(await _defaultPath());
     return _db!;
   }
 
-  static Future<Database> _open() async {
-    final String dbPath;
+  /// Opens the database at [dbPath] and makes it the active one.
+  @visibleForTesting
+  static Future<Database> openAt(String dbPath) async {
+    await _db?.close();
+    _db = await _open(dbPath);
+    return _db!;
+  }
+
+  static Future<String> _defaultPath() async {
     if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
       final dir = await getApplicationSupportDirectory();
-      dbPath = join(dir.path, 'btk_field_app.db');
-    } else {
-      dbPath = join(await getDatabasesPath(), 'btk_field_app.db');
+      return join(dir.path, 'btk_field_app.db');
     }
+    return join(await getDatabasesPath(), 'btk_field_app.db');
+  }
+
+  static Future<Database> _open(String dbPath) {
     return openDatabase(
       dbPath,
-      version: 3,
+      version: 4,
       onCreate: (db, _) async {
         await _createV1(db);
         await _createV2(db);
+        await _createV3(db);
       },
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < 2) await _createV2(db);
         if (oldVersion < 3) await _createV3(db);
+        if (oldVersion < 4) await _repairV4(db);
       },
     );
   }
@@ -83,6 +94,13 @@ class BtkDatabase {
   static Future<void> _createV3(Database db) async {
     await db.execute(
         "ALTER TABLE btk_records ADD COLUMN name TEXT DEFAULT ''");
+  }
+
+  // Databases created new at version 3 never ran _createV3, so `name` is missing.
+  static Future<void> _repairV4(Database db) async {
+    final columns = await db.rawQuery('PRAGMA table_info(btk_records)');
+    if (columns.any((c) => c['name'] == 'name')) return;
+    await _createV3(db);
   }
 
   // ── BtkRecord ───────────────────────────────────────────────────────────────
