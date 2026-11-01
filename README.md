@@ -1,6 +1,6 @@
-# ბტკ საველე აპლიკაცია · BTK Field App
+# ბტკ საველე აპლიკაცია · BTC Field App
 
-[![Launch BTK Web](https://img.shields.io/badge/Launch-BTK%20Web-2D8653?logo=googlechrome&logoColor=white)](https://btc.qgis.ge)
+[![Launch BTC Web](https://img.shields.io/badge/Launch-BTC%20Web-2D8653?logo=googlechrome&logoColor=white)](https://btc.qgis.ge)
 [![GCA GitHub](https://img.shields.io/badge/Georgian%20Cartographers%20Association-GitHub-181717?logo=github&logoColor=white)](https://github.com/Georgian-Cartographers-Association)
 [![Build & Release](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/actions/workflows/release.yml/badge.svg)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/actions/workflows/release.yml)
 [![Version](https://img.shields.io/github/v/release/Georgian-Cartographers-Association/GCA-btc-field-app?label=version&color=brightgreen)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)
@@ -15,39 +15,40 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22171694.svg)](https://doi.org/10.5281/zenodo.22171694)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Georgian-Cartographers-Association/GCA-btc-field-app)
 
-თბილისის სახელმწიფო უნივერსიტეტისა და **[საქართველოს კარტოგრაფთა ასოციაციის](https://github.com/Georgian-Cartographers-Association)** ერთობლივი პროექტი — **ბუნებრივ-ტერიტორიული კომპლექსების (ბტკ) ველური კვლევის ღია კოდის პლატფორმა.** მუშაობს ვებ-ბრაუზერში, Android ტელეფონზე, Windows-სა და Linux-ზე — მონაცემები ადგილობრივ მოწყობილობაზე რჩება.
+თბილისის სახელმწიფო უნივერსიტეტისა და **[საქართველოს კარტოგრაფთა ასოციაციის](https://github.com/Georgian-Cartographers-Association)** ერთობლივი პროექტი — **ბუნებრივ-ტერიტორიული კომპლექსების (ბტკ) ველური კვლევის ღია კოდის პლატფორმა.** მუშაობს ვებ-ბრაუზერში, Android ტელეფონზე, Windows-სა და Linux-ზე — მონაცემები ნაგულისხმევად მოწყობილობაზე რჩება, ღრუბლოვანი სინქრონიზაცია არასავალდებულოა.
 
-A joint project of Tbilisi State University and the **Georgian Cartographers Association** — a free, open-source field survey platform for **landscape natural-territorial complexes (NTC/BTC)**. Runs on the web, Android, Windows, and Linux, with your data staying local.
+A joint project of Tbilisi State University and the **Georgian Cartographers Association** — a free, open-source field survey platform for **landscape natural-territorial complexes (NTC/BTC)**. Runs on the web, Android, Windows, and Linux, with your data stored locally by default and optional cloud sync.
 
-- **[Launch BTK Web](https://btc.qgis.ge)** — სრული აპლიკაცია ბრაუზერში, ინსტალაცია არ სჭირდება
+- **[Launch BTC Web](https://btc.qgis.ge)** — სრული აპლიკაცია ბრაუზერში, ინსტალაცია არ სჭირდება
 - **[Download the app](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)** — Android APK, Windows Setup/Portable, Linux AppImage/.deb/.rpm
-- **[ბტკ ბლანკი](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)** — 6-სექციანი ფიზიკურ-გეოგრაფიული ბლანკი GPS-ით, ფოტოებით, ტრეკით
+- **[ბტკ ბლანკი](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)** — 6-სექციანი ფიზიკურ-გეოგრაფიული ბლანკი GPS-ით, კოორდინატების კონვერტერით, ფოტოებით
 - **[Import / Export](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)** — .btk, .btkz (ფოტო+GPS), PDF, KML, GeoJSON, CSV, GPX
 - **[სტატისტიკა](https://btc.qgis.ge)** — dashboard: ჩანაწერების ანალიზი, bar charts, mini-map
 - **[GPS ტრეკი](https://btc.qgis.ge)** — ჩაწერა → GPX ექსპორტი → .btkz-ში ავტოჩართვა
+- **[რუქის ინსტრუმენტები](https://btc.qgis.ge)** — მანძილისა და ფართობის გაზომვა, ძიება, ამინდი, საკუთარი WMS/XYZ სერვისები
 
 ## Screenshots
 
 <table>
   <tr>
-    <td width="33%"><a href="docs/screenshots/records.png"><img src="docs/screenshots/records.png" alt="ჩანაწერების სია"></a></td>
-    <td width="33%"><a href="docs/screenshots/form.png"><img src="docs/screenshots/form.png" alt="ბტკ ბლანკი"></a></td>
-    <td width="33%"><a href="docs/screenshots/map.png"><img src="docs/screenshots/map.png" alt="რუქა"></a></td>
+    <td width="33%"><a href="docs/screenshots/play/1_map_layers.png"><img src="docs/screenshots/play/1_map_layers.png" alt="რუქის ფენები"></a></td>
+    <td width="33%"><a href="docs/screenshots/play/2_record_form.png"><img src="docs/screenshots/play/2_record_form.png" alt="ბტკ ბლანკი"></a></td>
+    <td width="33%"><a href="docs/screenshots/play/3_records_list.png"><img src="docs/screenshots/play/3_records_list.png" alt="ჩანაწერების სია"></a></td>
   </tr>
   <tr>
-    <td align="center"><b>ჩანაწერები</b></td>
+    <td align="center"><b>რუქის ფენები</b></td>
     <td align="center"><b>ბტკ ბლანკი</b></td>
-    <td align="center"><b>რუქა</b></td>
+    <td align="center"><b>ჩანაწერები</b></td>
   </tr>
   <tr>
-    <td width="33%"><a href="docs/screenshots/stats.png"><img src="docs/screenshots/stats.png" alt="სტატისტიკა"></a></td>
-    <td width="33%"><a href="docs/screenshots/gps.png"><img src="docs/screenshots/gps.png" alt="GPS ტრეკი"></a></td>
-    <td width="33%"><a href="docs/screenshots/export.png"><img src="docs/screenshots/export.png" alt="ექსპორტი"></a></td>
+    <td width="33%"><a href="docs/screenshots/play/4_settings.png"><img src="docs/screenshots/play/4_settings.png" alt="პარამეტრები"></a></td>
+    <td width="33%"><a href="docs/screenshots/desktop_map_measure.png"><img src="docs/screenshots/desktop_map_measure.png" alt="ფართობის გაზომვა, Linux"></a></td>
+    <td width="33%"><a href="docs/screenshots/desktop_coord_converter.png"><img src="docs/screenshots/desktop_coord_converter.png" alt="კოორდინატების კონვერტერი, Linux"></a></td>
   </tr>
   <tr>
-    <td align="center"><b>სტატისტიკა</b></td>
-    <td align="center"><b>GPS ტრეკი</b></td>
-    <td align="center"><b>ექსპორტი</b></td>
+    <td align="center"><b>პარამეტრები</b></td>
+    <td align="center"><b>გაზომვა (Linux)</b></td>
+    <td align="center"><b>კონვერტერი (Linux)</b></td>
   </tr>
 </table>
 
@@ -65,7 +66,7 @@ A joint project of Tbilisi State University and the **Georgian Cartographers Ass
 | **Android** | `btk-android-arm64.apk` | თანამედროვე ტელეფონები (რეკომენდ.) |
 | **Android** | `btk-android-arm32.apk` | ძველი ტელეფონები |
 | **Android** | `btk-android-x86_64.apk` | ემულატორები |
-| **Android** | `app-release.aab` | Google Play Store |
+| **Android** | `app-release.aab` | CI-ის არტეფაქტი; Google Play-ზე იტვირთება ლოკალურად აწყობილი AAB ([docs/release](docs/release/ANDROID_RELEASE_BUILD.md)) |
 | **Windows** | `btk-windows-setup-X.Y.Z.exe` | ინსტალერი (Start Menu) |
 | **Windows** | `btk-windows.zip` | Portable — unzip და გაუშვი |
 | **Linux** | `btk-linux-X.Y.Z.AppImage` | ნებისმიერი distro — `chmod +x` |
@@ -74,6 +75,11 @@ A joint project of Tbilisi State University and the **Georgian Cartographers Ass
 | **Web** | — | **[btc.qgis.ge](https://btc.qgis.ge)** |
 
 SHA256 checksums: `checksums-android.txt` · `checksums-windows.txt` · `checksums-linux.txt`
+
+**Google Play:** აპლიკაცია (`ge.btc.field_app`) გამოსაქვეყნებლად მზადდება და ჯერ საჯაროდ არ არის ხელმისაწვდომი.
+
+> [!IMPORTANT]
+> Android-ის პაკეტის სახელი შეიცვალა: `ge.cartographers.btk_field_app` → `ge.btc.field_app`. ახალი ვერსია ძველ APK-ს (v1.20.2 და უფრო ძველი) ვერ განაახლებს და ცალკე აპლიკაციად დაყენდება. ადგილობრივი ჩანაწერების გადასატანად ძველ აპლიკაციაში გააკეთეთ `.btkz` ექსპორტი, ახალში კი იმპორტი.
 
 <details>
 <summary>ინსტალაციის ინსტრუქციები</summary>
@@ -94,16 +100,17 @@ sudo dpkg -i btk-linux-*.deb && sudo apt-get install -f
 
 ## ფუნქციები
 
-### ბტკ ბლანკი — 6 სექცია
+### ბტკ ბლანკი — 6 სექცია + ფოტოები
 
 | # | სექცია | ველები |
 |---|---|---|
-| 1 | **ძირითადი** | ID, სახელი, თარიღი, GPS კოორდინატები, ლოკაცია |
+| 1 | **ძირითადი** | ID, სახელი, თარიღი, GPS კოორდინატები, სიმაღლე, ექსპოზიცია, ლოკაცია, კოორდინატების კონვერტერი |
 | 2 | **ფიზ.-გეოგ.** | გეოლ. ფორმაცია, რელიეფი, მორფ. დახასიათება, მიგრ. რეჟიმი, ტენიანობა |
 | 3 | **მცენარეულობა** | ვ.სტრუქტ. ტიპი/ინდ., იარუსები, სახეობები, სიმ./სიმძლ./ფენოფაზა |
 | 4 | **ნიადაგი** | ტიპი, ჰორიზონტები, გეოჰ. ინდ., ზ.ფენ. ფორმ. + ფოტოები |
 | 5 | **გეომასა** | სექციები — პედო / ლითო / ჰიდრო / ფიტომასა |
 | 6 | **ვ.სტრუქტურა** | ტიპი, ინდ., სიმ., აღწ. + ფოტოები |
+| + | **ფოტოები** | ჩანაწერის ყველა ფოტო, კამერიდან ან გალერეიდან (ვებ-ვერსიაში არ არის) |
 
 ### ექსპორტი და იმპორტი
 
@@ -122,9 +129,14 @@ sudo dpkg -i btk-linux-*.deb && sudo apt-get install -f
 ### რუქა და GPS
 
 - **OpenStreetMap** + **OpenTopoMap** tile overlay-ები
+- მზა სერვისები: **Esri** (Satellite, World Topo, World Street, NatGeo) და **CARTO** (Voyager, Light, Dark)
+- საკუთარი **WMS / XYZ** სერვისების დამატება
+- **გაზომვა რუქაზე** — კოორდინატი, მანძილი, ფართობი და პერიმეტრი
+- **ადგილების ძიება** (Nominatim / OpenStreetMap)
+- **ამინდის პროგნოზი** (api.met.no) და **კომპასი**
 - ლოკალური **რასტრული რუქები** — Bounding Box + გამჭვირვალობა (ნიადაგი, ლანდშაფტი, რელიეფი)
 - საქართველოს ადმინ. საზღვრები (GeoJSON) — რეგიონები, მუნიციპალიტეტები
-- **GPS ტრეკის ჩაწერა** — ფონური, ტრეკის ისტორია, GPX ექსპორტი
+- **GPS ტრეკის ჩაწერა** — ტრეკის ისტორია, GPX ექსპორტი. ფონური ჩაწერა არ არის, ამიტომ ჩართეთ „ეკრანი ნუ ჩაქრება“
 - ტრეკი **ავტომატურად .btkz-ში** — ჩანაწერების მიმდებარე დღის ტრეკები
 
 ### UX
@@ -134,18 +146,29 @@ sudo dpkg -i btk-linux-*.deb && sudo apt-get install -f
 | Long-press → multi-select | batch export / batch PDF / batch წაშლა |
 | Record duplication | "(ასლი)" სუფიქსით |
 | Discard dialog | unsaved changes გაფრთხილება |
-| Auto-update banner | GitHub Releases-ს ამოწმებს, ახალი ვერსია → notification |
+| Auto-update banner | GitHub Releases-ს ამოწმებს, ახალი ვერსია → banner (Android-ზე არა: განახლება Play-დან ხდება) |
 | სტატისტიკა / Dashboard | bar chart, სიხშირე, mini-map |
 | ღია / მუქი ფონი | Material 3 theming |
-| ქართული / English | სრული ბილინგვალური UI |
+| ქართული / English | ენის გადართვა პარამეტრებიდან |
+| კოორდინატთა ფორმატები | DD, DM, DMS, UTM 37N, UTM 38N |
+| ეკრანი ნუ ჩაქრება | რუქაზე მუშაობისას |
+| ჩანაწერის გაგზავნა | ელფოსტით, ბლანკიდან |
+| მეთოდიკა | PDF აპლიკაციის შიგნით |
 
 ### შენახვის რეჟიმები
 
 | რეჟიმი | |
 |---|---|
 | **Local** | SQLite — მოწყობილობაზე, ინტერნეტი არ სჭირდება |
-| **Cloud** | Firebase Firestore — real-time sync |
-| **Expedition** | გუნდური — საექსპედიციო ID-ით |
+| **Cloud** | Firebase Firestore — real-time sync; საჭიროა ანგარიში |
+| **Expedition** | გუნდური — ექსპედიციის კოდით; საჭიროა ანგარიში |
+
+რეგისტრაცია შეზღუდულია: ელფოსტა ადმინისტრატორმა უნდა დაამატოს ნებადართულთა სიაში (`allowed_users`).
+
+### ანგარიში და კონფიდენციალურობა
+
+- **ანგარიშის წაშლა აპლიკაციიდან:** პარამეტრები → მონაცემების შენახვა → ანგარიშის წაშლა. იშლება ანგარიში და ღრუბელში შენახული ჩანაწერები. მოწყობილობაზე შენახული და ექსპედიციაში გაზიარებული ჩანაწერები რჩება.
+- **[Privacy Policy](https://btc.qgis.ge/privacy.html)** — რა მონაცემებს ამუშავებს აპლიკაცია და რატომ.
 
 ## Development
 
@@ -163,6 +186,22 @@ flutter build linux --release                      # Linux
 flutter build web --release                        # Web
 ```
 
+Linux-ზე აწყობისთვის (Ubuntu/Debian, clang 18):
+
+```bash
+sudo apt-get install -y clang ninja-build lld-18 libgtk-3-dev libblkid-dev liblzma-dev libsecret-1-dev libjsoncpp-dev
+flutter run -d linux
+```
+
+### Google Play გამოშვება
+
+აპლიკაცია იყენებს Play App Signing-ს ცალკე upload key-ით. გასაღები რეპოში არ ინახება, ხოლო release build გასაღების გარეშე შეცდომით ჩერდება.
+
+- [Upload key setup](docs/release/UPLOAD_KEY_SETUP.md)
+- [Android release build](docs/release/ANDROID_RELEASE_BUILD.md)
+- [Key backup and recovery](docs/release/KEY_BACKUP_AND_RECOVERY.md)
+- Store-ის გრაფიკა: [`docs/store/`](docs/store) (`generate_art.py` ხელახლა ქმნის ხატულებს), სურათები: [`docs/screenshots/play/`](docs/screenshots/play)
+
 ## CI/CD
 
 | Job | Trigger | Artifacts |
@@ -170,6 +209,7 @@ flutter build web --release                        # Web
 | `build-apk` | `git tag v*` | arm64 / arm32 / x86_64 APK + AAB + SHA256 |
 | `build-windows` | `git tag v*` | Setup .exe + Portable .zip + SHA256 |
 | `build-linux` | `git tag v*` | AppImage + .deb + .rpm + SHA256 |
+| `pages.yml` | push to `main` | Web build → [btc.qgis.ge](https://btc.qgis.ge), მათ შორის `privacy.html` |
 
 ```bash
 git tag v1.20.0 && git push origin v1.20.0
@@ -183,12 +223,17 @@ lib/
 ├── models/                          # BtkRecord, GpsTrack, Photo, …
 ├── database/btk_database.dart       # SQLite (sqflite_common_ffi)
 ├── data/
-│   ├── repositories/                # Local / Cloud / Expedition
+│   ├── repositories/                # Local / Cloud / Expedition / User
 │   └── services/
 │       ├── export_service.dart      # .btk .btkz PDF KML GeoJSON CSV GPX
+│       ├── account_service.dart     # In-app account deletion
+│       ├── sync_service.dart        # Cloud ⇄ local sync
+│       ├── weather_service.dart     # api.met.no forecast
+│       ├── analytics_service.dart   # Firebase Analytics events
 │       └── update_service.dart      # GitHub Releases auto-update check
+├── utils/                           # Coordinate conversion, UTM, measurement
 └── features/
-    ├── map/                         # FlutterMap + tile layers + raster
+    ├── map/                         # FlutterMap, tile layers, measurement, search, weather
     ├── form/                        # 6-section BTC form + photo panels
     ├── records/                     # List, search, batch ops, import/export
     ├── stats/                       # Dashboard — charts + mini-map
@@ -196,7 +241,8 @@ lib/
     ├── auth/                        # Firebase Auth
     ├── expedition/                  # Expedition mode
     ├── settings/                    # Storage mode, theme, locale, coord fmt
-    ├── layers/                      # Raster layer manager
+    ├── layers/                      # Raster and WMS/XYZ layer manager
+    ├── raster/                      # Raster layer state
     └── pdf/                         # Methodology PDF viewer (164 გვ.)
 ```
 
@@ -204,11 +250,14 @@ lib/
 
 | Package | |
 |---|---|
-| `flutter_map` | OSM / OpenTopoMap tiles + raster overlay |
+| `flutter_map` + `flutter_map_cache` + `dio` | Tile layers with caching + raster overlay |
 | `flutter_riverpod` | State management |
 | `sqflite` + `sqflite_common_ffi` | SQLite (Android + Desktop) |
-| `firebase_core` + `firebase_auth` + `cloud_firestore` | Cloud sync |
-| `geolocator` | GPS + track recording |
+| `firebase_core` + `firebase_auth` + `cloud_firestore` | Accounts + cloud sync |
+| `firebase_analytics` | Usage analytics |
+| `geolocator` + `flutter_compass` | GPS, track recording, compass |
+| `image_picker` | Photos from camera or gallery |
+| `wakelock_plus` | Keep screen on |
 | `file_picker` | File import / Save As dialog |
 | `pdf` + `printing` | PDF export (Noto Sans Georgian) |
 | `archive` | .btkz ZIP encoding/decoding |
@@ -250,7 +299,7 @@ If you use this software, please cite it. Use GitHub's **"Cite this repository"*
 
 ## მადლობა · Acknowledgements
 
-ეს პროგრამა აგებულია ღია კოდის გეოსივრცული და Flutter-ის საზოგადოებებზე, მათ შორის: MapLibre / flutter_map, Firebase, sqflite, Riverpod, GoRouter, Noto Sans Georgian, და სხვა. სრული სია `pubspec.yaml`-ში.
+ეს პროგრამა აგებულია ღია კოდის გეოსივრცული და Flutter-ის საზოგადოებებზე, მათ შორის: flutter_map, OpenStreetMap, OpenTopoMap, Firebase, sqflite, Riverpod, GoRouter, Noto Sans Georgian, და სხვა. სრული სია `pubspec.yaml`-ში.
 
 ## ლიტერატურა
 
