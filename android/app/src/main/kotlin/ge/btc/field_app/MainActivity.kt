@@ -1,4 +1,4 @@
-package ge.cartographers.btk_field_app
+package ge.btc.field_app
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -24,7 +24,7 @@ val releaseStoreFile = signingValue("storeFile", "BTC_UPLOAD_STORE_FILE")
 val hasReleaseSigning = releaseStoreFile != null
 
 android {
-    namespace = "ge.cartographers.btk_field_app"
+    namespace = "ge.btc.field_app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -38,7 +38,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "ge.cartographers.btk_field_app"
+        applicationId = "ge.btc.field_app"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

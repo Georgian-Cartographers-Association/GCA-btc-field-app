@@ -12,7 +12,7 @@ If the upload key is lost or leaked, Google Play support can reset it (see
 
 | Field | Value |
 |---|---|
-| applicationId | `ge.cartographers.btk_field_app` (approved by owner — cannot change after first upload) |
+| applicationId | `ge.btc.field_app` (approved by owner — cannot change after first upload) |
 | Version source | `pubspec.yaml` → `version: <versionName>+<versionCode>` |
 
 ## Upload key parameters
@@ -87,7 +87,7 @@ to the debug key). Debug builds never need the upload key.
 
 ## First Google Play upload
 
-1. Play Console → create the app with package `ge.cartographers.btk_field_app`.
+1. Play Console → create the app with package `ge.btc.field_app`.
 2. Release → Setup → App integrity → keep **"Use Google-generated key"** (Play App Signing).
 3. Upload the signed AAB (see [ANDROID_RELEASE_BUILD.md](ANDROID_RELEASE_BUILD.md)). The first upload registers this upload key.
 4. In App integrity, confirm the **Upload key certificate** SHA-256 matches the fingerprint above.

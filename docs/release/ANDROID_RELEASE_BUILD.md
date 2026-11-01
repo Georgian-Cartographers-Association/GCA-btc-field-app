@@ -47,7 +47,7 @@ F8:20:11:52:8D:5A:D7:62:36:AA:A1:F3:99:3B:95:68:FB:85:AD:EB:05:5D:FB:58:E4:2B:17
 Also confirm package and version:
 
 ```bash
-unzip -p "$AAB" base/manifest/AndroidManifest.xml | strings | grep -E "btk_field_app"
+unzip -p "$AAB" base/manifest/AndroidManifest.xml | strings | grep -E "ge\.btc\.field_app"
 ```
 
 ## 4. Check debug builds still work
