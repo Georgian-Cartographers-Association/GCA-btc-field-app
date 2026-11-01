@@ -6,10 +6,8 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <!-- Camera for image_picker -->
     <uses-permission android:name="android.permission.CAMERA"/>
-    <!-- File picker & sharing — Android 13+ uses granular permissions -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
-    <!-- Android 14+ partial photo access -->
-    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED"/>
+    <!-- Android 13+ needs no media permission: image_picker uses the system
+         photo picker and file_picker uses the Storage Access Framework. -->
     <!-- Android ≤12 fallback -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32"/>
