@@ -62,11 +62,11 @@ class BtkNotifier extends StateNotifier<List<BtkRecord>> {
     await _repo.delete(id);
   }
 
-  Future<BtkRecord> duplicate(BtkRecord original) async {
+  Future<BtkRecord> duplicate(BtkRecord original, String copySuffix) async {
     final json = original.toJson();
     json['id'] = const Uuid().v4().substring(0, 8).toUpperCase();
     if ((json['name'] as String).isNotEmpty) {
-      json['name'] = '${json['name']} (ასლი)';
+      json['name'] = '${json['name']} $copySuffix';
     }
     final copy = BtkRecord.fromJson(json);
     state = [...state, copy];

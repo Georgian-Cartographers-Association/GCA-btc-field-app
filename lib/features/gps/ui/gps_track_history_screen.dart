@@ -32,7 +32,7 @@ class GpsTrackHistoryScreen extends ConsumerWidget {
       ),
       body: tracksAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('შეცდომა: $e')),
+        error: (e, _) => Center(child: Text(l10n.errorWithDetail('$e'))),
         data: (tracks) => tracks.isEmpty
             ? _EmptyState()
             : ListView.separated(
@@ -41,7 +41,7 @@ class GpsTrackHistoryScreen extends ConsumerWidget {
                 separatorBuilder: (_, _) => const SizedBox(height: 8),
                 itemBuilder: (_, i) => _TrackCard(
                   track: tracks[i],
-                  onExport: () => ExportService.shareGpx(tracks[i]),
+                  onExport: () => ExportService.shareGpx(tracks[i], l10n),
                   onDelete: () async {
                     final ok = await _confirmDelete(context);
                     if (!ok) return;
@@ -172,15 +172,15 @@ class _TrackCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    track.startedAt.toGeorgianDateString(),
+                    track.startedAt.toLocalizedDateString(l10n),
                     style: const TextStyle(
                         fontWeight: FontWeight.w600, fontSize: 13),
                   ),
                   const SizedBox(height: 4),
                   Row(children: [
-                    _Chip(Icons.straighten, track.formattedDistance),
+                    _Chip(Icons.straighten, track.formattedDistance(l10n)),
                     const SizedBox(width: 8),
-                    _Chip(Icons.timer_outlined, track.formattedDuration),
+                    _Chip(Icons.timer_outlined, track.formattedDuration(l10n)),
                     const SizedBox(width: 8),
                     _Chip(Icons.location_on_outlined,
                         '${track.points.length}'),

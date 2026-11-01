@@ -84,12 +84,13 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
   // ── Batch actions ────────────────────────────────────────────────────────────
 
   Future<void> _exportSelected() async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       await ExportService.exportBtk(_selectedRecords(), context);
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('შეცდომა: $e')));
+            .showSnackBar(SnackBar(content: Text(l10n.errorWithDetail('$e'))));
       }
     }
   }
@@ -99,20 +100,21 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
   }
 
   Future<void> _deleteSelected() async {
+    final l10n = AppLocalizations.of(context)!;
     final count = _selected.length;
     final confirm = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('წაშლა'),
-        content: Text('$count ჩანაწერი საბოლოოდ წაიშლება?'),
+        title: Text(l10n.delete),
+        content: Text(l10n.deleteRecordsConfirm(count)),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('გაუქმება')),
+              child: Text(l10n.cancel)),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('წაშლა',
+            child: Text(l10n.delete,
                 style: TextStyle(color: Colors.white)),
           ),
         ],
@@ -128,10 +130,11 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
   // ── Per-record actions ───────────────────────────────────────────────────────
 
   Future<void> _duplicate(BtkRecord r) async {
-    await ref.read(btkProvider.notifier).duplicate(r);
+    final l10n = AppLocalizations.of(context)!;
+    await ref.read(btkProvider.notifier).duplicate(r, l10n.copySuffix);
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('ჩანაწერი გადაიწერა ✓'),
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(l10n.recordDuplicated),
           duration: Duration(seconds: 2)));
     }
   }
@@ -139,6 +142,7 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
   // ── Export / import ──────────────────────────────────────────────────────────
 
   Future<void> _export(String format, List<BtkRecord> records) async {
+    final l10n = AppLocalizations.of(context)!;
     final coordFmt = ref.read(settingsProvider).exportCoordFormat;
     try {
       switch (format) {
@@ -147,47 +151,48 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
         case 'btkz':
           await ExportService.exportBtkz(records, context);
         case 'kml':
-          await ExportService.shareKml(records);
+          await ExportService.shareKml(records, l10n);
         case 'geojson':
-          await ExportService.shareGeoJson(records);
+          await ExportService.shareGeoJson(records, l10n);
         case 'csv':
-          await ExportService.shareCsv(records, coordFormat: coordFmt);
+          await ExportService.shareCsv(records, l10n, coordFormat: coordFmt);
         case 'pdf':
           if (mounted) await _pdfActionSheet(context, records);
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('შეცდომა: $e')));
+            .showSnackBar(SnackBar(content: Text(l10n.errorWithDetail('$e'))));
       }
     }
   }
 
   Future<void> _importAny() async {
+    final l10n = AppLocalizations.of(context)!;
     final choice = await showModalBottomSheet<String>(
       context: context,
       builder: (_) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Padding(
+            Padding(
               padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text('ფაილის ტიპი',
+                child: Text(l10n.fileType,
                     style: TextStyle(fontWeight: FontWeight.bold)),
               ),
             ),
             ListTile(
               leading: const Icon(Icons.import_export_outlined),
-              title: const Text('ბტკ ჩანაწერი (.btk)'),
-              subtitle: const Text('ტექსტური მონაცემები'),
+              title: Text(l10n.btkFileTitle),
+              subtitle: Text(l10n.btkFileSub),
               onTap: () => Navigator.pop(context, 'btk'),
             ),
             ListTile(
               leading: const Icon(Icons.photo_library_outlined),
-              title: const Text('ბტკ ფოტოებით (.btkz)'),
-              subtitle: const Text('ჩანაწერები + ფოტოები'),
+              title: Text(l10n.btkzFileTitle),
+              subtitle: Text(l10n.btkzFileSub),
               onTap: () => Navigator.pop(context, 'btkz'),
             ),
           ],
@@ -198,31 +203,31 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
 
     try {
       if (choice == 'btkz') {
-        final r = await ExportService.parseBtkzFile();
+        final r = await ExportService.parseBtkzFile(l10n);
         if (r == null) return;
         final imported =
             await ref.read(btkProvider.notifier).importRecords(r.records);
         if (mounted) {
           final parts = [
-            '${imported.added + imported.updated} ჩანაწერი',
-            if (r.photoCount > 0) '${r.photoCount} ფოტო',
-            if (r.trackCount > 0) '${r.trackCount} GPS ტრეკი',
+            l10n.recordsCount(imported.added + imported.updated),
+            if (r.photoCount > 0) l10n.photosCount(r.photoCount),
+            if (r.trackCount > 0) l10n.tracksCount(r.trackCount),
           ].join(', ');
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('$parts შემოიტანა'),
+            content: Text(l10n.importedParts(parts)),
             duration: const Duration(seconds: 4),
           ));
         }
       } else {
-        final records = await ExportService.parseBtkFile();
+        final records = await ExportService.parseBtkFile(l10n);
         if (records == null) return;
         final imported =
             await ref.read(btkProvider.notifier).importRecords(records);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
-                '${imported.added + imported.updated} ჩანაწერი შემოიტანა '
-                '(${imported.added} ახალი, ${imported.updated} განახლდა)'),
+                l10n.importedSummary(imported.added + imported.updated,
+                    imported.added, imported.updated)),
             duration: const Duration(seconds: 4),
           ));
         }
@@ -230,7 +235,7 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('შეცდომა: $e')));
+            .showSnackBar(SnackBar(content: Text(l10n.errorWithDetail('$e'))));
       }
     }
   }
@@ -243,7 +248,7 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(l10n.delete),
-        content: const Text('დარწმუნებული ხართ ამ ჩანაწერის წაშლაში?'),
+        content: Text(l10n.deleteRecordConfirm),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx),
@@ -267,6 +272,7 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final all = ref.watch(btkProvider);
     final records = _filter(all);
 
@@ -277,11 +283,11 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
                 icon: const Icon(Icons.close),
                 onPressed: _clearSelection,
               ),
-              title: Text('${_selected.length} ჩანაწერი'),
+              title: Text(l10n.recordsCount(_selected.length)),
               actions: [
                 IconButton(
                   icon: const Icon(Icons.import_export_outlined),
-                  tooltip: 'ბტკ ექსპორტი',
+                  tooltip: l10n.exportBtc,
                   onPressed: _exportSelected,
                 ),
                 IconButton(
@@ -291,36 +297,36 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.delete_outline, color: Colors.red),
-                  tooltip: 'წაშლა',
+                  tooltip: l10n.delete,
                   onPressed: _deleteSelected,
                 ),
               ],
             )
           : AppBar(
-              title: const Text('შენახული ჩანაწერები'),
+              title: Text(l10n.savedRecords),
               actions: [
                 IconButton(
                   icon: const Icon(Icons.bar_chart_outlined),
-                  tooltip: 'სტატისტიკა',
+                  tooltip: l10n.statistics,
                   onPressed: () => context.push('/stats'),
                 ),
                 IconButton(
                   icon: const Icon(Icons.upload_file_outlined),
-                  tooltip: 'იმპორტი',
+                  tooltip: l10n.importAction,
                   onPressed: _importAny,
                 ),
                 if (all.isNotEmpty)
                   PopupMenuButton<String>(
                     icon: const Icon(Icons.file_download_outlined),
-                    tooltip: 'ექსპორტი',
+                    tooltip: l10n.exportAction,
                     onSelected: (val) => _export(val, all),
-                    itemBuilder: (_) => const [
+                    itemBuilder: (_) => [
                       PopupMenuItem(
                         value: 'btk',
                         child: ListTile(
                           leading: Icon(Icons.import_export_outlined),
-                          title: Text('ბტკ ჩანაწერი (.btk)'),
-                          subtitle: Text('ტექსტური მონაცემები'),
+                          title: Text(l10n.btkFileTitle),
+                          subtitle: Text(l10n.btkFileSub),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -328,8 +334,8 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
                         value: 'btkz',
                         child: ListTile(
                           leading: Icon(Icons.photo_library_outlined),
-                          title: Text('ბტკ ფოტოებით (.btkz)'),
-                          subtitle: Text('ჩანაწერები + ფოტოები'),
+                          title: Text(l10n.btkzFileTitle),
+                          subtitle: Text(l10n.btkzFileSub),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -337,7 +343,7 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
                         value: 'pdf',
                         child: ListTile(
                           leading: Icon(Icons.picture_as_pdf_outlined),
-                          title: Text('PDF დოკუმენტი'),
+                          title: Text(l10n.pdfDocument),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -374,7 +380,7 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
                   padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
                   child: SearchBar(
                     controller: _searchCtrl,
-                    hintText: 'ძებნა: სახელი, ID, ლოკაცია, თარიღი...',
+                    hintText: l10n.recordsSearchHint,
                     leading: const Icon(Icons.search, size: 20),
                     trailing: [
                       if (_query.isNotEmpty)
@@ -409,8 +415,8 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
                   const SizedBox(height: 12),
                   Text(
                     _query.isEmpty
-                        ? 'ჩანაწერები არ მოიძებნა'
-                        : '"$_query" — არ მოიძებნა',
+                        ? l10n.noRecords
+                        : l10n.queryNotFound(_query),
                     style: const TextStyle(color: Colors.grey),
                   ),
                 ],
@@ -440,6 +446,7 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
 
 Future<void> _pdfActionSheet(
     BuildContext context, List<BtkRecord> records) async {
+      final l10n = AppLocalizations.of(context)!;
   final choice = await showModalBottomSheet<String>(
     context: context,
     builder: (_) => SafeArea(
@@ -448,12 +455,12 @@ Future<void> _pdfActionSheet(
         children: [
           ListTile(
             leading: const Icon(Icons.share_outlined),
-            title: const Text('გაზიარება'),
+            title: Text(l10n.share),
             onTap: () => Navigator.pop(context, 'share'),
           ),
           ListTile(
             leading: const Icon(Icons.save_alt_outlined),
-            title: const Text('ფაილად შენახვა'),
+            title: Text(l10n.saveAsFile),
             onTap: () => Navigator.pop(context, 'save'),
           ),
         ],
@@ -462,13 +469,15 @@ Future<void> _pdfActionSheet(
   );
   if (choice == null || !context.mounted) return;
   if (context.mounted) {
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('PDF მზადდება...'),
+    final l10n = AppLocalizations.of(context)!;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(l10n.pdfPreparing),
       duration: Duration(seconds: 3),
     ));
   }
   if (choice == 'share') {
-    await ExportService.sharePdf(records);
+    final l10n = AppLocalizations.of(context)!;
+    await ExportService.sharePdf(records, l10n);
   } else {
     await ExportService.savePdf(records, context);
   }
@@ -497,6 +506,7 @@ class _RecordTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final r = record;
     final hasName = r.name.isNotEmpty;
 
@@ -521,12 +531,12 @@ class _RecordTile extends ConsumerWidget {
                   ),
                 ),
               ),
-        title: Text(hasName ? r.name : 'ბტკ #${r.id}'),
+        title: Text(hasName ? r.name : l10n.btkNumber(r.id)),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (hasName)
-              Text('ბტკ #${r.id}',
+              Text(l10n.btkNumber(r.id),
                   style:
                       const TextStyle(fontSize: 11, color: Colors.grey)),
             Text(r.date.toString().split(' ')[0]),
@@ -553,7 +563,7 @@ class _RecordTile extends ConsumerWidget {
                   ),
                   IconButton(
                     icon: const Icon(Icons.copy_outlined, size: 20),
-                    tooltip: 'დუბლირება',
+                    tooltip: l10n.duplicate,
                     onPressed: onDuplicate,
                   ),
                   IconButton(

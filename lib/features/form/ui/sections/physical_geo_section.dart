@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../models/btk_record.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 class PhysicalGeoSection extends StatefulWidget {
   final BtkRecord record;
@@ -44,19 +45,20 @@ class _PhysicalGeoSectionState extends State<PhysicalGeoSection> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final r = widget.record;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _header(context, 'ფიზიკურ-გეოგრაფიული დახასიათება'),
+          _header(context, l10n.physGeoDesc),
           const SizedBox(height: 16),
           TextField(
             controller: _geologicalFormationCtrl,
             onChanged: (v) => widget.onChanged(r..geologicalFormation = v),
-            decoration: const InputDecoration(
-              labelText: 'გეოლოგიური ფორმაცია',
+            decoration: InputDecoration(
+              labelText: l10n.geologicalFormation,
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               isDense: true,
@@ -66,8 +68,8 @@ class _PhysicalGeoSectionState extends State<PhysicalGeoSection> {
           TextField(
             controller: _reliefTypeCtrl,
             onChanged: (v) => widget.onChanged(r..reliefType = v),
-            decoration: const InputDecoration(
-              labelText: 'რელიეფის ტიპი',
+            decoration: InputDecoration(
+              labelText: l10n.reliefType,
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               isDense: true,
@@ -78,8 +80,8 @@ class _PhysicalGeoSectionState extends State<PhysicalGeoSection> {
             controller: _morphologicalDescCtrl,
             onChanged: (v) => widget.onChanged(r..morphologicalDesc = v),
             maxLines: 3,
-            decoration: const InputDecoration(
-              labelText: 'მორფოლოგიური დახასიათება',
+            decoration: InputDecoration(
+              labelText: l10n.morphologicalDesc,
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               isDense: true,
@@ -90,8 +92,8 @@ class _PhysicalGeoSectionState extends State<PhysicalGeoSection> {
             controller: _geomorphProcessesCtrl,
             onChanged: (v) => widget.onChanged(r..geomorphProcesses = v),
             maxLines: 2,
-            decoration: const InputDecoration(
-              labelText: 'თანამედროვე გეომორფოლოგიური პროცესები',
+            decoration: InputDecoration(
+              labelText: l10n.geomorphProcesses,
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               isDense: true,
@@ -101,8 +103,8 @@ class _PhysicalGeoSectionState extends State<PhysicalGeoSection> {
           TextField(
             controller: _migrationRegimeCtrl,
             onChanged: (v) => widget.onChanged(r..migrationRegime = v),
-            decoration: const InputDecoration(
-              labelText: 'მიგრაციის რეჟიმი',
+            decoration: InputDecoration(
+              labelText: l10n.migrationRegime,
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               isDense: true,
@@ -112,8 +114,8 @@ class _PhysicalGeoSectionState extends State<PhysicalGeoSection> {
           TextField(
             controller: _moistureDegreeCtrl,
             onChanged: (v) => widget.onChanged(r..moistureDegree = v),
-            decoration: const InputDecoration(
-              labelText: 'დატენიანების ხარისხი',
+            decoration: InputDecoration(
+              labelText: l10n.moistureDegree,
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               isDense: true,

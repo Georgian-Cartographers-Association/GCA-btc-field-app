@@ -31,12 +31,13 @@ class _ExpeditionScreenState extends ConsumerState<ExpeditionScreen>
   }
 
   Future<void> _create() async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       await ref.read(expeditionFormProvider.notifier).create();
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('შეცდომა: $e')));
+            .showSnackBar(SnackBar(content: Text(l10n.errorWithDetail('$e'))));
       }
     }
   }
@@ -302,7 +303,7 @@ class _JoinTab extends StatelessWidget {
             decoration: InputDecoration(
               labelText: l10n.expeditionCodeLabel,
               hintText: 'XXXXXX',
-              errorText: state.joinError,
+              errorText: state.joinError?.call(l10n),
               border: const OutlineInputBorder(),
               counterText: '',
             ),

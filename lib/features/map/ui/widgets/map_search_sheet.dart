@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
+import '../../../../l10n/generated/app_localizations.dart';
+import '../../../../l10n/localized_text.dart';
 
 class GeoSearchResult {
   final String name;
-  final String subtitle;
+  final LocalizedText subtitle;
   final LatLng center;
   final LatLngBounds? bounds;
 
@@ -152,19 +154,19 @@ class _MapSearchSheetState extends State<MapSearchSheet> {
             item['display_name'])
         .toString();
 
-    final subtitle = _localizeType(item['type'] as String? ?? '');
-    return GeoSearchResult(name: name, subtitle: subtitle, center: LatLng(lat, lon), bounds: bounds);
+    final type = item['type'] as String? ?? '';
+    return GeoSearchResult(name: name, subtitle: (l10n) => _localizeType(l10n, type), center: LatLng(lat, lon), bounds: bounds);
   }
 
-  String _localizeType(String type) => switch (type) {
-        'city' || 'town' => 'ქალაქი',
-        'village' || 'hamlet' || 'isolated_dwelling' => 'სოფელი',
-        'administrative' || 'county' => 'ადმინისტრაციული ერთეული',
-        'state' => 'რეგიონი',
-        'suburb' || 'neighbourhood' => 'უბანი',
-        'river' || 'stream' => 'მდინარე',
-        'mountain' || 'peak' => 'მთა',
-        _ => 'ადგილი',
+  String _localizeType(AppLocalizations l10n, String type) => switch (type) {
+        'city' || 'town' => l10n.placeCity,
+        'village' || 'hamlet' || 'isolated_dwelling' => l10n.placeVillage,
+        'administrative' || 'county' => l10n.placeAdmin,
+        'state' => l10n.placeRegion,
+        'suburb' || 'neighbourhood' => l10n.placeSuburb,
+        'river' || 'stream' => l10n.placeRiver,
+        'mountain' || 'peak' => l10n.placeMountain,
+        _ => l10n.placeOther,
       };
 
   bool get _hasResults => _local.isNotEmpty || _geo.isNotEmpty;
@@ -176,6 +178,7 @@ class _MapSearchSheetState extends State<MapSearchSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Column(
@@ -201,7 +204,7 @@ class _MapSearchSheetState extends State<MapSearchSheet> {
               autofocus: true,
               textInputAction: TextInputAction.search,
               decoration: InputDecoration(
-                hintText: 'ძებნა: სოფელი, ქალაქი, რეგიონი...',
+                hintText: l10n.mapSearchHint,
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: _ctrl.text.isNotEmpty
                     ? IconButton(
@@ -239,11 +242,12 @@ class _MapSearchSheetState extends State<MapSearchSheet> {
   }
 
   Widget _buildResultList() {
+    final l10n = AppLocalizations.of(context)!;
     if (_lastQuery.isEmpty) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 16),
         child: Text(
-          'ჩაწერეთ ძებნის სიტყვა',
+          l10n.typeSearchTerm,
           style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
           textAlign: TextAlign.center,
         ),
@@ -254,7 +258,7 @@ class _MapSearchSheetState extends State<MapSearchSheet> {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 20),
         child: Text(
-          'არაფერი მოიძებნა',
+          l10n.nothingFound,
           style: TextStyle(color: Colors.grey.shade600),
           textAlign: TextAlign.center,
         ),
@@ -265,7 +269,7 @@ class _MapSearchSheetState extends State<MapSearchSheet> {
       shrinkWrap: true,
       children: [
         if (_local.isNotEmpty) ...[
-          _SectionLabel('შრეებში'),
+          _SectionLabel(l10n.inLayers),
           ..._local.map((r) => _Tile(
                 result: r,
                 icon: Icons.layers_outlined,
@@ -284,7 +288,7 @@ class _MapSearchSheetState extends State<MapSearchSheet> {
             ),
           ),
         if (_geo.isNotEmpty) ...[
-          _SectionLabel('ადგილები (OSM)'),
+          _SectionLabel(l10n.placesOsm),
           ..._geo.map((r) => _Tile(
                 result: r,
                 icon: Icons.place_outlined,
@@ -325,10 +329,11 @@ class _Tile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return ListTile(
       leading: Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary),
       title: Text(result.name, style: const TextStyle(fontSize: 14)),
-      subtitle: Text(result.subtitle,
+      subtitle: Text(result.subtitle(l10n),
           style: const TextStyle(fontSize: 12, color: Colors.grey)),
       dense: true,
       onTap: onTap,

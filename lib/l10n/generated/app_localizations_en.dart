@@ -579,4 +579,1038 @@ class AppLocalizationsEn extends AppLocalizations {
   String deleteAccountFailed(String error) {
     return 'Could not delete account: $error';
   }
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get searchEllipsis => 'Search...';
+
+  @override
+  String get error => 'Error';
+
+  @override
+  String get unknownError => 'Unknown error';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get type => 'Type';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get zoomIn => 'Zoom in';
+
+  @override
+  String get copied => 'Copied';
+
+  @override
+  String get copiedClipboard => 'Copied 📋';
+
+  @override
+  String get statistics => 'Statistics';
+
+  @override
+  String get photos => 'Photos';
+
+  @override
+  String get camera => 'Camera';
+
+  @override
+  String get gallery => 'Gallery';
+
+  @override
+  String get recordDuplicated => 'Record duplicated ✓';
+
+  @override
+  String get fileType => 'File type';
+
+  @override
+  String get btkFileTitle => 'BTC record (.btk)';
+
+  @override
+  String get btkFileSub => 'Text data';
+
+  @override
+  String get btkzFileTitle => 'BTC with photos (.btkz)';
+
+  @override
+  String get btkzFileSub => 'Records + photos';
+
+  @override
+  String get deleteRecordConfirm =>
+      'Are you sure you want to delete this record?';
+
+  @override
+  String get exportBtc => 'Export BTC';
+
+  @override
+  String get savedRecords => 'Saved records';
+
+  @override
+  String get importAction => 'Import';
+
+  @override
+  String get exportAction => 'Export';
+
+  @override
+  String get pdfDocument => 'PDF document';
+
+  @override
+  String get recordsSearchHint => 'Search: name, ID, location, date...';
+
+  @override
+  String get share => 'Share';
+
+  @override
+  String get saveAsFile => 'Save as file';
+
+  @override
+  String get pdfPreparing => 'Preparing PDF...';
+
+  @override
+  String get duplicate => 'Duplicate';
+
+  @override
+  String get dataLayers => 'Data layers';
+
+  @override
+  String get rasters => 'Rasters';
+
+  @override
+  String get webServices => 'Web services';
+
+  @override
+  String get fromDevice => 'From device (PNG/JPG/WebP/TIFF)';
+
+  @override
+  String get rasterBounds => 'Raster bounds';
+
+  @override
+  String get boundNorth => 'North (N)';
+
+  @override
+  String get boundSouth => 'South (S)';
+
+  @override
+  String get boundEast => 'East (E)';
+
+  @override
+  String get boundWest => 'West (W)';
+
+  @override
+  String get boundsExample => 'e.g. N:43.5  S:41.0  E:46.8  W:40.0';
+
+  @override
+  String get noRasterLayers => 'No raster layers';
+
+  @override
+  String get fromTemplate => 'From template';
+
+  @override
+  String get noWebServices => 'No web services';
+
+  @override
+  String get saveAsTemplate => 'Save as template';
+
+  @override
+  String get deleteServiceConfirm => 'Do you want to delete this service?';
+
+  @override
+  String get chooseTemplate => 'Choose a template';
+
+  @override
+  String get nameOptional => 'Name (optional)';
+
+  @override
+  String get addService => 'Add service';
+
+  @override
+  String get editService => 'Edit service';
+
+  @override
+  String get urlTemplate => 'URL template';
+
+  @override
+  String get subdomains => 'Subdomains (comma-separated)';
+
+  @override
+  String get subdomainsHint => 'a,b,c  — optional';
+
+  @override
+  String get wmsServiceUrl => 'WMS service URL';
+
+  @override
+  String get wmsLayers => 'Layers (comma-separated)';
+
+  @override
+  String get wmsAutoRequest => 'The WMS GetMap request is built automatically';
+
+  @override
+  String get zoomOutSmall => 'Zoom out';
+
+  @override
+  String get closeSearch => 'Close search';
+
+  @override
+  String get notFound => 'Not found';
+
+  @override
+  String get previous => 'Previous';
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get goToPage => 'Go to page';
+
+  @override
+  String get goAction => 'Go';
+
+  @override
+  String get noRecordsYet => 'No records';
+
+  @override
+  String get statsTotal => 'Total';
+
+  @override
+  String get statsNoGps => 'No GPS';
+
+  @override
+  String get statsLast6Months => 'Last 6 months';
+
+  @override
+  String get statsGeoFormations => 'Geological formations';
+
+  @override
+  String get statsReliefTypes => 'Relief types';
+
+  @override
+  String get statsSoilTypes => 'Soil types';
+
+  @override
+  String get resetPassword => 'Reset password';
+
+  @override
+  String get sentCheck => 'Sent ✓';
+
+  @override
+  String get screenSection => 'Screen';
+
+  @override
+  String get exportCoordFormat => 'Coordinate format (export)';
+
+  @override
+  String get aboutSection => 'About';
+
+  @override
+  String get organizationLabel => 'Organization';
+
+  @override
+  String get universityLabel => 'University';
+
+  @override
+  String get measureTool => 'Measure';
+
+  @override
+  String get undo => 'Undo';
+
+  @override
+  String get clear => 'Clear';
+
+  @override
+  String get measureCoords => 'Coords';
+
+  @override
+  String get measureLine => 'Line';
+
+  @override
+  String get measurePolygon => 'Polygon';
+
+  @override
+  String get measureHintCoords => 'Tap the map to see coordinates';
+
+  @override
+  String get measureHintLine => 'Tap to add points';
+
+  @override
+  String get measureHintPolygon => 'Tap to draw a polygon (min. 3 pts)';
+
+  @override
+  String get measurePoints => 'Pts';
+
+  @override
+  String get measureLength => 'Length';
+
+  @override
+  String get measurePerimeter => 'Perimeter';
+
+  @override
+  String get measureArea => 'Area';
+
+  @override
+  String get layerControl => 'Layer control';
+
+  @override
+  String get baseMaps => 'Base maps';
+
+  @override
+  String get adminBoundaries => 'Administrative boundaries';
+
+  @override
+  String get layerRegions => 'Regions';
+
+  @override
+  String get layerMunicipalities => 'Municipalities';
+
+  @override
+  String get fieldData => 'Field data';
+
+  @override
+  String get weatherForecast => 'Weather forecast';
+
+  @override
+  String get weatherLoadFailed => 'Could not load the weather';
+
+  @override
+  String get checkInternet => 'Check your internet connection';
+
+  @override
+  String get retry => 'Try again';
+
+  @override
+  String get forecast24h => '24-hour forecast';
+
+  @override
+  String get nextDays => 'Next days';
+
+  @override
+  String get weatherCredit => 'Weather: ';
+
+  @override
+  String get placeCity => 'City';
+
+  @override
+  String get placeVillage => 'Village';
+
+  @override
+  String get placeAdmin => 'Administrative unit';
+
+  @override
+  String get placeRegion => 'Region';
+
+  @override
+  String get placeSuburb => 'Neighbourhood';
+
+  @override
+  String get placeRiver => 'River';
+
+  @override
+  String get placeMountain => 'Mountain';
+
+  @override
+  String get placeOther => 'Place';
+
+  @override
+  String get placeMunicipality => 'Municipality';
+
+  @override
+  String get mapSearchHint => 'Search: village, city, region...';
+
+  @override
+  String get typeSearchTerm => 'Enter a search term';
+
+  @override
+  String get nothingFound => 'Nothing found';
+
+  @override
+  String get inLayers => 'In layers';
+
+  @override
+  String get placesOsm => 'Places (OSM)';
+
+  @override
+  String get gpsTrackFinished => 'GPS track finished';
+
+  @override
+  String get distance => 'Distance';
+
+  @override
+  String get durationShort => 'Duration';
+
+  @override
+  String get trackPoints => 'Points';
+
+  @override
+  String get downloadGpx => 'Download GPX';
+
+  @override
+  String get tapMapToAddPoint => 'Tap the map to add a point';
+
+  @override
+  String get georgia => 'Georgia';
+
+  @override
+  String get savedCheck => 'Saved ✓';
+
+  @override
+  String get gpsOff => 'GPS is off';
+
+  @override
+  String get enableGps => 'Enable GPS';
+
+  @override
+  String get locationBlocked => 'Location is blocked';
+
+  @override
+  String get recordChanged => 'Record changed';
+
+  @override
+  String get unsavedChanges =>
+      'Your latest changes have not been auto-saved yet.';
+
+  @override
+  String get stay => 'Stay';
+
+  @override
+  String get exitAction => 'Leave';
+
+  @override
+  String get saveAndExit => 'Save and leave';
+
+  @override
+  String get tabBasic => 'Basic';
+
+  @override
+  String get tabPhysGeo => 'Phys.Geo';
+
+  @override
+  String get tabVegetation => 'Veg.';
+
+  @override
+  String get tabGeomass => 'Geomass';
+
+  @override
+  String get tabVertStruct => 'V.Str.';
+
+  @override
+  String get zoomOut => 'Zoom out';
+
+  @override
+  String get fullScreen => 'Full screen';
+
+  @override
+  String get coordFormatHint => 'DD, DM or DMS format';
+
+  @override
+  String get utmMustBeNumbers => 'E and N must be numbers';
+
+  @override
+  String get outsideGeorgia => 'Outside the borders of Georgia';
+
+  @override
+  String get conversionError => 'Conversion error';
+
+  @override
+  String get coordsWrittenToForm => 'Coordinates written to the form';
+
+  @override
+  String get coordConverter => 'Coordinate converter';
+
+  @override
+  String get latitudeShort => 'Latitude';
+
+  @override
+  String get longitudeShort => 'Longitude';
+
+  @override
+  String get writeToForm => 'Write to form';
+
+  @override
+  String get enterCoordsAnyFormat => 'Enter coordinates in any format';
+
+  @override
+  String get convert => 'Convert';
+
+  @override
+  String get writeToFormDd => 'Write to form (DD)';
+
+  @override
+  String get coordsOutsideGeorgia =>
+      'Coordinates are outside the borders of Georgia';
+
+  @override
+  String get numbersOnly => 'Numbers only';
+
+  @override
+  String get altitudeRange => '−500 … 9000 m';
+
+  @override
+  String get btkFullTitle => 'Natural-Territorial Complex (BTC) description';
+
+  @override
+  String get locationHint => 'Place name / description';
+
+  @override
+  String get altitudeM => 'Altitude (m)';
+
+  @override
+  String get aspectDeg => 'Aspect (°)';
+
+  @override
+  String get geomassHeader =>
+      'Geomass research — above-ground part of the BTC vertical profile';
+
+  @override
+  String get treePhytomassHeader => 'Tree phytomass (t/ha)';
+
+  @override
+  String get rowShort => 'Row';
+
+  @override
+  String get treeRowShort => 'Tree row';
+
+  @override
+  String get gmSection => 'Sec.';
+
+  @override
+  String get gmDepth => 'Depth';
+
+  @override
+  String get gmPedBulk => 'Ped.bulk';
+
+  @override
+  String get gmPedQty => 'Ped.qty';
+
+  @override
+  String get gmLithQty => 'Lith.qty';
+
+  @override
+  String get gmLithDens => 'Lith.dens';
+
+  @override
+  String get gmHydQty => 'Hyd.qty';
+
+  @override
+  String get gmHydWet => 'Hyd.wet';
+
+  @override
+  String get gmHydDry => 'Hyd.dry';
+
+  @override
+  String get gmPhytWet => 'Phyt.wet';
+
+  @override
+  String get gmPhytDry => 'Phyt.dry';
+
+  @override
+  String get tpSpecies => 'Sp.';
+
+  @override
+  String get tpVolume => 'Vol.';
+
+  @override
+  String get tpWetWood => 'Wet wd.';
+
+  @override
+  String get tpWetLeaves => 'Wet lv.';
+
+  @override
+  String get tpWetBranches => 'Wet br.';
+
+  @override
+  String get tpWetRoots => 'Wet rt.';
+
+  @override
+  String get tpWetTotal => 'Wet tot.';
+
+  @override
+  String get tpDryWood => 'Dry wd.';
+
+  @override
+  String get tpDryLeaves => 'Dry lv.';
+
+  @override
+  String get tpDryBranches => 'Dry br.';
+
+  @override
+  String get tpDryRoots => 'Dry rt.';
+
+  @override
+  String get tpDryTotal => 'Dry tot.';
+
+  @override
+  String get vegTierShort => 'Tier';
+
+  @override
+  String get vegHeightM => 'Height (m)';
+
+  @override
+  String get vegPhenShort => 'Phen.';
+
+  @override
+  String get soilProfileDescShort => 'Soil profile morphological description';
+
+  @override
+  String get morphDescPhotos => 'Morphological description photos';
+
+  @override
+  String get horizonShort => 'Hor.';
+
+  @override
+  String get addHorizon => 'Add horizon';
+
+  @override
+  String get soilSurfaceFormationShort => 'Soil surface formation type';
+
+  @override
+  String get vertStructDescShort =>
+      'Relationship of above-ground to below-ground vertical profile';
+
+  @override
+  String get vertStructPhotos => 'V.S. photos';
+
+  @override
+  String get deletePhoto => 'Delete photo';
+
+  @override
+  String get deletePhotoConfirm => 'Do you want to delete this photo?';
+
+  @override
+  String get noPhotoAdded => 'No photo added';
+
+  @override
+  String get cameraOrGallery => 'Camera or gallery';
+
+  @override
+  String get noPhotoHint =>
+      'No photos. Take one with the camera or attach one from the gallery.';
+
+  @override
+  String get updateLater => 'Later';
+
+  @override
+  String get updateDownload => 'Download';
+
+  @override
+  String get layersEmptyHelp =>
+      '📁 \"From device\" — a file from this device\n\n📦 Bundled assets — in catalog.json:\n  \"file\": \"assets/rasters/map.png\"\n  Formats: PNG · JPG · WebP · TIFF';
+
+  @override
+  String get resetPasswordPrompt =>
+      'Enter your email and we will send you a reset link.';
+
+  @override
+  String get soilLegend =>
+      'Col.=color  M.C.=mech.comp.  Str.=structure  Por.=porosity  Den.=density  N.F.=new formations  Gr.=gravel  Moist.=moisture  Hum.=humus type  L.B.=lower boundary';
+
+  @override
+  String get otherUserChanged =>
+      '⚠️ Another user changed this record — your version has been saved';
+
+  @override
+  String get gpsOffMessage =>
+      'GPS (location service) must be on to detect coordinates.';
+
+  @override
+  String get locationBlockedMessage =>
+      'The app has no access to your location. Open settings and allow it.';
+
+  @override
+  String get copySuffix => '(copy)';
+
+  @override
+  String get authUserNotFound => 'User not found';
+
+  @override
+  String get authWrongPassword => 'Incorrect password';
+
+  @override
+  String get authInvalidCredential => 'Incorrect email or password';
+
+  @override
+  String get authEmailInUse => 'This email is already in use';
+
+  @override
+  String get authWeakPassword => 'Password is too weak (min. 6 characters)';
+
+  @override
+  String get authInvalidEmail => 'Invalid email format';
+
+  @override
+  String get authMethodDisabled => 'This sign-in method is disabled';
+
+  @override
+  String get authUserDisabled => 'Account is blocked';
+
+  @override
+  String get authTooManyRequests => 'Too many attempts — please wait a while';
+
+  @override
+  String get authNetworkError =>
+      'Network error — check your internet connection';
+
+  @override
+  String get authSystemError => 'System error';
+
+  @override
+  String get authEnterEmailFirst => 'Enter your email first';
+
+  @override
+  String get authRulesError =>
+      'Firestore Rules error — set \"allow read: if true\" on the allowed_users collection.';
+
+  @override
+  String get fileReadFailed => 'Could not read the file';
+
+  @override
+  String get invalidBtkFile => 'Invalid .btk file format';
+
+  @override
+  String get invalidBtkzFile => 'Invalid .btkz format';
+
+  @override
+  String get shareRecordsGeoJson => 'BTC records — GeoJSON';
+
+  @override
+  String get shareRecordsCsv => 'BTC records — CSV';
+
+  @override
+  String get shareRecordsKml => 'BTC KML';
+
+  @override
+  String get savePdfTitle => 'Save PDF';
+
+  @override
+  String get pdfSaved => 'PDF saved';
+
+  @override
+  String get exportBtkTitle => 'Export BTC records';
+
+  @override
+  String get exportBtkzTitle => 'BTC records + photos';
+
+  @override
+  String get exported => 'Exported';
+
+  @override
+  String get unitKm => 'km';
+
+  @override
+  String get unitM => 'm';
+
+  @override
+  String get unitKm2 => 'km²';
+
+  @override
+  String get unitM2 => 'm²';
+
+  @override
+  String get unitHa => 'ha';
+
+  @override
+  String get unitMps => 'm/s';
+
+  @override
+  String get unitMm => 'mm';
+
+  @override
+  String get unitHour => 'h';
+
+  @override
+  String get unitMin => 'min';
+
+  @override
+  String get unitSec => 's';
+
+  @override
+  String get windN => 'N';
+
+  @override
+  String get windNE => 'NE';
+
+  @override
+  String get windE => 'E';
+
+  @override
+  String get windSE => 'SE';
+
+  @override
+  String get windS => 'S';
+
+  @override
+  String get windSW => 'SW';
+
+  @override
+  String get windW => 'W';
+
+  @override
+  String get windNW => 'NW';
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get tomorrow => 'Tomorrow';
+
+  @override
+  String get daySun => 'Sun';
+
+  @override
+  String get dayMon => 'Mon';
+
+  @override
+  String get dayTue => 'Tue';
+
+  @override
+  String get dayWed => 'Wed';
+
+  @override
+  String get dayThu => 'Thu';
+
+  @override
+  String get dayFri => 'Fri';
+
+  @override
+  String get daySat => 'Sat';
+
+  @override
+  String get wxThunder => 'Thunderstorm';
+
+  @override
+  String get wxHeavyRain => 'Heavy rain';
+
+  @override
+  String get wxRain => 'Rain';
+
+  @override
+  String get wxSleet => 'Sleet';
+
+  @override
+  String get wxSnow => 'Snow';
+
+  @override
+  String get wxFog => 'Fog';
+
+  @override
+  String get wxClear => 'Clear';
+
+  @override
+  String get wxFair => 'Fair';
+
+  @override
+  String get wxPartlyCloudy => 'Partly cloudy';
+
+  @override
+  String get wxOvercast => 'Overcast';
+
+  @override
+  String get wxCloudy => 'Cloudy';
+
+  @override
+  String get wxUnknown => 'Weather';
+
+  @override
+  String get monthJan => 'Jan';
+
+  @override
+  String get monthFeb => 'Feb';
+
+  @override
+  String get monthMar => 'Mar';
+
+  @override
+  String get monthApr => 'Apr';
+
+  @override
+  String get monthMay => 'May';
+
+  @override
+  String get monthJun => 'Jun';
+
+  @override
+  String get monthJul => 'Jul';
+
+  @override
+  String get monthAug => 'Aug';
+
+  @override
+  String get monthSep => 'Sep';
+
+  @override
+  String get monthOct => 'Oct';
+
+  @override
+  String get monthNov => 'Nov';
+
+  @override
+  String get monthDec => 'Dec';
+
+  @override
+  String errorWithDetail(String detail) {
+    return 'Error: $detail';
+  }
+
+  @override
+  String authErrorCode(String code) {
+    return 'Error ($code)';
+  }
+
+  @override
+  String authDbError(String code) {
+    return 'Database error ($code)';
+  }
+
+  @override
+  String resetLinkSent(String email) {
+    return 'A password reset link was sent to:\n\n$email\n\nCheck your email (including spam).';
+  }
+
+  @override
+  String deleteRecordsConfirm(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count records',
+      one: '1 record',
+    );
+    return 'Permanently delete $_temp0?';
+  }
+
+  @override
+  String recordsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count records',
+      one: '1 record',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String photosCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count photos',
+      one: '1 photo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tracksCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count GPS tracks',
+      one: '1 GPS track',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String importedParts(String parts) {
+    return 'Imported $parts';
+  }
+
+  @override
+  String importedSummary(int total, int added, int updated) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$total records',
+      one: '1 record',
+    );
+    return 'Imported $_temp0 ($added new, $updated updated)';
+  }
+
+  @override
+  String queryNotFound(String query) {
+    return '\"$query\" — not found';
+  }
+
+  @override
+  String btkNumber(String id) {
+    return 'BTC #$id';
+  }
+
+  @override
+  String templateSaved(String name) {
+    return '\"$name\" saved to templates ✓';
+  }
+
+  @override
+  String pageOf(int current, int total) {
+    return 'Page $current / $total';
+  }
+
+  @override
+  String pageRange(int count) {
+    return 'Page (1–$count)';
+  }
+
+  @override
+  String recordsOnMap(int count) {
+    return 'Records on the map ($count)';
+  }
+
+  @override
+  String recordsDownloaded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count records',
+      one: '1 record',
+    );
+    return '$_temp0 downloaded ✓';
+  }
+
+  @override
+  String photoOpenFailed(String error) {
+    return 'Could not open the photo: $error';
+  }
+
+  @override
+  String photoSaveFailed(String error) {
+    return 'Could not save the photo: $error';
+  }
+
+  @override
+  String newVersionAvailable(String version) {
+    return 'New version v$version is available';
+  }
+
+  @override
+  String savedAtPath(String path) {
+    return 'Saved: $path';
+  }
+
+  @override
+  String exportedWith(String details) {
+    return 'Exported ($details)';
+  }
+
+  @override
+  String shareGpsTrack(String date) {
+    return 'GPS track — $date';
+  }
+
+  @override
+  String shareBtkFile(String filename) {
+    return 'BTC — $filename';
+  }
+
+  @override
+  String get photoLabel => 'Photo';
 }

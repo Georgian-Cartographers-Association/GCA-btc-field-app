@@ -2,6 +2,7 @@
 import '../../../../models/btk_record.dart';
 import '../../../../utils/coord_converter.dart';
 import '../widgets/coord_converter_widget.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 class BasicInfoSection extends StatefulWidget {
   final BtkRecord record;
@@ -85,39 +86,44 @@ class _BasicInfoSectionState extends State<BasicInfoSection> {
   }
 
   String? _validateLat(String v) {
+    final l10n = AppLocalizations.of(context)!;
     if (v.trim().isEmpty) return null;
     final n = double.tryParse(v);
-    if (n == null) return 'მხოლოდ რიცხვი';
+    if (n == null) return l10n.numbersOnly;
     if (n < -90 || n > 90) return '-90 … 90';
     return null;
   }
 
   String? _validateLon(String v) {
+    final l10n = AppLocalizations.of(context)!;
     if (v.trim().isEmpty) return null;
     final n = double.tryParse(v);
-    if (n == null) return 'მხოლოდ რიცხვი';
+    if (n == null) return l10n.numbersOnly;
     if (n < -180 || n > 180) return '-180 … 180';
     return null;
   }
 
   String? _validateAlt(String v) {
+    final l10n = AppLocalizations.of(context)!;
     if (v.trim().isEmpty) return null;
     final n = double.tryParse(v);
-    if (n == null) return 'მხოლოდ რიცხვი';
-    if (n < -500 || n > 9000) return '−500 … 9000 მ';
+    if (n == null) return l10n.numbersOnly;
+    if (n < -500 || n > 9000) return l10n.altitudeRange;
     return null;
   }
 
   String? _validateAspect(String v) {
+    final l10n = AppLocalizations.of(context)!;
     if (v.trim().isEmpty) return null;
     final n = double.tryParse(v);
-    if (n == null) return 'მხოლოდ რიცხვი';
+    if (n == null) return l10n.numbersOnly;
     if (n < 0 || n > 360) return '0 … 360°';
     return null;
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final r = widget.record;
 
     return SingleChildScrollView(
@@ -125,7 +131,7 @@ class _BasicInfoSectionState extends State<BasicInfoSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _sectionHeader(context, 'ბუნებრივ-ტერიტორიული კომპლექსის (ბტკ) აღწერა'),
+          _sectionHeader(context, l10n.btkFullTitle),
           const SizedBox(height: 4),
           Text('ID: ${r.id}',
               style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
@@ -136,7 +142,7 @@ class _BasicInfoSectionState extends State<BasicInfoSection> {
             controller: _dateCtrl,
             readOnly: true,
             decoration: InputDecoration(
-              labelText: 'თარიღი',
+              labelText: l10n.date,
               suffixIcon: IconButton(
                 icon: const Icon(Icons.calendar_today, size: 18),
                 onPressed: () async {
@@ -160,9 +166,9 @@ class _BasicInfoSectionState extends State<BasicInfoSection> {
           TextField(
             controller: _locationCtrl,
             onChanged: (v) => widget.onChanged(r..location = v),
-            decoration: const InputDecoration(
-              labelText: 'ადგილმდებარეობა',
-              hintText: 'მდებარეობის სახელი / აღწერა',
+            decoration: InputDecoration(
+              labelText: l10n.location,
+              hintText: l10n.locationHint,
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               isDense: true,
@@ -170,7 +176,7 @@ class _BasicInfoSectionState extends State<BasicInfoSection> {
           ),
           const SizedBox(height: 16),
 
-          Text('კოორდინატები', style: Theme.of(context).textTheme.labelLarge),
+          Text(l10n.coordinates, style: Theme.of(context).textTheme.labelLarge),
           const SizedBox(height: 8),
 
           // Lat / Lon row
@@ -189,7 +195,7 @@ class _BasicInfoSectionState extends State<BasicInfoSection> {
                     }
                   },
                   decoration: InputDecoration(
-                    labelText: 'განედი (lat)',
+                    labelText: l10n.latitude,
                     errorText: _latError,
                     border: const OutlineInputBorder(),
                     contentPadding:
@@ -212,7 +218,7 @@ class _BasicInfoSectionState extends State<BasicInfoSection> {
                     }
                   },
                   decoration: InputDecoration(
-                    labelText: 'გრძედი (lon)',
+                    labelText: l10n.longitude,
                     errorText: _lonError,
                     border: const OutlineInputBorder(),
                     contentPadding:
@@ -241,7 +247,7 @@ class _BasicInfoSectionState extends State<BasicInfoSection> {
                     }
                   },
                   decoration: InputDecoration(
-                    labelText: 'სიმაღლე (მ)',
+                    labelText: l10n.altitudeM,
                     errorText: _altError,
                     border: const OutlineInputBorder(),
                     contentPadding:
@@ -264,7 +270,7 @@ class _BasicInfoSectionState extends State<BasicInfoSection> {
                     }
                   },
                   decoration: InputDecoration(
-                    labelText: 'ასპექტი (°)',
+                    labelText: l10n.aspectDeg,
                     hintText: '0–360',
                     errorText: _aspectError,
                     border: const OutlineInputBorder(),
@@ -281,7 +287,7 @@ class _BasicInfoSectionState extends State<BasicInfoSection> {
           ElevatedButton.icon(
             onPressed: widget.onDetectGps,
             icon: const Icon(Icons.gps_fixed, size: 18),
-            label: const Text('GPS-ით დადგენა'),
+            label: Text(l10n.useGps),
           ),
           const SizedBox(height: 8),
           CoordConverterWidget(

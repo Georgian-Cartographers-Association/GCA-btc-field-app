@@ -46,7 +46,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('არა'),
+            child: Text(l10n.no),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
@@ -78,6 +78,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   }
 
   Future<void> _forgotPassword() async {
+    final l10n = AppLocalizations.of(context)!;
     // Pre-fill with whatever is already typed in the email field.
     final prefill = _emailCtrl.text.trim();
     final inputCtrl = TextEditingController(text: prefill);
@@ -85,13 +86,12 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     final email = await showDialog<String>(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('პაროლის აღდგენა'),
+        title: Text(l10n.resetPassword),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'შეიყვანეთ ელ-ფოსტა — გამოგიგზავნოთ '
-              'განახლების ბმული.',
+            Text(
+              l10n.resetPasswordPrompt,
               style: TextStyle(fontSize: 13),
             ),
             const SizedBox(height: 12),
@@ -100,8 +100,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               autofocus: prefill.isEmpty,
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.done,
-              decoration: const InputDecoration(
-                labelText: 'ელ-ფოსტა',
+              decoration: InputDecoration(
+                labelText: l10n.email,
                 prefixIcon: Icon(Icons.email_outlined),
                 border: OutlineInputBorder(),
               ),
@@ -111,11 +111,11 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('გაუქმება'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, inputCtrl.text.trim()),
-            child: const Text('გაგზავნა'),
+            child: Text(l10n.send),
           ),
         ],
       ),
@@ -134,17 +134,16 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text(sent != null ? 'გაიგზავნა ✓' : 'შეცდომა'),
+        title: Text(sent != null ? l10n.sentCheck : l10n.error),
         content: Text(
           sent != null
-              ? 'პაროლის განახლების ბმული გამოიგზავნა:\n\n$sent\n\n'
-                  'შეამოწმეთ ელ-ფოსტა (spam-საც).'
-              : (error ?? 'უცნობი შეცდომა'),
+              ? l10n.resetLinkSent(sent)
+              : (error?.call(l10n) ?? l10n.unknownError),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('კარგი'),
+            child: Text(l10n.ok),
           ),
         ],
       ),
@@ -261,7 +260,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              state.error!,
+                              state.error!(l10n),
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.error,
                                 fontSize: 13,

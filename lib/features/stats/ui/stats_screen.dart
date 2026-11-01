@@ -4,23 +4,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import '../../../models/btk_record.dart';
 import '../../records/domain/btk_provider.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 class StatsScreen extends ConsumerWidget {
   const StatsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final records = ref.watch(btkProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('სტატისტიკა')),
+      appBar: AppBar(title: Text(l10n.statistics)),
       body: records.isEmpty
-          ? const Center(
+          ? Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.bar_chart_outlined, size: 64, color: Colors.grey),
                   SizedBox(height: 12),
-                  Text('ჩანაწერები არ არის',
+                  Text(l10n.noRecordsYet,
                       style: TextStyle(color: Colors.grey)),
                 ],
               ),
@@ -36,6 +38,7 @@ class _StatsBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final located = records.where((r) => r.latitude != null).toList();
     final cs = Theme.of(context).colorScheme;
 
@@ -63,13 +66,13 @@ class _StatsBody extends StatelessWidget {
       children: [
         // ── Summary cards ───────────────────────────────────────────────────
         Row(children: [
-          _Card(label: 'სულ', value: '${records.length}',
+          _Card(label: l10n.statsTotal, value: '${records.length}',
               icon: Icons.article_outlined, color: cs.primary),
           const SizedBox(width: 8),
           _Card(label: 'GPS', value: '${located.length}',
               icon: Icons.location_on_outlined, color: Colors.green),
           const SizedBox(width: 8),
-          _Card(label: 'GPS გარეშე',
+          _Card(label: l10n.statsNoGps,
               value: '${records.length - located.length}',
               icon: Icons.location_off_outlined, color: Colors.orange),
         ]),
@@ -77,7 +80,7 @@ class _StatsBody extends StatelessWidget {
 
         // ── Monthly bars ────────────────────────────────────────────────────
         if (maxM > 0) ...[
-          _SectionTitle('ბოლო 6 თვე'),
+          _SectionTitle(l10n.statsLast6Months),
           const SizedBox(height: 8),
           _MonthlyBars(monthly: monthly, max: maxM, color: cs.primary),
           const SizedBox(height: 20),
@@ -85,7 +88,7 @@ class _StatsBody extends StatelessWidget {
 
         // ── Geological formations ───────────────────────────────────────────
         if (geoFreq.isNotEmpty) ...[
-          _SectionTitle('გეოლოგიური ფორმაციები'),
+          _SectionTitle(l10n.statsGeoFormations),
           const SizedBox(height: 8),
           _FreqBars(entries: geoFreq.take(5).toList(), color: cs.primary),
           const SizedBox(height: 20),
@@ -93,7 +96,7 @@ class _StatsBody extends StatelessWidget {
 
         // ── Relief types ────────────────────────────────────────────────────
         if (reliefFreq.isNotEmpty) ...[
-          _SectionTitle('რელიეფის ტიპები'),
+          _SectionTitle(l10n.statsReliefTypes),
           const SizedBox(height: 8),
           _FreqBars(entries: reliefFreq.take(5).toList(), color: cs.tertiary),
           const SizedBox(height: 20),
@@ -101,7 +104,7 @@ class _StatsBody extends StatelessWidget {
 
         // ── Soil types ──────────────────────────────────────────────────────
         if (soilFreq.isNotEmpty) ...[
-          _SectionTitle('ნიადაგის ტიპები'),
+          _SectionTitle(l10n.statsSoilTypes),
           const SizedBox(height: 8),
           _FreqBars(entries: soilFreq.take(5).toList(), color: Colors.brown),
           const SizedBox(height: 20),
@@ -109,7 +112,7 @@ class _StatsBody extends StatelessWidget {
 
         // ── Mini map ────────────────────────────────────────────────────────
         if (located.isNotEmpty) ...[
-          _SectionTitle('ჩანაწერები რუქაზე (${located.length})'),
+          _SectionTitle(l10n.recordsOnMap(located.length)),
           const SizedBox(height: 8),
           SizedBox(
             height: 260,

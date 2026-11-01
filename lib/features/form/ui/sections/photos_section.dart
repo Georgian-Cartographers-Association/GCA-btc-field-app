@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../models/photo.dart';
 import '../../domain/photo_provider.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 /// Photo gallery section — shown as the last tab in BtkFormScreen.
 /// Android-only: web shows a placeholder.
@@ -13,6 +14,7 @@ class PhotosSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final photos = ref.watch(photoProvider(recordId));
     final notifier = ref.read(photoProvider(recordId).notifier);
 
@@ -27,13 +29,13 @@ class PhotosSection extends ConsumerWidget {
               FilledButton.icon(
                 onPressed: () => notifier.addFromSource(ImageSource.camera, context),
                 icon: const Icon(Icons.camera_alt_outlined, size: 18),
-                label: const Text('კამერა'),
+                label: Text(l10n.camera),
               ),
               const SizedBox(width: 8),
               OutlinedButton.icon(
                 onPressed: () => notifier.addFromSource(ImageSource.gallery, context),
                 icon: const Icon(Icons.photo_library_outlined, size: 18),
-                label: const Text('გალერეა'),
+                label: Text(l10n.gallery),
               ),
             ],
           ),
@@ -75,19 +77,20 @@ class PhotosSection extends ConsumerWidget {
 
   Future<void> _confirmDelete(
       BuildContext ctx, PhotoNotifier notifier, Photo photo) async {
+    final l10n = AppLocalizations.of(ctx)!;
     final ok = await showDialog<bool>(
       context: ctx,
       builder: (dCtx) => AlertDialog(
-        title: const Text('ფოტოს წაშლა'),
-        content: const Text('გსურთ ამ ფოტოს წაშლა?'),
+        title: Text(l10n.deletePhoto),
+        content: Text(l10n.deletePhotoConfirm),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(dCtx, false),
-              child: const Text('გაუქმება')),
+              child: Text(l10n.cancel)),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             onPressed: () => Navigator.pop(dCtx, true),
-            child: const Text('წაშლა',
+            child: Text(l10n.delete,
                 style: TextStyle(color: Colors.white)),
           ),
         ],
@@ -153,6 +156,7 @@ class _EmptyHint extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 40),
@@ -166,7 +170,7 @@ class _EmptyHint extends StatelessWidget {
                     .withValues(alpha: 0.3)),
             const SizedBox(height: 12),
             Text(
-              'ფოტო არ არის დამატებული',
+              l10n.noPhotoAdded,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(context)
                         .colorScheme
@@ -176,7 +180,7 @@ class _EmptyHint extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              'კამერა ან გალერეა',
+              l10n.cameraOrGallery,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context)
                         .colorScheme

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../../../models/photo.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 /// Reusable inline photo panel for form sections.
 /// Shows camera / gallery buttons and a horizontal thumbnail strip.
@@ -24,6 +25,7 @@ class SectionPhotoPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final scheme = Theme.of(context).colorScheme;
     return Container(
       decoration: BoxDecoration(
@@ -49,13 +51,13 @@ class SectionPhotoPanel extends StatelessWidget {
               ),
               _IconChip(
                 icon: Icons.camera_alt_outlined,
-                label: 'კამერა',
+                label: l10n.camera,
                 onTap: onCamera,
               ),
               const SizedBox(width: 6),
               _IconChip(
                 icon: Icons.photo_library_outlined,
-                label: 'გალერეა',
+                label: l10n.gallery,
                 onTap: onGallery,
               ),
             ],
@@ -78,7 +80,7 @@ class SectionPhotoPanel extends StatelessWidget {
           ] else ...[
             const SizedBox(height: 8),
             Text(
-              'ფოტო არ არის. გადაიღეთ კამერით ან მიაბით გალერეიდან.',
+              l10n.noPhotoHint,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: scheme.onSurface.withValues(alpha: 0.45),
                   ),
@@ -177,13 +179,13 @@ class _Thumb extends StatelessWidget {
 class SectionFullScreenGallery extends StatefulWidget {
   final List<Photo> photos;
   final int initialIndex;
-  final String title;
+  final String? title;
 
   const SectionFullScreenGallery({
     super.key,
     required this.photos,
     required this.initialIndex,
-    this.title = 'ფოტო',
+    this.title,
   });
 
   @override
@@ -215,7 +217,7 @@ class _SectionFullScreenGalleryState extends State<SectionFullScreenGallery> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
-        title: Text('${widget.title}  ${_current + 1}/${widget.photos.length}'),
+        title: Text('${widget.title ?? AppLocalizations.of(context)!.photoLabel}  ${_current + 1}/${widget.photos.length}'),
       ),
       body: PageView.builder(
         controller: _ctrl,
@@ -243,20 +245,21 @@ class _SectionFullScreenGalleryState extends State<SectionFullScreenGallery> {
 /// Helper to pick and confirm deletion of a photo from any section.
 Future<void> confirmDeleteSectionPhoto(
     BuildContext context, VoidCallback onConfirm) async {
+      final l10n = AppLocalizations.of(context)!;
   final ok = await showDialog<bool>(
     context: context,
     builder: (dCtx) => AlertDialog(
-      title: const Text('ფოტოს წაშლა'),
-      content: const Text('გსურთ ამ ფოტოს წაშლა?'),
+      title: Text(l10n.deletePhoto),
+      content: Text(l10n.deletePhotoConfirm),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(dCtx, false),
-          child: const Text('გაუქმება'),
+          child: Text(l10n.cancel),
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
           onPressed: () => Navigator.pop(dCtx, true),
-          child: const Text('წაშლა', style: TextStyle(color: Colors.white)),
+          child: Text(l10n.delete, style: TextStyle(color: Colors.white)),
         ),
       ],
     ),

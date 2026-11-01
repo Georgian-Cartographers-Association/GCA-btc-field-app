@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../models/btk_record.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 class VegetationSection extends StatefulWidget {
   final BtkRecord record;
@@ -61,13 +62,14 @@ class _VegetationSectionState extends State<VegetationSection> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final rows = widget.record.vegetation;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _header(context, 'მცენარეულობა'),
+          _header(context, l10n.vegetation),
           const SizedBox(height: 12),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -75,12 +77,12 @@ class _VegetationSectionState extends State<VegetationSection> {
               headingRowColor: WidgetStateProperty.all(
                   Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.5)),
               columnSpacing: 12,
-              columns: const [
-                DataColumn(label: Text('იარ.', style: TextStyle(fontSize: 12))),
-                DataColumn(label: Text('სიმ. (მ)', style: TextStyle(fontSize: 12))),
-                DataColumn(label: Text('სიმძლ.', style: TextStyle(fontSize: 12))),
-                DataColumn(label: Text('ფენოფ.', style: TextStyle(fontSize: 12))),
-                DataColumn(label: Text('სახეობა', style: TextStyle(fontSize: 12))),
+              columns: [
+                DataColumn(label: Text(l10n.vegTierShort, style: TextStyle(fontSize: 12))),
+                DataColumn(label: Text(l10n.vegHeightM, style: TextStyle(fontSize: 12))),
+                DataColumn(label: Text(l10n.vegDensity, style: TextStyle(fontSize: 12))),
+                DataColumn(label: Text(l10n.vegPhenShort, style: TextStyle(fontSize: 12))),
+                DataColumn(label: Text(l10n.vegSpecies, style: TextStyle(fontSize: 12))),
                 DataColumn(label: Text('', style: TextStyle(fontSize: 12))),
               ],
               rows: List.generate(rows.length, (i) {
@@ -104,7 +106,7 @@ class _VegetationSectionState extends State<VegetationSection> {
           TextButton.icon(
             onPressed: _addRow,
             icon: const Icon(Icons.add),
-            label: const Text('სტრიქონის დამატება'),
+            label: Text(l10n.addRow),
           ),
         ],
       ),

@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class UpdateService {
   static const _prefKey = 'update_dismissed_v';
@@ -32,16 +33,17 @@ class UpdateService {
       if (!_isNewer(tag, info.version)) return;
       if (prefs.getString(_prefKey) == tag) return;
       if (!context.mounted) return;
+      final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showMaterialBanner(MaterialBanner(
         leading: const Icon(Icons.system_update_outlined),
-        content: Text('ახალი ვერსია v$tag ხელმისაწვდომია'),
+        content: Text(l10n.newVersionAvailable(tag)),
         actions: [
           TextButton(
             onPressed: () {
               ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
               prefs.setString(_prefKey, tag);
             },
-            child: const Text('შემდეგ'),
+            child: Text(l10n.updateLater),
           ),
           FilledButton.tonal(
             onPressed: () async {
@@ -50,7 +52,7 @@ class UpdateService {
               await launchUrl(Uri.parse(url),
                   mode: LaunchMode.externalApplication);
             },
-            child: const Text('ჩამოტვირთვა'),
+            child: Text(l10n.updateDownload),
           ),
         ],
       ));

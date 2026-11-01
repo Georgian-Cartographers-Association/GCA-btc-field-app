@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/map_provider.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 class LayerControlPanel extends ConsumerWidget {
   const LayerControlPanel({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final layers = ref.watch(mapLayersProvider);
     final n = ref.read(mapLayersProvider.notifier);
 
@@ -33,7 +35,7 @@ class LayerControlPanel extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 16),
-            Text('შრეების კონტროლი',
+            Text(l10n.layerControl,
                 style: Theme.of(context)
                     .textTheme
                     .titleMedium
@@ -41,7 +43,7 @@ class LayerControlPanel extends ConsumerWidget {
             const SizedBox(height: 8),
 
             // ── ფონური რუკები ────────────────────────────────────────
-            _SectionLabel('ფონური რუკები'),
+            _SectionLabel(l10n.baseMaps),
             _LayerTile(
               icon: Icons.map_outlined,
               label: 'OpenStreetMap',
@@ -58,24 +60,24 @@ class LayerControlPanel extends ConsumerWidget {
             const Divider(height: 24),
 
             // ── ადმინისტრაციული საზღვრები ────────────────────────────
-            _SectionLabel('ადმინისტრაციული საზღვრები'),
+            _SectionLabel(l10n.adminBoundaries),
             _LayerTile(
               icon: Icons.pentagon_outlined,
-              label: 'საქართველოს საზღვარი',
+              label: l10n.layerBoundary,
               value: layers.showBoundary,
               color: Colors.blue.shade700,
               onChanged: (_) => n.toggleBoundary(),
             ),
             _LayerTile(
               icon: Icons.grid_view_outlined,
-              label: 'მხარეები',
+              label: l10n.layerRegions,
               value: layers.showRegions,
               color: Colors.orange.shade700,
               onChanged: (_) => n.toggleRegions(),
             ),
             _LayerTile(
               icon: Icons.grid_on_outlined,
-              label: 'მუნიციპალიტეტები',
+              label: l10n.layerMunicipalities,
               value: layers.showMunicipalities,
               color: Colors.green.shade700,
               onChanged: (_) => n.toggleMunicipalities(),
@@ -84,10 +86,10 @@ class LayerControlPanel extends ConsumerWidget {
             const Divider(height: 24),
 
             // ── საველე მონაცემები ─────────────────────────────────────
-            _SectionLabel('საველე მონაცემები'),
+            _SectionLabel(l10n.fieldData),
             _LayerTile(
               icon: Icons.location_pin,
-              label: 'ბტკ წერტილები',
+              label: l10n.layerPoints,
               value: layers.showPoints,
               color: Theme.of(context).colorScheme.primary,
               onChanged: (_) => n.togglePoints(),

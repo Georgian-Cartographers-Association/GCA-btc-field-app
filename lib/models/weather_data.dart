@@ -1,3 +1,5 @@
+import '../l10n/generated/app_localizations.dart';
+
 /// Parsed data from api.met.no locationforecast/2.0/compact
 class WeatherHour {
   final DateTime time;
@@ -20,8 +22,11 @@ class WeatherHour {
 
   String get emoji => WeatherData.symbolEmoji(symbolCode);
 
-  String get windDirLabel {
-    const dirs = ['ჩ', 'ჩ-აღ', 'აღ', 'სამ-აღ', 'სამ', 'სამ-დ', 'დ', 'ჩ-დ'];
+  String windDirLabel(AppLocalizations l10n) {
+    final dirs = [
+      l10n.windN, l10n.windNE, l10n.windE, l10n.windSE,
+      l10n.windS, l10n.windSW, l10n.windW, l10n.windNW,
+    ];
     final idx = ((windDir + 22.5) / 45).floor() % 8;
     return dirs[idx];
   }
@@ -45,23 +50,29 @@ class WeatherDay {
 
   String get emoji => WeatherData.symbolEmoji(symbolCode);
 
-  /// Georgian short day name (or დღეს / ხვალ).
-  String get dayName {
+  bool get isToday {
     final today = DateTime.now();
-    final d = date;
-    if (d.year == today.year && d.month == today.month && d.day == today.day) {
-      return 'დღეს';
-    }
-    final tomorrow = today.add(const Duration(days: 1));
-    if (d.year == tomorrow.year &&
-        d.month == tomorrow.month &&
-        d.day == tomorrow.day) {
-      return 'ხვალ';
-    }
-    const names = [
-      'კვირა', 'ორშ', 'სამშ', 'ოთხ', 'ხუთ', 'პარ', 'შაბ',
+    return date.year == today.year &&
+        date.month == today.month &&
+        date.day == today.day;
+  }
+
+  bool get isTomorrow {
+    final tomorrow = DateTime.now().add(const Duration(days: 1));
+    return date.year == tomorrow.year &&
+        date.month == tomorrow.month &&
+        date.day == tomorrow.day;
+  }
+
+  /// Localized short day name (or today / tomorrow).
+  String dayName(AppLocalizations l10n) {
+    if (isToday) return l10n.today;
+    if (isTomorrow) return l10n.tomorrow;
+    final names = [
+      l10n.daySun, l10n.dayMon, l10n.dayTue, l10n.dayWed,
+      l10n.dayThu, l10n.dayFri, l10n.daySat,
     ];
-    return names[d.weekday % 7];
+    return names[date.weekday % 7];
   }
 
   factory WeatherDay.fromHours(DateTime date, List<WeatherHour> hours) {
@@ -211,23 +222,23 @@ class WeatherData {
     return '🌡️';
   }
 
-  static String symbolGeorgian(String code) {
+  static String symbolLabel(String code, AppLocalizations l10n) {
     final c = code.toLowerCase();
-    if (c.contains('thunder')) return 'ჭექა-ქუხილი';
-    if (c.contains('heavyrain')) return 'ძლიერი წვიმა';
+    if (c.contains('thunder')) return l10n.wxThunder;
+    if (c.contains('heavyrain')) return l10n.wxHeavyRain;
     if (c.contains('rain') || c.contains('drizzle') || c.contains('shower')) {
-      return 'წვიმა';
+      return l10n.wxRain;
     }
-    if (c.contains('sleet')) return 'თოვა-წვიმა';
-    if (c.contains('snow')) return 'თოვლი';
-    if (c.contains('fog')) return 'ნისლი';
-    if (c.contains('clearsky')) return 'მოწმენდილი';
-    if (c.contains('fair')) return 'ნათელი';
+    if (c.contains('sleet')) return l10n.wxSleet;
+    if (c.contains('snow')) return l10n.wxSnow;
+    if (c.contains('fog')) return l10n.wxFog;
+    if (c.contains('clearsky')) return l10n.wxClear;
+    if (c.contains('fair')) return l10n.wxFair;
     if (c.contains('partlycloudy') || c.contains('partly')) {
-      return 'ნაწილობრივ ღრუბლიანი';
+      return l10n.wxPartlyCloudy;
     }
-    if (c.contains('overcast')) return 'მოღრუბლული';
-    if (c.contains('cloud')) return 'ღრუბლიანი';
-    return 'ამინდი';
+    if (c.contains('overcast')) return l10n.wxOvercast;
+    if (c.contains('cloud')) return l10n.wxCloudy;
+    return l10n.wxUnknown;
   }
 }
