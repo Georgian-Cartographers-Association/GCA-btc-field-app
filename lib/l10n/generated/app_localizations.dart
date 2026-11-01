@@ -1177,6 +1177,36 @@ abstract class AppLocalizations {
   /// In ka, this message translates to:
   /// **'პარამ.'**
   String get paramsShort;
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In ka, this message translates to:
+  /// **'ანგარიშის წაშლა'**
+  String get deleteAccount;
+
+  /// No description provided for @deleteAccountSub.
+  ///
+  /// In ka, this message translates to:
+  /// **'ანგარიში და ღრუბელში შენახული ჩანაწერები სამუდამოდ წაიშლება'**
+  String get deleteAccountSub;
+
+  /// No description provided for @deleteAccountWarning.
+  ///
+  /// In ka, this message translates to:
+  /// **'წაიშლება თქვენი ანგარიში და ღრუბელში შენახული ყველა ჩანაწერი. მოწყობილობაზე შენახული ჩანაწერები და ექსპედიციაში გაზიარებული ჩანაწერები დარჩება. ეს მოქმედება შეუქცევადია.\n\nდასადასტურებლად შეიყვანეთ პაროლი:'**
+  String get deleteAccountWarning;
+
+  /// No description provided for @accountDeleted.
+  ///
+  /// In ka, this message translates to:
+  /// **'ანგარიში წაიშალა'**
+  String get accountDeleted;
+
+  /// No description provided for @deleteAccountFailed.
+  ///
+  /// In ka, this message translates to:
+  /// **'ანგარიში ვერ წაიშალა: {error}'**
+  String deleteAccountFailed(String error);
 }
 
 class _AppLocalizationsDelegate

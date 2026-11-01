@@ -185,5 +185,11 @@
   "trackHistory": "Track History",
   "map": "Map",
   "methodologyShort": "Guide",
-  "paramsShort": "Params"
+  "paramsShort": "Params",
+
+  "deleteAccount": "Delete account",
+  "deleteAccountSub": "Permanently delete your account and cloud records",
+  "deleteAccountWarning": "Your account and all records stored in the cloud will be deleted. Records stored on this device and records shared in an expedition are kept. This cannot be undone.\n\nEnter your password to confirm:",
+  "accountDeleted": "Account deleted",
+  "deleteAccountFailed": "Could not delete account: {error}"
 }
