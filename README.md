@@ -146,7 +146,7 @@ sudo dpkg -i btk-linux-*.deb && sudo apt-get install -f
 | Long-press → multi-select | batch export / batch PDF / batch წაშლა |
 | Record duplication | "(ასლი)" სუფიქსით |
 | Discard dialog | unsaved changes გაფრთხილება |
-| Auto-update banner | GitHub Releases-ს ამოწმებს, ახალი ვერსია → banner |
+| Auto-update banner | GitHub Releases-ს ამოწმებს, ახალი ვერსია → banner (Android-ზე არა: განახლება Play-დან ხდება) |
 | სტატისტიკა / Dashboard | bar chart, სიხშირე, mini-map |
 | ღია / მუქი ფონი | Material 3 theming |
 | ქართული / English | ენის გადართვა პარამეტრებიდან |
