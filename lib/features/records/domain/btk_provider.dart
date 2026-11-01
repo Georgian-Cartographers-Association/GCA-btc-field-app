@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
+import '../../../core/app_messenger.dart';
 import '../../../models/btk_record.dart';
 import '../../../data/repositories/cloud_repository.dart';
 import '../../../data/repositories/data_repository.dart';
@@ -22,13 +23,19 @@ class BtkNotifier extends StateNotifier<List<BtkRecord>> {
     if (s != null) {
       _cloudSub = s.listen((records) {
         if (mounted) state = records;
-      });
+      }, onError: _reportLoadError);
     } else {
       _repo.getAll().then((records) {
         if (mounted) state = records;
-      });
+      }, onError: _reportLoadError);
     }
   }
+
+  void _reportLoadError(Object _) {
+    AppMessenger.showError((l10n) => l10n.recordsLoadFailed);
+  }
+
+  static String _newId() => const Uuid().v4().substring(0, 8).toUpperCase();
 
   @override
   void dispose() {
@@ -38,17 +45,28 @@ class BtkNotifier extends StateNotifier<List<BtkRecord>> {
 
   Future<BtkRecord> add({double? lat, double? lon}) async {
     final record = BtkRecord(
-      id: const Uuid().v4().substring(0, 8).toUpperCase(),
+      id: _newId(),
       date: DateTime.now(),
       latitude: lat,
       longitude: lon,
     );
-    state = [...state, record];
-    await _repo.upsert(record);
+    await _insert(record);
     return record;
   }
 
+  /// Shows [record] right away, and removes it again if it can't be stored.
+  Future<void> _insert(BtkRecord record) async {
+    state = [...state, record];
+    try {
+      await _repo.upsert(record);
+    } catch (_) {
+      if (mounted) state = state.where((r) => r.id != record.id).toList();
+      rethrow;
+    }
+  }
+
   /// Returns true if a sync conflict was detected (expedition mode only).
+  /// Throws if the save fails. The edit stays on screen so it can be retried.
   Future<bool> update(BtkRecord record) async {
     state = [
       for (final r in state)
@@ -58,46 +76,61 @@ class BtkNotifier extends StateNotifier<List<BtkRecord>> {
   }
 
   Future<void> remove(String id) async {
+    final before = state;
     state = state.where((r) => r.id != id).toList();
-    await _repo.delete(id);
+    try {
+      await _repo.delete(id);
+    } catch (_) {
+      if (mounted) state = before;
+      rethrow;
+    }
   }
 
   Future<BtkRecord> duplicate(BtkRecord original, String copySuffix) async {
     final json = original.toJson();
-    json['id'] = const Uuid().v4().substring(0, 8).toUpperCase();
+    json['id'] = _newId();
     if ((json['name'] as String).isNotEmpty) {
       json['name'] = '${json['name']} $copySuffix';
     }
     final copy = BtkRecord.fromJson(json);
-    state = [...state, copy];
-    await _repo.upsert(copy);
+    await _insert(copy);
     return copy;
   }
 
-  Future<({int added, int updated})> importRecords(
+  /// Adds new records and replaces older copies. A copy that is the same age
+  /// or newer than the imported one is kept, and counted in `skipped`.
+  Future<({int added, int updated, int skipped})> importRecords(
       List<BtkRecord> records) async {
-    final existingIds = {for (final r in state) r.id};
-    int added = 0, updated = 0;
-
-    for (final r in records) {
-      if (existingIds.contains(r.id)) {
-        updated++;
-      } else {
-        added++;
-      }
-      await _repo.upsert(r);
-    }
-
     final stateMap = {for (final r in state) r.id: r};
-    for (final r in records) {
-      stateMap[r.id] = r;
-    }
-    if (mounted) {
-      state = stateMap.values.toList()
-        ..sort((a, b) => b.date.compareTo(a.date));
+    int added = 0, updated = 0, skipped = 0;
+
+    try {
+      for (var r in records) {
+        if (r.id.isEmpty) {
+          r = BtkRecord.fromJson({...r.toJson(), 'id': _newId()});
+        }
+        final current = stateMap[r.id];
+        if (current != null && !r.updatedAt.isAfter(current.updatedAt)) {
+          skipped++;
+          continue;
+        }
+        await _repo.upsert(r, keepUpdatedAt: true);
+        stateMap[r.id] = r;
+        if (current != null) {
+          updated++;
+        } else {
+          added++;
+        }
+      }
+    } finally {
+      // Records written before a failure are stored, so they must show.
+      if (mounted) {
+        state = stateMap.values.toList()
+          ..sort((a, b) => b.date.compareTo(a.date));
+      }
     }
 
-    return (added: added, updated: updated);
+    return (added: added, updated: updated, skipped: skipped);
   }
 }
 

@@ -15,6 +15,11 @@ class Photo {
     required this.createdAt,
   });
 
+  /// Every `record_id` a record's photos are stored under: the photos tab
+  /// plus the soil and vertical structure sections.
+  static List<String> keysFor(String recordId) =>
+      [recordId, '${recordId}_soil', '${recordId}_vertStruct'];
+
   Map<String, dynamic> toMap() => {
         'id': id,
         'record_id': recordId,

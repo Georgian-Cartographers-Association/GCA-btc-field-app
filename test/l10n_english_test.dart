@@ -25,7 +25,7 @@ class _MemoryRepository extends DataRepository {
         BtkRecord(id: 'TEST', date: DateTime(2026, 1, 15), location: 'Tbilisi'),
       ];
   @override
-  Future<bool> upsert(BtkRecord record) async => false;
+  Future<bool> upsert(BtkRecord record, {bool keepUpdatedAt = false}) async => false;
   @override
   Future<void> delete(String id) async {}
 }

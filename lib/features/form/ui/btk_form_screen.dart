@@ -7,6 +7,7 @@ import '../../../l10n/generated/app_localizations.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../core/app_messenger.dart';
 import '../../../models/btk_record.dart';
 import '../../records/domain/btk_provider.dart';
 import '../../settings/domain/settings_provider.dart';
@@ -35,6 +36,8 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
   bool _pdfOpen = false;
   bool _dirty = false; // unsaved changes indicator
 
+  bool _saveFailureShown = false;
+
   // Auto-save debounce — 800 ms after last change
   Timer? _autoSaveTimer;
 
@@ -52,7 +55,10 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
     if (_autoSaveTimer?.isActive == true) {
       _autoSaveTimer!.cancel();
       // fire-and-forget — we're leaving the widget tree
-      ref.read(btkProvider.notifier).update(_record);
+      ref.read(btkProvider.notifier).update(_record).catchError((Object _) {
+        AppMessenger.showError((l10n) => l10n.saveFailed);
+        return false;
+      });
     }
     _tabController.dispose();
     super.dispose();
@@ -70,8 +76,18 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
   }
 
   // Silent background save — conflict ignored (auto-save is non-intrusive)
+  // A failure is shown once per failing streak, and the unsaved dot stays on.
   Future<void> _autoSave() async {
-    await ref.read(btkProvider.notifier).update(_record);
+    try {
+      await ref.read(btkProvider.notifier).update(_record);
+    } catch (_) {
+      if (!_saveFailureShown) {
+        _saveFailureShown = true;
+        AppMessenger.showError((l10n) => l10n.saveFailed);
+      }
+      return;
+    }
+    _saveFailureShown = false;
     if (mounted) setState(() => _dirty = false);
   }
 
@@ -79,7 +95,14 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
   Future<void> _save() async {
     final l10n = AppLocalizations.of(context)!;
     _autoSaveTimer?.cancel();
-    final conflict = await ref.read(btkProvider.notifier).update(_record);
+    final bool conflict;
+    try {
+      conflict = await ref.read(btkProvider.notifier).update(_record);
+    } catch (_) {
+      AppMessenger.showError((l10n) => l10n.saveFailed);
+      return;
+    }
+    _saveFailureShown = false;
     AnalyticsService.logRecordSaved();
     if (!mounted) return;
     setState(() => _dirty = false);
@@ -160,10 +183,42 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
     if (perm == LocationPermission.denied) return;
 
     if (!mounted) return;
+    if (_record.latitude != null || _record.longitude != null) {
+      final replace = await showDialog<bool>(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text(l10n.replaceCoordsTitle),
+          content: Text(l10n.replaceCoordsMessage),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(l10n.cancel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(l10n.replaceAction),
+            ),
+          ],
+        ),
+      );
+      if (replace != true || !mounted) return;
+    }
+
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(l10n.locationDetecting),
         duration: Duration(seconds: 2)));
-    final pos = await Geolocator.getCurrentPosition();
+    final Position pos;
+    try {
+      pos = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.best,
+          timeLimit: Duration(seconds: 30),
+        ),
+      );
+    } catch (_) {
+      AppMessenger.showError((l10n) => l10n.locationFailed);
+      return;
+    }
     if (!mounted) return;
 
     double? heading;
@@ -183,7 +238,7 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
       ..latitude = pos.latitude
       ..longitude = pos.longitude
       ..altitude = pos.altitude
-      ..aspect = heading);
+      ..aspect = heading ?? _record.aspect);
   }
 
   // ─── Email sending ──────────────────────────────────────────────────────────
@@ -332,8 +387,15 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
         if (!mounted) return;
         if (choice == 'save') {
           _autoSaveTimer?.cancel();
-          await ref.read(btkProvider.notifier).update(_record);
-          if (mounted) Navigator.of(context).pop();
+          try {
+            await ref.read(btkProvider.notifier).update(_record);
+          } catch (_) {
+            AppMessenger.showError((l10n) => l10n.saveFailed);
+            return; // stay, so the edits aren't lost
+          }
+          if (!mounted) return;
+          setState(() => _dirty = false);
+          Navigator.of(context).pop();
         } else if (choice == 'discard') {
           _autoSaveTimer?.cancel();
           setState(() => _dirty = false); // prevent dispose from re-saving

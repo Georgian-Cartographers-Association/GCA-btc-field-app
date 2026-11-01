@@ -5,7 +5,8 @@ import '../../models/btk_record.dart';
 abstract class DataRepository {
   Future<List<BtkRecord>> getAll();
   /// Returns true if a sync conflict was detected (expedition mode only).
-  Future<bool> upsert(BtkRecord record);
+  /// [keepUpdatedAt] preserves the record's timestamp, for imports and copies.
+  Future<bool> upsert(BtkRecord record, {bool keepUpdatedAt = false});
   Future<void> delete(String id);
 
   /// Optional: stream of all records (used by cloud repo for real-time sync).
