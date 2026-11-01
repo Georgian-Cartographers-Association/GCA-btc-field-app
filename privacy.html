@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ka">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BTC Field App — Privacy Policy / კონფიდენციალურობის პოლიტიკა</title>
+<style>
+  :root { --bg:#fff; --fg:#1d2329; --muted:#5b6670; --line:#e3e7ea; --accent:#1f6f4a; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#14181b; --fg:#e6eaed; --muted:#9aa5ae; --line:#2a3136; --accent:#5fc596; } }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:32px 16px 64px; }
+  h1 { font-size:1.6rem; margin:0 0 4px; }
+  h2 { font-size:1.2rem; margin:32px 0 8px; border-top:1px solid var(--line); padding-top:24px; }
+  h3 { font-size:1rem; margin:20px 0 4px; }
+  p, li { margin:6px 0; }
+  .meta { color:var(--muted); font-size:.9rem; }
+  a { color:var(--accent); }
+  table { border-collapse:collapse; width:100%; font-size:.95rem; }
+  th, td { border:1px solid var(--line); padding:6px 8px; text-align:left; vertical-align:top; }
+  nav a { margin-right:12px; }
+</style>
+</head>
+<body>
+<main>
+<h1>BTC Field App — Privacy Policy</h1>
+<p class="meta">Package: <code>ge.btc.field_app</code> · Effective date: 1 November 2026</p>
+<nav><a href="#en">English</a><a href="#ka">ქართული</a></nav>
+
+<section id="en" lang="en">
+<h2>English</h2>
+<p>BTC Field App ("the app") is a landscape field-survey tool published by the
+Georgian Cartographers Association ("GCA", "we"). This policy explains what data the app
+handles, why, and the choices you have.</p>
+
+<h3>1. Data stored only on your device</h3>
+<ul>
+  <li><b>Survey records</b> (site name, date, coordinates, altitude, aspect, relief, soil and vegetation
+  measurements, notes) are stored in a local database on your device.</li>
+  <li><b>Photos</b> you take with the camera or pick from your gallery are saved in the app's private
+  storage on your device. Photos are <b>not uploaded</b> to our servers.</li>
+  <li><b>GPS tracks</b>, settings and added map layers are stored on your device.</li>
+</ul>
+
+<h3>2. Data sent to services</h3>
+<table>
+  <tr><th>Data</th><th>Sent to</th><th>Purpose</th></tr>
+  <tr><td>Email address and password (password handled by Firebase, never stored by us)</td>
+      <td>Google Firebase Authentication</td><td>Optional sign-in for cloud sync</td></tr>
+  <tr><td>Survey records, including their coordinates (signed-in users only)</td>
+      <td>Google Cloud Firestore</td><td>Backup and sharing records within an expedition team</td></tr>
+  <tr><td>Anonymous usage events (e.g. "record saved", "export used"), device and app information</td>
+      <td>Google Firebase Analytics</td><td>Understanding which features are used, improving the app</td></tr>
+  <tr><td>Approximate location (map area / coordinates for a forecast)</td>
+      <td>Map tile providers (OpenStreetMap, CARTO, Esri ArcGIS, OpenTopoMap, and any server you add); api.met.no</td>
+      <td>Displaying maps; weather forecast</td></tr>
+  <tr><td>App version check</td><td>GitHub API</td><td>Notifying you about updates</td></tr>
+</table>
+<p>Analytics events do not contain your survey content, coordinates or email address.
+Location is used only while the app is in use; the app does not collect location in the background.</p>
+
+<h3>3. Sharing</h3>
+<p>We do not sell personal data and do not use it for advertising. The app contains no ads.
+Records you sync to an expedition are visible to the members of that expedition. When you
+export or email records (CSV, GeoJSON, KML, GPX, PDF), the data goes only to the recipients
+or apps you choose.</p>
+
+<h3>4. Permissions</h3>
+<ul>
+  <li><b>Location</b> — to place records and tracks on the map.</li>
+  <li><b>Camera / photos</b> — to attach photos to records.</li>
+  <li><b>Internet</b> — maps, weather, sign-in, sync.</li>
+</ul>
+
+<h3>5. Security and retention</h3>
+<p>Data in transit to Google Firebase is encrypted (TLS). Local data stays on your device until you
+delete it or uninstall the app. Cloud data is kept while your account exists.</p>
+
+<h3 id="delete-en">6. Deleting your data and account</h3>
+<ul>
+  <li>Delete individual records in the app; deleted records are also removed from the cloud.</li>
+  <li>To delete your account and all associated cloud data, email
+  <a href="mailto:kapan.gio777@gmail.com?subject=BTC%20Field%20App%20account%20deletion">kapan.gio777@gmail.com</a>
+  from the address you signed up with, with the subject "BTC Field App account deletion".
+  We delete the account and its records within 30 days. Anonymous analytics data is retained by
+  Firebase for up to 14 months.</li>
+</ul>
+
+<h3>7. Children</h3>
+<p>The app is intended for researchers and students and is not directed at children under 13.</p>
+
+<h3>8. Changes and contact</h3>
+<p>We may update this policy; the effective date above will change. Questions:
+<a href="mailto:kapan.gio777@gmail.com">kapan.gio777@gmail.com</a> · Georgian Cartographers Association, Tbilisi, Georgia ·
+<a href="https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app">source code</a>.</p>
+<p>Google's handling of Firebase data: <a href="https://firebase.google.com/support/privacy">firebase.google.com/support/privacy</a>.</p>
+</section>
+
+<section id="ka" lang="ka">
+<h2>ქართული</h2>
+<p>BTC Field App („აპლიკაცია“) ლანდშაფტური საველე კვლევის ინსტრუმენტია, რომელსაც
+საქართველოს კარტოგრაფთა ასოციაცია („GCA“, „ჩვენ“) ავრცელებს. ეს პოლიტიკა განმარტავს,
+რა მონაცემებს ამუშავებს აპლიკაცია, რა მიზნით და რა არჩევანი გაქვთ.</p>
+
+<h3>1. მხოლოდ თქვენს მოწყობილობაზე შენახული მონაცემები</h3>
+<ul>
+  <li><b>საველე ჩანაწერები</b> (ადგილის სახელი, თარიღი, კოორდინატები, სიმაღლე, ექსპოზიცია, რელიეფი,
+  ნიადაგისა და მცენარეულობის გაზომვები, შენიშვნები) ინახება მოწყობილობის ლოკალურ ბაზაში.</li>
+  <li><b>ფოტოები</b>, რომლებსაც კამერით იღებთ ან გალერეიდან ირჩევთ, ინახება აპლიკაციის დახურულ
+  საცავში. ფოტოები ჩვენს სერვერებზე <b>არ იტვირთება</b>.</li>
+  <li><b>GPS ტრეკები</b>, პარამეტრები და დამატებული რუკის ფენები ინახება მოწყობილობაზე.</li>
+</ul>
+
+<h3>2. სერვისებზე გაგზავნილი მონაცემები</h3>
+<table>
+  <tr><th>მონაცემი</th><th>სად იგზავნება</th><th>მიზანი</th></tr>
+  <tr><td>ელფოსტა და პაროლი (პაროლს ამუშავებს Firebase, ჩვენ არ ვინახავთ)</td>
+      <td>Google Firebase Authentication</td><td>არასავალდებულო ავტორიზაცია ღრუბლოვანი სინქრონიზაციისთვის</td></tr>
+  <tr><td>საველე ჩანაწერები კოორდინატებით (მხოლოდ ავტორიზებულ მომხმარებლებზე)</td>
+      <td>Google Cloud Firestore</td><td>სარეზერვო ასლი და ექსპედიციის გუნდთან გაზიარება</td></tr>
+  <tr><td>ანონიმური გამოყენების მოვლენები (მაგ. „ჩანაწერი შენახულია“), მოწყობილობისა და აპლიკაციის ინფორმაცია</td>
+      <td>Google Firebase Analytics</td><td>ფუნქციების გამოყენების ანალიზი და გაუმჯობესება</td></tr>
+  <tr><td>მიახლოებითი მდებარეობა (რუკის არე / პროგნოზის კოორდინატები)</td>
+      <td>რუკის ფილების სერვისები (OpenStreetMap, CARTO, Esri ArcGIS, OpenTopoMap და თქვენ მიერ დამატებული სერვერები); api.met.no</td>
+      <td>რუკის ჩვენება; ამინდის პროგნოზი</td></tr>
+  <tr><td>ვერსიის შემოწმება</td><td>GitHub API</td><td>განახლების შეტყობინება</td></tr>
+</table>
+<p>ანალიტიკის მოვლენები არ შეიცავს ჩანაწერების შინაარსს, კოორდინატებს ან ელფოსტას.
+მდებარეობა გამოიყენება მხოლოდ აპლიკაციით სარგებლობისას; ფონურ რეჟიმში მდებარეობა არ გროვდება.</p>
+
+<h3>3. გაზიარება</h3>
+<p>პერსონალურ მონაცემებს არ ვყიდით და რეკლამისთვის არ ვიყენებთ. აპლიკაციაში რეკლამა არ არის.
+ექსპედიციაში სინქრონიზებული ჩანაწერები ჩანს ამ ექსპედიციის წევრებისთვის. ექსპორტის ან ელფოსტით
+გაგზავნისას (CSV, GeoJSON, KML, GPX, PDF) მონაცემები მხოლოდ თქვენ მიერ არჩეულ მიმღებებს ან აპლიკაციებს გადაეცემა.</p>
+
+<h3>4. ნებართვები</h3>
+<ul>
+  <li><b>მდებარეობა</b> — ჩანაწერებისა და ტრეკების რუკაზე დასატანად.</li>
+  <li><b>კამერა / ფოტოები</b> — ჩანაწერზე ფოტოს დასამაგრებლად.</li>
+  <li><b>ინტერნეტი</b> — რუკები, ამინდი, ავტორიზაცია, სინქრონიზაცია.</li>
+</ul>
+
+<h3>5. უსაფრთხოება და შენახვის ვადა</h3>
+<p>Google Firebase-თან კავშირი დაშიფრულია (TLS). ლოკალური მონაცემები მოწყობილობაზე რჩება, სანამ არ
+წაშლით ან აპლიკაციას არ წაშლით. ღრუბლოვანი მონაცემები ინახება, სანამ ანგარიში არსებობს.</p>
+
+<h3 id="delete-ka">6. მონაცემებისა და ანგარიშის წაშლა</h3>
+<ul>
+  <li>ცალკეული ჩანაწერები აპლიკაციაში წაშალეთ; წაშლილი ჩანაწერები ღრუბლიდანაც იშლება.</li>
+  <li>ანგარიშისა და მასთან დაკავშირებული ყველა ღრუბლოვანი მონაცემის წასაშლელად მოგვწერეთ
+  <a href="mailto:kapan.gio777@gmail.com?subject=BTC%20Field%20App%20account%20deletion">kapan.gio777@gmail.com</a>
+  იმ მისამართიდან, რომლითაც დარეგისტრირდით, თემით „BTC Field App account deletion“.
+  ანგარიშსა და ჩანაწერებს 30 დღის განმავლობაში წავშლით. ანონიმური ანალიტიკა Firebase-ში ინახება 14 თვემდე.</li>
+</ul>
+
+<h3>7. ბავშვები</h3>
+<p>აპლიკაცია განკუთვნილია მკვლევრებისა და სტუდენტებისთვის და არ არის მიმართული 13 წლამდე ბავშვებზე.</p>
+
+<h3>8. ცვლილებები და კონტაქტი</h3>
+<p>პოლიტიკა შეიძლება განახლდეს; ამ შემთხვევაში შეიცვლება ძალაში შესვლის თარიღი. კითხვებისთვის:
+<a href="mailto:kapan.gio777@gmail.com">kapan.gio777@gmail.com</a> · საქართველოს კარტოგრაფთა ასოციაცია, თბილისი ·
+<a href="https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app">წყარო კოდი</a>.</p>
+</section>
+</main>
+</body>
+</html>
