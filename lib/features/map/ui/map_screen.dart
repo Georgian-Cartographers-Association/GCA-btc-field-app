@@ -20,6 +20,7 @@ import '../../../models/raster_layer.dart';
 import '../../../models/tile_service.dart';
 import '../../records/domain/btk_provider.dart';
 import '../domain/map_provider.dart';
+import '../domain/map_toolbar.dart';
 import '../../raster/domain/raster_provider.dart';
 import '../domain/tile_service_provider.dart';
 import '../../../utils/measurement_service.dart';
@@ -44,6 +45,11 @@ import '../../settings/domain/settings_provider.dart';
 import '../../../data/services/analytics_service.dart';
 import '../../../data/services/export_service.dart';
 import '../../../l10n/localized_text.dart';
+
+// Room the toolbar leaves above itself, and below for the bottom bar (12 margin
+// + ~68 buttons + 12 margin) with an 8 gap.
+const _toolbarTop = 80.0;
+const _bottomBarSpace = 100.0;
 
 class MapScreen extends ConsumerStatefulWidget {
   const MapScreen({super.key});
@@ -443,6 +449,131 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     showWeatherDialog(context, center.latitude, center.longitude);
   }
 
+  // ── Right-side toolbar ────────────────────────────────────────────────────
+
+  Future<void> _toggleTrack() async {
+    final notifier = ref.read(gpsTrackProvider.notifier);
+    if (notifier.isTracking) {
+      final finished = await notifier.stopTracking();
+      if (!mounted) return;
+      if (finished != null && finished.points.isNotEmpty) {
+        _showTrackFinishedSheet(context, finished);
+      }
+    } else {
+      if (!await ensureLocationAccess(context)) return;
+      if (!mounted) return;
+      try {
+        await notifier.startTracking(_trackSettings(AppLocalizations.of(context)!));
+      } catch (_) {
+        AppMessenger.showError((l10n) => l10n.trackStartFailed);
+      }
+    }
+  }
+
+  void _zoomBy(double change) => _mapController.move(
+      _mapController.camera.center, _mapController.camera.zoom + change);
+
+  void _openLayerPanel() => showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+        builder: (_) => const LayerControlPanel(),
+      );
+
+  /// In display order. A lower rank stays on screen longer when space is short.
+  List<_MapTool> _mapTools(
+      AppLocalizations l10n, bool filtering, bool measuring) {
+    final track = ref.watch(gpsTrackProvider);
+    final tracking = track != null && track.endedAt == null;
+    return [
+      _MapTool(Icons.search, l10n.search, _openSearch, rank: 3),
+      _MapTool(Icons.format_list_bulleted, l10n.recordsInView, _showRecordsInView,
+          rank: 7),
+      _MapTool(filtering ? Icons.filter_alt : Icons.filter_alt_outlined,
+          l10n.filterTitle, () => showRecordFilterSheet(context),
+          rank: 6, active: filtering),
+      _MapTool(Icons.add, l10n.zoomIn, () => _zoomBy(1), rank: 4),
+      _MapTool(Icons.remove, l10n.zoomOut, () => _zoomBy(-1), rank: 5),
+      _MapTool(Icons.my_location, l10n.myLocation, _goToMyLocation, rank: 0),
+      if (!kIsWeb) ...[
+        _MapTool(tracking ? Icons.stop_circle_outlined : Icons.route,
+            tracking ? l10n.trackStop : l10n.trackStart, _toggleTrack,
+            rank: 1, active: tracking, activeColor: Colors.red),
+        _MapTool(Icons.history, l10n.trackHistory, () => context.push('/gps'),
+            rank: 9),
+      ],
+      _MapTool(Icons.wb_cloudy_outlined, l10n.weatherForecast, _openWeather,
+          rank: 10),
+      _MapTool(Icons.travel_explore, l10n.dataLayers, () => context.push('/layers'),
+          rank: 11),
+      _MapTool(Icons.layers_outlined, l10n.layers, _openLayerPanel, rank: 2),
+      _MapTool(Icons.zoom_out_map, l10n.georgia, _fitToGeorgia, rank: 12),
+      _MapTool(Icons.straighten, l10n.measureTool, _toggleMeasure,
+          rank: 8, active: measuring),
+    ];
+  }
+
+  Widget _buildToolbar(AppLocalizations l10n, bool filtering, bool measuring) {
+    final media = MediaQuery.of(context);
+    final split = splitMapTools(
+      _mapTools(l10n, filtering, measuring),
+      height: media.size.height -
+          media.padding.top -
+          media.padding.bottom -
+          _toolbarTop -
+          _bottomBarSpace,
+      rank: (t) => t.rank,
+    );
+    return Column(
+      spacing: mapButtonGap,
+      children: [
+        for (final t in split.shown)
+          _MapButton(
+            icon: t.icon,
+            tooltip: t.label,
+            onTap: t.onTap,
+            active: t.active,
+            activeColor: t.activeColor,
+          ),
+        if (split.hidden.isNotEmpty)
+          _MapButton(
+            icon: Icons.more_horiz,
+            tooltip: l10n.mapTools,
+            active: split.hidden.any((t) => t.active),
+            onTap: () => _showToolsMenu(l10n, split.hidden),
+          ),
+      ],
+    );
+  }
+
+  void _showToolsMenu(AppLocalizations l10n, List<_MapTool> tools) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) => SafeArea(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.7),
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              for (final t in tools)
+                ListTile(
+                  leading: Icon(t.icon),
+                  title: Text(t.label),
+                  selected: t.active,
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    t.onTap();
+                  },
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   // ── GPS Track finished sheet ──────────────────────────────────────────────
 
   void _showTrackFinishedSheet(BuildContext ctx, GpsTrack track) {
@@ -770,126 +901,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
             ),
           Positioned(
             right: 12,
-            top: MediaQuery.of(context).padding.top + 80,
-            child: Column(
-              children: [
-                _MapButton(
-                  icon: Icons.search,
-                  tooltip: l10n.search,
-                  onTap: _openSearch,
-                ),
-                const SizedBox(height: 8),
-                _MapButton(
-                  icon: Icons.format_list_bulleted,
-                  tooltip: l10n.recordsInView,
-                  onTap: _showRecordsInView,
-                ),
-                const SizedBox(height: 8),
-                _MapButton(
-                  icon: filter.isActive ? Icons.filter_alt : Icons.filter_alt_outlined,
-                  active: filter.isActive,
-                  tooltip: l10n.filterTitle,
-                  onTap: () => showRecordFilterSheet(context),
-                ),
-                const SizedBox(height: 16),
-                _MapButton(
-                  icon: Icons.add,
-                  onTap: () => _mapController.move(
-                      _mapController.camera.center,
-                      _mapController.camera.zoom + 1),
-                ),
-                const SizedBox(height: 8),
-                _MapButton(
-                  icon: Icons.remove,
-                  onTap: () => _mapController.move(
-                      _mapController.camera.center,
-                      _mapController.camera.zoom - 1),
-                ),
-                const SizedBox(height: 16),
-                _MapButton(
-                  icon: Icons.my_location,
-                  onTap: _goToMyLocation,
-                ),
-                const SizedBox(height: 8),
-                if (!kIsWeb)
-                  Builder(builder: (ctx) {
-                    final trackNotifier =
-                        ref.read(gpsTrackProvider.notifier);
-                    final track = ref.watch(gpsTrackProvider);
-                    final isTracking =
-                        track != null && track.endedAt == null;
-                    return _MapButton(
-                      icon: isTracking
-                          ? Icons.stop_circle_outlined
-                          : Icons.route,
-                      active: isTracking,
-                      activeColor: Colors.red,
-                      onTap: () async {
-                        if (isTracking) {
-                          final finished =
-                              await trackNotifier.stopTracking();
-                          if (!ctx.mounted) return;
-                          if (finished != null &&
-                              finished.points.isNotEmpty) {
-                            _showTrackFinishedSheet(ctx, finished);
-                          }
-                        } else {
-                          if (!await ensureLocationAccess(ctx)) return;
-                          if (!ctx.mounted) return;
-                          try {
-                            await trackNotifier.startTracking(
-                                _trackSettings(AppLocalizations.of(ctx)!));
-                          } catch (_) {
-                            AppMessenger.showError(
-                                (l10n) => l10n.trackStartFailed);
-                          }
-                        }
-                      },
-                    );
-                  }),
-                if (!kIsWeb) const SizedBox(height: 8),
-                if (!kIsWeb)
-                  _MapButton(
-                    icon: Icons.history,
-                    tooltip: AppLocalizations.of(context)!.trackHistory,
-                    onTap: () => context.push('/gps'),
-                  ),
-                if (!kIsWeb) const SizedBox(height: 8),
-                _MapButton(
-                  icon: Icons.wb_cloudy_outlined,
-                  onTap: _openWeather,
-                ),
-                const SizedBox(height: 8),
-                _MapButton(
-                  icon: Icons.travel_explore,
-                  onTap: () => context.push('/layers'),
-                ),
-                const SizedBox(height: 4),
-                _MapButton(
-                  icon: Icons.layers_outlined,
-                  onTap: () => showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    shape: const RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(20))),
-                    builder: (_) => const LayerControlPanel(),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                _MapButton(
-                  icon: Icons.zoom_out_map,
-                  tooltip: l10n.georgia,
-                  onTap: _fitToGeorgia,
-                ),
-                const SizedBox(height: 8),
-                _MapButton(
-                  icon: Icons.straighten,
-                  active: measuring,
-                  onTap: _toggleMeasure,
-                ),
-              ],
-            ),
+            top: MediaQuery.of(context).padding.top + _toolbarTop,
+            child: _buildToolbar(l10n, filter.isActive, measuring),
           ),
 
           // ── Measurement panel ───────────────────────────────────────────
@@ -1004,6 +1017,18 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
 // ──────────────────────────────────────────────────────────────────────────────
 
+class _MapTool {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final int rank;
+  final bool active;
+  final Color? activeColor;
+
+  const _MapTool(this.icon, this.label, this.onTap,
+      {required this.rank, this.active = false, this.activeColor});
+}
+
 class _MapButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
@@ -1035,8 +1060,8 @@ class _MapButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         onTap: onTap,
         child: SizedBox(
-          width: 44,
-          height: 44,
+          width: mapButtonSize,
+          height: mapButtonSize,
           child: Icon(icon, size: 22, color: effectiveColor),
         ),
       ),

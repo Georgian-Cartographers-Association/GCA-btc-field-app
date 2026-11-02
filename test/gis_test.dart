@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:btk_field_app/features/map/domain/geojson_parse.dart';
+import 'package:btk_field_app/features/map/domain/map_toolbar.dart';
 import 'package:btk_field_app/features/records/domain/record_filter.dart';
 import 'package:btk_field_app/models/btk_record.dart';
 import 'package:flutter/material.dart';
@@ -135,6 +136,34 @@ void main() {
     test('the isolate version gives the same result', () async {
       expect(await parsePolygons(raw), hasLength(4));
       expect((await parsePlaces(raw, 'NAME')), hasLength(2));
+    });
+  });
+
+  group('map toolbar', () {
+    final tools = [for (var i = 0; i < 13; i++) i];
+    int rank(int t) => 12 - t;
+    final allHeight = 13 * mapButtonSize + 12 * mapButtonGap;
+
+    test('keeps every button when they all fit', () {
+      final split = splitMapTools(tools, height: allHeight, rank: rank);
+      expect(split.shown, tools);
+      expect(split.hidden, isEmpty);
+    });
+
+    test('one pixel short moves the rest to the menu and leaves room for it', () {
+      final split = splitMapTools(tools, height: allHeight - 1, rank: rank);
+      expect(split.shown, hasLength(11));
+      expect(split.hidden, [0, 1]);
+    });
+
+    test('keeps the lowest ranks, in their own order', () {
+      final split = splitMapTools(tools, height: 3 * mapButtonSize + 2 * mapButtonGap, rank: rank);
+      expect(split.shown, [11, 12]);
+    });
+
+    test('no room at all hides everything without failing', () {
+      expect(splitMapTools(tools, height: 0, rank: rank).shown, isEmpty);
+      expect(splitMapTools(tools, height: -50, rank: rank).shown, isEmpty);
     });
   });
 }

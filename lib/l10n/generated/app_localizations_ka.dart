@@ -817,6 +817,15 @@ class AppLocalizationsKa extends AppLocalizations {
       'პროგრამა შექმნილია სტუდენტებისთვის — ლანდშაფტური გეოგრაფიის საველე კვლევების სასწავლო და სამეცნიერო პრაქტიკისათვის. ავტორი შპს ბიზნესისა და ტექნოლოგიების უნივერსიტეტის (BTU) ასოცირებული პროფესორი გიორგი კაპანაძე';
 
   @override
+  String get mapTools => 'ინსტრუმენტები';
+
+  @override
+  String get trackStart => 'ტრეკის ჩაწერა';
+
+  @override
+  String get trackStop => 'ჩაწერის დასრულება';
+
+  @override
   String get organizationLabel => 'ორგანიზაცია';
 
   @override

@@ -817,6 +817,15 @@ class AppLocalizationsEn extends AppLocalizations {
       'Created for students, for teaching and research practice in landscape geography field studies. Author: Giorgi Kapanadze, Associate Professor, Business and Technology University (BTU) LLC';
 
   @override
+  String get mapTools => 'Map tools';
+
+  @override
+  String get trackStart => 'Record a track';
+
+  @override
+  String get trackStop => 'Stop recording';
+
+  @override
   String get organizationLabel => 'Organization';
 
   @override
