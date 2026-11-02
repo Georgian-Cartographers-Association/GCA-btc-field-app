@@ -20,6 +20,15 @@ class Photo {
   static List<String> keysFor(String recordId) =>
       [recordId, '${recordId}_soil', '${recordId}_vertStruct'];
 
+  Photo withCaption(String value) => Photo(
+        id: id,
+        recordId: recordId,
+        filePath: filePath,
+        caption: value,
+        sortOrder: sortOrder,
+        createdAt: createdAt,
+      );
+
   Map<String, dynamic> toMap() => {
         'id': id,
         'record_id': recordId,

@@ -975,17 +975,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recordChanged => 'Record changed';
 
   @override
-  String get unsavedChanges =>
-      'Your latest changes have not been auto-saved yet.';
-
-  @override
   String get stay => 'Stay';
 
   @override
   String get exitAction => 'Leave';
-
-  @override
-  String get saveAndExit => 'Save and leave';
 
   @override
   String get tabBasic => 'Basic';
@@ -1656,5 +1649,148 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get unitGCm3 => 'g/cm³';
+
+  @override
+  String get unitTHa => 't/ha';
+
+  @override
+  String get unitTM3 => 't/m³';
+
+  @override
+  String get measureUnreadable => 'This value can\'t be read as a number';
+
+  @override
+  String get measureOutOfRange => 'This value is outside the expected limits';
+
+  @override
+  String get measureLegend =>
+      'Orange means the value needs checking. It is still saved.';
+
+  @override
   String get photoLabel => 'Photo';
+
+  @override
+  String get recordMenu => 'More actions';
+
+  @override
+  String get fillFromOther => 'Fill from a template or record';
+
+  @override
+  String get fillOnlyEmpty =>
+      'Only empty fields are filled. Anything already entered stays as it is.';
+
+  @override
+  String get fillAction => 'Fill';
+
+  @override
+  String filledCount(int count) {
+    return 'Filled: $count';
+  }
+
+  @override
+  String get nothingFilled => 'No empty fields to fill';
+
+  @override
+  String get nothingToReuse => 'No templates or other records yet';
+
+  @override
+  String get templates => 'Templates';
+
+  @override
+  String get recentRecords => 'Recent records';
+
+  @override
+  String get recordSaveAsTemplate => 'Save as template';
+
+  @override
+  String get templateName => 'Template name';
+
+  @override
+  String templateDefaultName(String time) {
+    return 'Template $time';
+  }
+
+  @override
+  String get recordTemplateSaved => 'Template saved';
+
+  @override
+  String get templateSaveFailed => 'Couldn\'t save the template';
+
+  @override
+  String get deleteTemplate => 'Delete template';
+
+  @override
+  String get revertChanges => 'Undo changes';
+
+  @override
+  String get revertMessage =>
+      'The form goes back to how it was when you opened it. Photos aren\'t affected.';
+
+  @override
+  String get revertAction => 'Restore';
+
+  @override
+  String get exitSaveFailed =>
+      'Your latest changes couldn\'t be saved. They may be lost if you leave.';
+
+  @override
+  String get qualityTitle => 'Record check';
+
+  @override
+  String get qualityNoNotes => 'Nothing to check';
+
+  @override
+  String lastEdited(String time) {
+    return 'Last edited: $time';
+  }
+
+  @override
+  String get unfinishedRecord => 'Unfinished';
+
+  @override
+  String get qualityMissingLocation => 'Location is empty';
+
+  @override
+  String get qualityMissingCoords => 'Coordinates are empty';
+
+  @override
+  String get qualityBadCoords => 'Coordinates are outside the valid limits';
+
+  @override
+  String get qualityFutureDate => 'The date is in the future';
+
+  @override
+  String qualityUnreadable(String field) {
+    return '$field: can\'t be read as a number';
+  }
+
+  @override
+  String qualityOutOfRange(String field) {
+    return '$field: outside the expected limits';
+  }
+
+  @override
+  String qualityDryAboveWet(String field) {
+    return '$field: dry mass is above wet mass';
+  }
+
+  @override
+  String qualityTotalMismatch(String field, String sum) {
+    return '$field: doesn\'t match the sum of the parts ($sum)';
+  }
+
+  @override
+  String qualityRow(int row, String text) {
+    return 'Row $row. $text';
+  }
+
+  @override
+  String get photoCaption => 'Caption';
+
+  @override
+  String get photoCaptionFailed => 'Couldn\'t save the caption';
+
+  @override
+  String get photosGeneral => 'General';
 }

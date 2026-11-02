@@ -1,4 +1,5 @@
 ﻿import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +10,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/app_messenger.dart';
 import '../../../models/btk_record.dart';
+import '../../../models/record_quality.dart';
 import '../../records/domain/btk_provider.dart';
 import '../../settings/domain/settings_provider.dart';
 import '../../../data/services/analytics_service.dart';
@@ -20,6 +22,7 @@ import 'sections/vegetation_section.dart';
 import 'sections/soil_section.dart';
 import 'sections/geomass_section.dart';
 import 'sections/vertical_structure_section.dart';
+import 'widgets/record_tools.dart';
 
 class BtkFormScreen extends ConsumerStatefulWidget {
   final BtkRecord record;
@@ -30,13 +33,20 @@ class BtkFormScreen extends ConsumerStatefulWidget {
 }
 
 class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late BtkRecord _record;
   late TabController _tabController;
   bool _pdfOpen = false;
   bool _dirty = false; // unsaved changes indicator
 
   bool _saveFailureShown = false;
+
+  // The record as it was opened, for "undo changes".
+  late final String _opened;
+
+  // Sections keep their own text controllers, so anything that changes the
+  // record from outside them has to recreate them.
+  int _generation = 0;
 
   // Auto-save debounce — 800 ms after last change
   Timer? _autoSaveTimer;
@@ -45,12 +55,28 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
   void initState() {
     super.initState();
     _record = widget.record;
+    _opened = _snapshot(_record);
+    WidgetsBinding.instance.addObserver(this);
     // 7 tabs on Android (photos available), 6 on web
     _tabController = TabController(length: kIsWeb ? 6 : 7, vsync: this);
   }
 
+  // Everything the user can edit, leaving out the save time.
+  String _snapshot(BtkRecord r) => jsonEncode(r.toJson()..remove('updatedAt'));
+
+  // Android may end the app at any time once it's in the background, for
+  // example while the camera is open, so a pending save can't wait.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed && _autoSaveTimer?.isActive == true) {
+      _autoSaveTimer!.cancel();
+      _autoSave();
+    }
+  }
+
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     // Flush any pending auto-save immediately on screen close
     if (_autoSaveTimer?.isActive == true) {
       _autoSaveTimer!.cancel();
@@ -360,48 +386,37 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
       canPop: !_dirty,
       onPopInvokedWithResult: (didPop, _) async {
         if (didPop) return; // already navigated (canPop was true)
+        // Leaving keeps the edits, as autosave would. Undoing them is a separate
+        // action, so a mistaken tap on the way out can't lose field data.
         if (!mounted) return;
-        final choice = await showDialog<String>(
-          context: context,
-          builder: (_) => AlertDialog(
-            title: Text(l10n.recordChanged),
-            content: Text(
-                l10n.unsavedChanges),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, 'stay'),
-                child: Text(l10n.stay),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context, 'discard'),
-                child: Text(l10n.exitAction,
-                    style: TextStyle(color: Colors.red)),
-              ),
-              FilledButton(
-                onPressed: () => Navigator.pop(context, 'save'),
-                child: Text(l10n.saveAndExit),
-              ),
-            ],
-          ),
-        );
-        if (!mounted) return;
-        if (choice == 'save') {
-          _autoSaveTimer?.cancel();
-          try {
-            await ref.read(btkProvider.notifier).update(_record);
-          } catch (_) {
-            AppMessenger.showError((l10n) => l10n.saveFailed);
-            return; // stay, so the edits aren't lost
-          }
+        _autoSaveTimer?.cancel();
+        try {
+          await ref.read(btkProvider.notifier).update(_record);
+        } catch (_) {
           if (!mounted) return;
-          setState(() => _dirty = false);
-          Navigator.of(context).pop();
-        } else if (choice == 'discard') {
-          _autoSaveTimer?.cancel();
-          setState(() => _dirty = false); // prevent dispose from re-saving
-          if (mounted) Navigator.of(context).pop();
+          final leave = await showDialog<bool>(
+            context: context,
+            builder: (dCtx) => AlertDialog(
+              title: Text(l10n.recordChanged),
+              content: Text(l10n.exitSaveFailed),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(dCtx, true),
+                  child: Text(l10n.exitAction,
+                      style: const TextStyle(color: Colors.red)),
+                ),
+                FilledButton(
+                  onPressed: () => Navigator.pop(dCtx, false),
+                  child: Text(l10n.stay),
+                ),
+              ],
+            ),
+          );
+          if (leave != true || !mounted) return;
         }
-        // 'stay' / null → do nothing
+        if (!mounted) return;
+        setState(() => _dirty = false);
+        Navigator.of(context).pop();
       },
       child: Scaffold(
         appBar: AppBar(
@@ -430,15 +445,25 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
                   tooltip: l10n.methodology,
                   onPressed: () => setState(() => _pdfOpen = !_pdfOpen),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.email_outlined),
-                  tooltip: l10n.send,
-                  onPressed: _sendEmail,
-                ),
+                _qualityButton(l10n),
                 IconButton(
                   icon: const Icon(Icons.save_outlined),
                   tooltip: l10n.save,
                   onPressed: _save,
+                ),
+                PopupMenuButton<VoidCallback>(
+                  tooltip: l10n.recordMenu,
+                  onSelected: (action) => action(),
+                  itemBuilder: (_) => [
+                    PopupMenuItem(value: _fillFromOther, child: Text(l10n.fillFromOther)),
+                    PopupMenuItem(value: _saveTemplate, child: Text(l10n.recordSaveAsTemplate)),
+                    PopupMenuItem(value: _sendEmail, child: Text(l10n.send)),
+                    PopupMenuItem(
+                      value: _revert,
+                      enabled: _snapshot(_record) != _opened,
+                      child: Text(l10n.revertChanges),
+                    ),
+                  ],
                 ),
               ]);
             }),
@@ -447,12 +472,7 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
             controller: _tabController,
             isScrollable: true,
             tabs: [
-              Tab(text: l10n.tabBasic),
-              Tab(text: l10n.tabPhysGeo),
-              Tab(text: l10n.tabVegetation),
-              Tab(text: l10n.soil),
-              Tab(text: l10n.tabGeomass),
-              Tab(text: l10n.tabVertStruct),
+              for (final section in FormSection.values) _sectionTab(l10n, section),
               if (!kIsWeb)
                 Tab(
                   icon: Icon(Icons.photo_library_outlined, size: 16),
@@ -478,16 +498,100 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
     );
   }
 
+  // A tick shows at a glance which sections still need work.
+  Widget _sectionTab(AppLocalizations l10n, FormSection section) {
+    final label = sectionLabel(l10n, section);
+    if (!_record.isFilled(section)) return Tab(text: label);
+    return Tab(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.check, size: 14, color: Colors.green),
+          const SizedBox(width: 4),
+          Text(label),
+        ],
+      ),
+    );
+  }
+
+  Widget _qualityButton(AppLocalizations l10n) {
+    final count = _record.qualityNotes().length;
+    return IconButton(
+      icon: Badge(
+        isLabelVisible: count > 0,
+        label: Text('$count'),
+        backgroundColor: const Color(0xFFE65100),
+        child: const Icon(Icons.fact_check_outlined),
+      ),
+      tooltip: l10n.qualityTitle,
+      onPressed: () async {
+        final section = await showQualitySheet(context, _record);
+        if (section != null && mounted) _tabController.animateTo(section.index);
+      },
+    );
+  }
+
+  Future<void> _fillFromOther() async {
+    final l10n = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
+    final filled = await fillFromOther(context, _record, ref.read(btkProvider));
+    if (filled == null || !mounted) return;
+    if (filled == 0) {
+      messenger.showSnackBar(SnackBar(content: Text(l10n.nothingFilled)));
+      return;
+    }
+    setState(() => _generation++);
+    _update(_record);
+    messenger.showSnackBar(SnackBar(content: Text(l10n.filledCount(filled))));
+  }
+
+  Future<void> _saveTemplate() async {
+    final l10n = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      if (!await saveAsTemplate(context, _record)) return;
+      messenger.showSnackBar(SnackBar(content: Text(l10n.recordTemplateSaved)));
+    } catch (_) {
+      AppMessenger.showError((l10n) => l10n.templateSaveFailed);
+    }
+  }
+
+  Future<void> _revert() async {
+    final l10n = AppLocalizations.of(context)!;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (dCtx) => AlertDialog(
+        title: Text(l10n.revertChanges),
+        content: Text(l10n.revertMessage),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(dCtx, false),
+              child: Text(l10n.cancel)),
+          FilledButton(
+              onPressed: () => Navigator.pop(dCtx, true),
+              child: Text(l10n.revertAction)),
+        ],
+      ),
+    );
+    if (ok != true || !mounted) return;
+    setState(() {
+      _record = BtkRecord.fromJson(jsonDecode(_opened) as Map<String, dynamic>);
+      _generation++;
+    });
+    _update(_record);
+  }
+
   Widget _buildTabView() {
+    final g = _generation;
     return TabBarView(
       controller: _tabController,
       children: [
-        BasicInfoSection(record: _record, onChanged: _update, onDetectGps: _detectGps),
-        PhysicalGeoSection(record: _record, onChanged: _update),
-        VegetationSection(record: _record, onChanged: _update),
-        SoilSection(record: _record, onChanged: _update),
-        GeomassSection(record: _record, onChanged: _update),
-        VerticalStructureSection(record: _record, onChanged: _update),
+        BasicInfoSection(key: ValueKey('basic$g'), record: _record, onChanged: _update, onDetectGps: _detectGps),
+        PhysicalGeoSection(key: ValueKey('physGeo$g'), record: _record, onChanged: _update),
+        VegetationSection(key: ValueKey('vegetation$g'), record: _record, onChanged: _update),
+        SoilSection(key: ValueKey('soil$g'), record: _record, onChanged: _update),
+        GeomassSection(key: ValueKey('geomass$g'), record: _record, onChanged: _update),
+        VerticalStructureSection(key: ValueKey('vertStruct$g'), record: _record, onChanged: _update),
         if (!kIsWeb) PhotosSection(recordId: _record.id),
       ],
     );

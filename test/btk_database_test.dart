@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:btk_field_app/database/btk_database.dart';
 import 'package:btk_field_app/models/btk_record.dart';
+import 'package:btk_field_app/models/photo.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -117,5 +118,20 @@ void main() {
     await createOld(3, [_recordsV1, _photosV1, _tracksV2]);
     await BtkDatabase.openAt(dbPath);
     await expectOldKeptAndSaveWorks();
+  });
+
+  test('a photo caption is saved and only that photo changes', () async {
+    await BtkDatabase.openAt(dbPath);
+    Photo photo(String id) => Photo(
+        id: id, recordId: 'R', filePath: '/x/$id.jpg', createdAt: DateTime(2026));
+    await BtkDatabase.insertPhoto(photo('P1'));
+    await BtkDatabase.insertPhoto(photo('P2'));
+
+    await BtkDatabase.updatePhotoCaption('P1', 'ჭრილი');
+
+    final photos = await BtkDatabase.getPhotos('R');
+    expect(photos.firstWhere((p) => p.id == 'P1').caption, 'ჭრილი');
+    expect(photos.firstWhere((p) => p.id == 'P2').caption, '');
+    expect(photos.firstWhere((p) => p.id == 'P1').filePath, '/x/P1.jpg');
   });
 }

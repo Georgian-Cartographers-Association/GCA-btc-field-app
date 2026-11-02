@@ -1,4 +1,6 @@
-﻿// Stored data may come from old versions or edited files, so reading never
+﻿import 'measure.dart';
+
+// Stored data may come from old versions or edited files, so reading never
 // fails on an unexpected type.
 String _str(dynamic v) => v == null ? '' : v.toString();
 
@@ -43,6 +45,8 @@ class VegetationRow {
         phenophase: _str(j['phenophase']),
         species: _str(j['species']),
       );
+
+  double? get heightValue => Measures.vegHeight.value(height);
 }
 
 class SoilHorizonRow {
@@ -110,6 +114,17 @@ class GeomassRow {
         phytomassWet: _str(j['phytomassWet']),
         phytomassDry: _str(j['phytomassDry']),
       );
+
+  MeasureRange? get depthRange => Measures.depth.range(depth);
+  double? get pedomassBulkValue => Measures.soilBulkDensity.value(pedomassBulk);
+  double? get pedomassQtyValue => Measures.geomass.value(pedomassQty);
+  double? get lithomassQtyValue => Measures.geomass.value(lithomassQty);
+  double? get lithomassDensityValue => Measures.rockDensity.value(lithomassDensity);
+  double? get hydromassQtyValue => Measures.geomass.value(hydromassQty);
+  double? get hydromassWetValue => Measures.plain.value(hydromassWet);
+  double? get hydromassDryValue => Measures.plain.value(hydromassDry);
+  double? get phytomassWetValue => Measures.geomass.value(phytomassWet);
+  double? get phytomassDryValue => Measures.geomass.value(phytomassDry);
 }
 
 class TreePhytomassRow {
@@ -170,6 +185,18 @@ class TreePhytomassRow {
         dryRoots: _str(j['dryRoots']),
         dryTotal: _str(j['dryTotal']),
       );
+
+  double? get bulkDensityValue => Measures.woodDensity.value(bulkDensity);
+  double? get wetWoodValue => Measures.geomass.value(wetWood);
+  double? get wetLeavesValue => Measures.geomass.value(wetLeaves);
+  double? get wetBranchesValue => Measures.geomass.value(wetBranches);
+  double? get wetRootsValue => Measures.geomass.value(wetRoots);
+  double? get wetTotalValue => Measures.geomass.value(wetTotal);
+  double? get dryWoodValue => Measures.geomass.value(dryWood);
+  double? get dryLeavesValue => Measures.geomass.value(dryLeaves);
+  double? get dryBranchesValue => Measures.geomass.value(dryBranches);
+  double? get dryRootsValue => Measures.geomass.value(dryRoots);
+  double? get dryTotalValue => Measures.geomass.value(dryTotal);
 }
 
 class BtkRecord {
@@ -321,6 +348,9 @@ class BtkRecord {
   /// Reads a record kept under [storedId], which fills in a missing `id`.
   factory BtkRecord.fromStored(String storedId, Map<String, dynamic> j) =>
       BtkRecord.fromJson(_str(j['id']).isEmpty ? {...j, 'id': storedId} : j);
+
+  MeasureRange? get vertHeightRange => Measures.vertHeight.range(vertStructHeight);
+  double? get plotArea => Measures.plotSize.area(experimentPlotSize);
 
   String toEmailText({bool georgian = true}) {
     final buf = StringBuffer();

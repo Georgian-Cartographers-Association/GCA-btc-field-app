@@ -1994,12 +1994,6 @@ abstract class AppLocalizations {
   /// **'ჩანაწერი შეიცვალა'**
   String get recordChanged;
 
-  /// No description provided for @unsavedChanges.
-  ///
-  /// In ka, this message translates to:
-  /// **'ბოლო ცვლილებები ავტომატურად ჯერ არ შენახულა.'**
-  String get unsavedChanges;
-
   /// No description provided for @stay.
   ///
   /// In ka, this message translates to:
@@ -2011,12 +2005,6 @@ abstract class AppLocalizations {
   /// In ka, this message translates to:
   /// **'გასვლა'**
   String get exitAction;
-
-  /// No description provided for @saveAndExit.
-  ///
-  /// In ka, this message translates to:
-  /// **'შენახვა და გასვლა'**
-  String get saveAndExit;
 
   /// No description provided for @tabBasic.
   ///
@@ -3134,11 +3122,257 @@ abstract class AppLocalizations {
   /// **'{count} გამოტოვებულია, რადგან უკვე არის იგივე ან უფრო ახალი ვერსია'**
   String importSkippedOlder(int count);
 
+  /// No description provided for @unitGCm3.
+  ///
+  /// In ka, this message translates to:
+  /// **'გრ/სმ³'**
+  String get unitGCm3;
+
+  /// No description provided for @unitTHa.
+  ///
+  /// In ka, this message translates to:
+  /// **'ტ/ჰა'**
+  String get unitTHa;
+
+  /// No description provided for @unitTM3.
+  ///
+  /// In ka, this message translates to:
+  /// **'ტ/მ³'**
+  String get unitTM3;
+
+  /// No description provided for @measureUnreadable.
+  ///
+  /// In ka, this message translates to:
+  /// **'ეს მნიშვნელობა რიცხვად ვერ იკითხება'**
+  String get measureUnreadable;
+
+  /// No description provided for @measureOutOfRange.
+  ///
+  /// In ka, this message translates to:
+  /// **'მნიშვნელობა მოსალოდნელ ფარგლებს სცდება'**
+  String get measureOutOfRange;
+
+  /// No description provided for @measureLegend.
+  ///
+  /// In ka, this message translates to:
+  /// **'ნარინჯისფერი ნიშნავს, რომ მნიშვნელობა შესამოწმებელია. ის მაინც ინახება.'**
+  String get measureLegend;
+
   /// No description provided for @photoLabel.
   ///
   /// In ka, this message translates to:
   /// **'ფოტო'**
   String get photoLabel;
+
+  /// No description provided for @recordMenu.
+  ///
+  /// In ka, this message translates to:
+  /// **'მეტი მოქმედება'**
+  String get recordMenu;
+
+  /// No description provided for @fillFromOther.
+  ///
+  /// In ka, this message translates to:
+  /// **'შევსება შაბლონიდან ან ჩანაწერიდან'**
+  String get fillFromOther;
+
+  /// No description provided for @fillOnlyEmpty.
+  ///
+  /// In ka, this message translates to:
+  /// **'შეივსება მხოლოდ ცარიელი ველები. უკვე ჩაწერილი მონაცემები არ შეიცვლება.'**
+  String get fillOnlyEmpty;
+
+  /// No description provided for @fillAction.
+  ///
+  /// In ka, this message translates to:
+  /// **'შევსება'**
+  String get fillAction;
+
+  /// No description provided for @filledCount.
+  ///
+  /// In ka, this message translates to:
+  /// **'შევსებულია: {count}'**
+  String filledCount(int count);
+
+  /// No description provided for @nothingFilled.
+  ///
+  /// In ka, this message translates to:
+  /// **'შესავსები ცარიელი ველი ვერ მოიძებნა'**
+  String get nothingFilled;
+
+  /// No description provided for @nothingToReuse.
+  ///
+  /// In ka, this message translates to:
+  /// **'შაბლონი ან სხვა ჩანაწერი ჯერ არ არის'**
+  String get nothingToReuse;
+
+  /// No description provided for @templates.
+  ///
+  /// In ka, this message translates to:
+  /// **'შაბლონები'**
+  String get templates;
+
+  /// No description provided for @recentRecords.
+  ///
+  /// In ka, this message translates to:
+  /// **'ბოლო ჩანაწერები'**
+  String get recentRecords;
+
+  /// No description provided for @recordSaveAsTemplate.
+  ///
+  /// In ka, this message translates to:
+  /// **'შაბლონად შენახვა'**
+  String get recordSaveAsTemplate;
+
+  /// No description provided for @templateName.
+  ///
+  /// In ka, this message translates to:
+  /// **'შაბლონის სახელი'**
+  String get templateName;
+
+  /// No description provided for @templateDefaultName.
+  ///
+  /// In ka, this message translates to:
+  /// **'შაბლონი {time}'**
+  String templateDefaultName(String time);
+
+  /// No description provided for @recordTemplateSaved.
+  ///
+  /// In ka, this message translates to:
+  /// **'შაბლონი შენახულია'**
+  String get recordTemplateSaved;
+
+  /// No description provided for @templateSaveFailed.
+  ///
+  /// In ka, this message translates to:
+  /// **'შაბლონი ვერ შეინახა'**
+  String get templateSaveFailed;
+
+  /// No description provided for @deleteTemplate.
+  ///
+  /// In ka, this message translates to:
+  /// **'შაბლონის წაშლა'**
+  String get deleteTemplate;
+
+  /// No description provided for @revertChanges.
+  ///
+  /// In ka, this message translates to:
+  /// **'ცვლილებების გაუქმება'**
+  String get revertChanges;
+
+  /// No description provided for @revertMessage.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფორმა დაუბრუნდება იმ მდგომარეობას, რომელშიც გახსენით. ფოტოებზე ეს არ მოქმედებს.'**
+  String get revertMessage;
+
+  /// No description provided for @revertAction.
+  ///
+  /// In ka, this message translates to:
+  /// **'აღდგენა'**
+  String get revertAction;
+
+  /// No description provided for @exitSaveFailed.
+  ///
+  /// In ka, this message translates to:
+  /// **'ბოლო ცვლილებები ვერ შეინახა. თუ გახვალთ, ისინი შეიძლება დაიკარგოს.'**
+  String get exitSaveFailed;
+
+  /// No description provided for @qualityTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩანაწერის შემოწმება'**
+  String get qualityTitle;
+
+  /// No description provided for @qualityNoNotes.
+  ///
+  /// In ka, this message translates to:
+  /// **'შენიშვნები არ არის'**
+  String get qualityNoNotes;
+
+  /// No description provided for @lastEdited.
+  ///
+  /// In ka, this message translates to:
+  /// **'ბოლო ცვლილება: {time}'**
+  String lastEdited(String time);
+
+  /// No description provided for @unfinishedRecord.
+  ///
+  /// In ka, this message translates to:
+  /// **'დაუსრულებელი'**
+  String get unfinishedRecord;
+
+  /// No description provided for @qualityMissingLocation.
+  ///
+  /// In ka, this message translates to:
+  /// **'ადგილმდებარეობა არ არის შევსებული'**
+  String get qualityMissingLocation;
+
+  /// No description provided for @qualityMissingCoords.
+  ///
+  /// In ka, this message translates to:
+  /// **'კოორდინატები არ არის შევსებული'**
+  String get qualityMissingCoords;
+
+  /// No description provided for @qualityBadCoords.
+  ///
+  /// In ka, this message translates to:
+  /// **'კოორდინატები დასაშვებ ფარგლებს სცდება'**
+  String get qualityBadCoords;
+
+  /// No description provided for @qualityFutureDate.
+  ///
+  /// In ka, this message translates to:
+  /// **'თარიღი მომავალშია'**
+  String get qualityFutureDate;
+
+  /// No description provided for @qualityUnreadable.
+  ///
+  /// In ka, this message translates to:
+  /// **'{field}: რიცხვად ვერ იკითხება'**
+  String qualityUnreadable(String field);
+
+  /// No description provided for @qualityOutOfRange.
+  ///
+  /// In ka, this message translates to:
+  /// **'{field}: მოსალოდნელ ფარგლებს სცდება'**
+  String qualityOutOfRange(String field);
+
+  /// No description provided for @qualityDryAboveWet.
+  ///
+  /// In ka, this message translates to:
+  /// **'{field}: მშრალი მასა სველზე მეტია'**
+  String qualityDryAboveWet(String field);
+
+  /// No description provided for @qualityTotalMismatch.
+  ///
+  /// In ka, this message translates to:
+  /// **'{field}: არ ემთხვევა ნაწილების ჯამს ({sum})'**
+  String qualityTotalMismatch(String field, String sum);
+
+  /// No description provided for @qualityRow.
+  ///
+  /// In ka, this message translates to:
+  /// **'სტრიქონი {row}. {text}'**
+  String qualityRow(int row, String text);
+
+  /// No description provided for @photoCaption.
+  ///
+  /// In ka, this message translates to:
+  /// **'წარწერა'**
+  String get photoCaption;
+
+  /// No description provided for @photoCaptionFailed.
+  ///
+  /// In ka, this message translates to:
+  /// **'წარწერა ვერ შეინახა'**
+  String get photoCaptionFailed;
+
+  /// No description provided for @photosGeneral.
+  ///
+  /// In ka, this message translates to:
+  /// **'ზოგადი'**
+  String get photosGeneral;
 }
 
 class _AppLocalizationsDelegate

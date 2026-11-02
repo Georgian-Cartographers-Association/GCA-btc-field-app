@@ -975,16 +975,10 @@ class AppLocalizationsKa extends AppLocalizations {
   String get recordChanged => 'ჩანაწერი შეიცვალა';
 
   @override
-  String get unsavedChanges => 'ბოლო ცვლილებები ავტომატურად ჯერ არ შენახულა.';
-
-  @override
   String get stay => 'დარჩენა';
 
   @override
   String get exitAction => 'გასვლა';
-
-  @override
-  String get saveAndExit => 'შენახვა და გასვლა';
 
   @override
   String get tabBasic => 'ძირითადი';
@@ -1610,5 +1604,148 @@ class AppLocalizationsKa extends AppLocalizations {
   }
 
   @override
+  String get unitGCm3 => 'გრ/სმ³';
+
+  @override
+  String get unitTHa => 'ტ/ჰა';
+
+  @override
+  String get unitTM3 => 'ტ/მ³';
+
+  @override
+  String get measureUnreadable => 'ეს მნიშვნელობა რიცხვად ვერ იკითხება';
+
+  @override
+  String get measureOutOfRange => 'მნიშვნელობა მოსალოდნელ ფარგლებს სცდება';
+
+  @override
+  String get measureLegend =>
+      'ნარინჯისფერი ნიშნავს, რომ მნიშვნელობა შესამოწმებელია. ის მაინც ინახება.';
+
+  @override
   String get photoLabel => 'ფოტო';
+
+  @override
+  String get recordMenu => 'მეტი მოქმედება';
+
+  @override
+  String get fillFromOther => 'შევსება შაბლონიდან ან ჩანაწერიდან';
+
+  @override
+  String get fillOnlyEmpty =>
+      'შეივსება მხოლოდ ცარიელი ველები. უკვე ჩაწერილი მონაცემები არ შეიცვლება.';
+
+  @override
+  String get fillAction => 'შევსება';
+
+  @override
+  String filledCount(int count) {
+    return 'შევსებულია: $count';
+  }
+
+  @override
+  String get nothingFilled => 'შესავსები ცარიელი ველი ვერ მოიძებნა';
+
+  @override
+  String get nothingToReuse => 'შაბლონი ან სხვა ჩანაწერი ჯერ არ არის';
+
+  @override
+  String get templates => 'შაბლონები';
+
+  @override
+  String get recentRecords => 'ბოლო ჩანაწერები';
+
+  @override
+  String get recordSaveAsTemplate => 'შაბლონად შენახვა';
+
+  @override
+  String get templateName => 'შაბლონის სახელი';
+
+  @override
+  String templateDefaultName(String time) {
+    return 'შაბლონი $time';
+  }
+
+  @override
+  String get recordTemplateSaved => 'შაბლონი შენახულია';
+
+  @override
+  String get templateSaveFailed => 'შაბლონი ვერ შეინახა';
+
+  @override
+  String get deleteTemplate => 'შაბლონის წაშლა';
+
+  @override
+  String get revertChanges => 'ცვლილებების გაუქმება';
+
+  @override
+  String get revertMessage =>
+      'ფორმა დაუბრუნდება იმ მდგომარეობას, რომელშიც გახსენით. ფოტოებზე ეს არ მოქმედებს.';
+
+  @override
+  String get revertAction => 'აღდგენა';
+
+  @override
+  String get exitSaveFailed =>
+      'ბოლო ცვლილებები ვერ შეინახა. თუ გახვალთ, ისინი შეიძლება დაიკარგოს.';
+
+  @override
+  String get qualityTitle => 'ჩანაწერის შემოწმება';
+
+  @override
+  String get qualityNoNotes => 'შენიშვნები არ არის';
+
+  @override
+  String lastEdited(String time) {
+    return 'ბოლო ცვლილება: $time';
+  }
+
+  @override
+  String get unfinishedRecord => 'დაუსრულებელი';
+
+  @override
+  String get qualityMissingLocation => 'ადგილმდებარეობა არ არის შევსებული';
+
+  @override
+  String get qualityMissingCoords => 'კოორდინატები არ არის შევსებული';
+
+  @override
+  String get qualityBadCoords => 'კოორდინატები დასაშვებ ფარგლებს სცდება';
+
+  @override
+  String get qualityFutureDate => 'თარიღი მომავალშია';
+
+  @override
+  String qualityUnreadable(String field) {
+    return '$field: რიცხვად ვერ იკითხება';
+  }
+
+  @override
+  String qualityOutOfRange(String field) {
+    return '$field: მოსალოდნელ ფარგლებს სცდება';
+  }
+
+  @override
+  String qualityDryAboveWet(String field) {
+    return '$field: მშრალი მასა სველზე მეტია';
+  }
+
+  @override
+  String qualityTotalMismatch(String field, String sum) {
+    return '$field: არ ემთხვევა ნაწილების ჯამს ($sum)';
+  }
+
+  @override
+  String qualityRow(int row, String text) {
+    return 'სტრიქონი $row. $text';
+  }
+
+  @override
+  String get photoCaption => 'წარწერა';
+
+  @override
+  String get photoCaptionFailed => 'წარწერა ვერ შეინახა';
+
+  @override
+  String get photosGeneral => 'ზოგადი';
 }
