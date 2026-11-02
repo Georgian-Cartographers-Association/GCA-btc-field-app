@@ -78,9 +78,6 @@ void main() {
       expect(_r('A', lat: 95, lon: 43).mapPoint, isNull);
     });
 
-    test('half-entered coordinates stay out of the email text', () {
-      expect(_r('A', lat: 42).toEmailText(), isNot(contains('null')));
-    });
 
     test('recordsWithin keeps only records that have a place inside', () {
       final out = recordsWithin(

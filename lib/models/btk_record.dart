@@ -363,25 +363,4 @@ class BtkRecord {
 
   MeasureRange? get vertHeightRange => Measures.vertHeight.range(vertStructHeight);
   double? get plotArea => Measures.plotSize.area(experimentPlotSize);
-
-  String toEmailText({bool georgian = true}) {
-    final buf = StringBuffer();
-    buf.writeln('ბუნებრივ-ტერიტორიული კომპლექსის (ბტკ) აღწერა');
-    buf.writeln('ID: $id');
-    buf.writeln('თარიღი: ${date.toString().split(' ')[0]}');
-    if (latitude != null && longitude != null) buf.writeln('კოორდინატები: $latitude, $longitude');
-    buf.writeln('ადგილმდებარეობა: $location');
-    buf.writeln('---');
-    buf.writeln('გეოლ. ფორმაცია: $geologicalFormation');
-    buf.writeln('რელიეფის ტიპი: $reliefType');
-    buf.writeln('მორფ. დახ.: $morphologicalDesc');
-    buf.writeln('გეომ. პროც.: $geomorphProcesses');
-    buf.writeln('მიგ. რეჟიმი: $migrationRegime');
-    buf.writeln('დატენ. ხ.: $moistureDegree');
-    buf.writeln('---');
-    buf.writeln('ნიადაგი: $soilTypeName');
-    buf.writeln('ნ. პროფ.: $soilProfileDesc');
-    buf.writeln('ვ.ს. ტიპი: $vertStructTypeName  ინდ: $vertStructIndex  სიმ: $vertStructHeight');
-    return buf.toString();
-  }
 }

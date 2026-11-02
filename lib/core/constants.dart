@@ -26,8 +26,6 @@ class AppConstants {
   static const String prefRecords = 'btk_records';
   static const String prefTheme = 'theme_mode';
   static const String prefLocale = 'locale';
-  static const String prefEmail = 'default_email';    // legacy — migration only
-  static const String prefEmails = 'emails_list';     // new JSON list
   static const String prefPdfPage = 'pdf_page';
   static const String prefShowOsm = 'layer_osm';
   static const String prefShowTopo = 'layer_topo';
