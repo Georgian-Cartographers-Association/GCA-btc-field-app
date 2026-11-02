@@ -423,9 +423,16 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
       },
       child: Scaffold(
         appBar: AppBar(
+          titleSpacing: 0,
           title: Row(
             children: [
-              Text(l10n.btkNumber(_record.id)),
+              Flexible(
+                child: Text(
+                  l10n.btkNumber(_record.id),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
               if (_dirty) ...[
                 const SizedBox(width: 6),
                 Container(

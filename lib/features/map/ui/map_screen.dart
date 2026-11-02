@@ -343,9 +343,14 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     }
     if (!_addingPoint) return;
     setState(() => _addingPoint = false);
+    final track = ref.read(gpsTrackProvider);
     ref
         .read(btkProvider.notifier)
-        .add(lat: latlng.latitude, lon: latlng.longitude)
+        .add(
+          lat: latlng.latitude,
+          lon: latlng.longitude,
+          trackId: track != null && track.endedAt == null ? track.id : '',
+        )
         .then((record) {
       AnalyticsService.logRecordCreated();
       if (!mounted) return;
