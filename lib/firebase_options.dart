@@ -14,6 +14,8 @@ class DefaultFirebaseOptions {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
+      case TargetPlatform.iOS:
+        return ios;
       default:
         throw UnsupportedError(
             'DefaultFirebaseOptions not configured for this platform. '
@@ -41,5 +43,16 @@ class DefaultFirebaseOptions {
     messagingSenderId: '699141416460',
     projectId: 'gca-btk-field-app',
     storageBucket: 'gca-btk-field-app.firebasestorage.app',
+  );
+
+  // ── iOS ────────────────────────────────────────────────────────────────────
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyAseACjupieAg0od4gdo7hiakZcIJaSuKg',
+    appId: '1:699141416460:ios:82e8ab4f52e2dc5190f029',
+    messagingSenderId: '699141416460',
+    projectId: 'gca-btk-field-app',
+    storageBucket: 'gca-btk-field-app.firebasestorage.app',
+    iosBundleId: 'ge.btc.fieldApp',
   );
 }
