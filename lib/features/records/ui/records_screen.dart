@@ -578,24 +578,33 @@ class _RecordTile extends ConsumerWidget {
         ),
         trailing: selectionMode
             ? null
-            : Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.picture_as_pdf_outlined,
-                        size: 20),
-                    tooltip: 'PDF',
-                    onPressed: () => _pdfActionSheet(context, [r]),
+            : PopupMenuButton<VoidCallback>(
+                tooltip: l10n.recordMenu,
+                onSelected: (action) => action(),
+                itemBuilder: (_) => [
+                  PopupMenuItem(
+                    value: () => _pdfActionSheet(context, [r]),
+                    child: const ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: Icon(Icons.picture_as_pdf_outlined),
+                      title: Text('PDF'),
+                    ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.copy_outlined, size: 20),
-                    tooltip: l10n.duplicate,
-                    onPressed: onDuplicate,
+                  PopupMenuItem(
+                    value: onDuplicate,
+                    child: ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: const Icon(Icons.copy_outlined),
+                      title: Text(l10n.duplicate),
+                    ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.delete_outline,
-                        color: Colors.red, size: 20),
-                    onPressed: onDelete,
+                  PopupMenuItem(
+                    value: onDelete,
+                    child: ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: const Icon(Icons.delete_outline, color: Colors.red),
+                      title: Text(l10n.delete),
+                    ),
                   ),
                 ],
               ),
