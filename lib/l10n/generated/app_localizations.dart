@@ -1670,6 +1670,12 @@ abstract class AppLocalizations {
   /// **'შესახებ'**
   String get aboutSection;
 
+  /// No description provided for @appPurposeAndAuthor.
+  ///
+  /// In ka, this message translates to:
+  /// **'პროგრამა შექმნილია სტუდენტებისთვის — ლანდშაფტური გეოგრაფიის საველე კვლევების სასწავლო და სამეცნიერო პრაქტიკისათვის. ავტორი შპს ბიზნესისა და ტექნოლოგიების უნივერსიტეტის (BTU) ასოცირებული პროფესორი გიორგი კაპანაძე'**
+  String get appPurposeAndAuthor;
+
   /// No description provided for @organizationLabel.
   ///
   /// In ka, this message translates to:

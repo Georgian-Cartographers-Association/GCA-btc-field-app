@@ -813,6 +813,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aboutSection => 'About';
 
   @override
+  String get appPurposeAndAuthor =>
+      'Created for students, for teaching and research practice in landscape geography field studies. Author: Giorgi Kapanadze, Associate Professor, Business and Technology University (BTU) LLC';
+
+  @override
   String get organizationLabel => 'Organization';
 
   @override

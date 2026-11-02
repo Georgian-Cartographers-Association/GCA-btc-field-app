@@ -457,11 +457,13 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
                   onPressed: () => setState(() => _pdfOpen = !_pdfOpen),
                 ),
                 _qualityButton(l10n),
-                IconButton(
-                  icon: const Icon(Icons.save_outlined),
-                  tooltip: l10n.save,
-                  onPressed: _save,
-                ),
+                // The save button at the bottom is hidden beside the PDF.
+                if (_pdfOpen)
+                  IconButton(
+                    icon: const Icon(Icons.save_outlined),
+                    tooltip: l10n.save,
+                    onPressed: _save,
+                  ),
                 PopupMenuButton<VoidCallback>(
                   tooltip: l10n.recordMenu,
                   onSelected: (action) => action(),

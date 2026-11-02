@@ -813,6 +813,10 @@ class AppLocalizationsKa extends AppLocalizations {
   String get aboutSection => 'შესახებ';
 
   @override
+  String get appPurposeAndAuthor =>
+      'პროგრამა შექმნილია სტუდენტებისთვის — ლანდშაფტური გეოგრაფიის საველე კვლევების სასწავლო და სამეცნიერო პრაქტიკისათვის. ავტორი შპს ბიზნესისა და ტექნოლოგიების უნივერსიტეტის (BTU) ასოცირებული პროფესორი გიორგი კაპანაძე';
+
+  @override
   String get organizationLabel => 'ორგანიზაცია';
 
   @override

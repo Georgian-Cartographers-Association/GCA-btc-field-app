@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import '../../../core/firebase_state.dart';
@@ -154,6 +155,11 @@ class SettingsScreen extends ConsumerWidget {
           ),
 
           ListTile(
+            leading: const Icon(Icons.person_outline),
+            subtitle: Text(l10n.appPurposeAndAuthor),
+          ),
+
+          ListTile(
             leading: Icon(Icons.business_outlined),
             title: Text(l10n.organizationLabel),
             subtitle: Text(
@@ -166,18 +172,29 @@ class SettingsScreen extends ConsumerWidget {
             subtitle: Text('ი. ჯავახიშვილის სახ. თბილისის სახ. უნ-ტი'),
           ),
 
-          ListTile(
-            leading: const Icon(Icons.code_outlined),
-            title: const Text('GitHub'),
-            subtitle: const Text(
-              'Georgian-Cartographers-Association/\nGCA-btc-field-app',
-              style: TextStyle(fontSize: 11),
-            ),
-            trailing:
-                const Icon(Icons.open_in_new, size: 16, color: Colors.grey),
-            onTap: () => launchUrl(
-              Uri.parse(_githubUrl),
-              mode: LaunchMode.externalApplication,
+          Semantics(
+            link: true,
+            child: InkWell(
+              onTap: () => launchUrl(
+                Uri.parse(_githubUrl),
+                mode: LaunchMode.externalApplication,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Column(
+                  children: [
+                    Lottie.asset(
+                      'assets/lottie/cat.json',
+                      height: 96,
+                      animate: !MediaQuery.disableAnimationsOf(context),
+                    ),
+                    const Text(
+                      'GitHub',
+                      style: TextStyle(fontSize: 11, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
 
