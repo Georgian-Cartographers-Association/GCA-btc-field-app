@@ -426,6 +426,7 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
               Flexible(
                 child: Text(
                   l10n.btkNumber(_record.id),
+                  style: Theme.of(context).textTheme.titleMedium,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
