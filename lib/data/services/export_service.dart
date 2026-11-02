@@ -168,10 +168,12 @@ class ExportService {
           fontWeight: bold ? pw.FontWeight.bold : pw.FontWeight.normal,
         );
 
-    // Pre-load section photos for every record (soil + vert struct)
+    // Pre-load photos for every record (Photos tab, soil, vert struct)
+    final generalImgMap = <String, List<pw.MemoryImage>>{};
     final soilImgMap = <String, List<pw.MemoryImage>>{};
     final vertImgMap = <String, List<pw.MemoryImage>>{};
     for (final r in records) {
+      generalImgMap[r.id] = await _loadPdfImages(r.id);
       soilImgMap[r.id] = await _loadPdfImages('${r.id}_soil');
       vertImgMap[r.id] = await _loadPdfImages('${r.id}_vertStruct');
     }
@@ -179,6 +181,7 @@ class ExportService {
     final doc = pw.Document();
 
     for (final r in records) {
+      final generalImgs = generalImgMap[r.id] ?? [];
       final soilImgs = soilImgMap[r.id] ?? [];
       final vertImgs = vertImgMap[r.id] ?? [];
 
@@ -256,7 +259,7 @@ class ExportService {
             _pdfRow('ნ.ზ.ფ. ტ.', r.soilSurfaceFormation, style),
             if (soilImgs.isNotEmpty) ...[
               pw.SizedBox(height: 4),
-              _pdfPhotoGrid(soilImgs),
+              ..._pdfPhotoRows(soilImgs),
             ],
             _pdfSep,
             // Vertical structure
@@ -267,7 +270,12 @@ class ExportService {
             _pdfRow('აღწ.', r.vertStructDesc, style),
             if (vertImgs.isNotEmpty) ...[
               pw.SizedBox(height: 4),
-              _pdfPhotoGrid(vertImgs),
+              ..._pdfPhotoRows(vertImgs),
+            ],
+            if (generalImgs.isNotEmpty) ...[
+              _pdfSep,
+              _pdfHeader('ფოტოები', style),
+              ..._pdfPhotoRows(generalImgs),
             ],
           ],
         ),
@@ -291,7 +299,8 @@ class ExportService {
     return result;
   }
 
-  static pw.Widget _pdfPhotoGrid(List<pw.MemoryImage> images) {
+  // Separate rows, so a long set of photos can continue on the next page.
+  static List<pw.Widget> _pdfPhotoRows(List<pw.MemoryImage> images) {
     const maxPerRow = 3;
     const imgW = 158.0;
     const imgH = 118.0;
@@ -315,8 +324,7 @@ class ExportService {
         ),
       );
     }
-    return pw.Column(
-        crossAxisAlignment: pw.CrossAxisAlignment.start, children: rows);
+    return rows;
   }
 
   static pw.Widget _pdfRow(String label, String value,
