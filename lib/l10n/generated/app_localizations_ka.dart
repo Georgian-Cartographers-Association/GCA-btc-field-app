@@ -48,19 +48,7 @@ class AppLocalizationsKa extends AppLocalizations {
   String get email => 'ელ-ფოსტა';
 
   @override
-  String get sendByEmail => 'ელ-ფოსტით გაგზავნა';
-
-  @override
-  String get emailAddress => 'ელ-ფოსტის მისამართი';
-
-  @override
-  String get emailSent => 'გაგზავნილია';
-
-  @override
   String get copyToClipboard => 'კოპირება';
-
-  @override
-  String get paste => 'ჩასმა';
 
   @override
   String get language => 'ენა';
@@ -302,12 +290,6 @@ class AppLocalizationsKa extends AppLocalizations {
   String get pdfScrollRemembered => 'PDF გახსნის ადგილი დამახსოვრდა';
 
   @override
-  String get defaultEmail => 'ნაგულისხმევი ელ-ფოსტა';
-
-  @override
-  String get defaultEmailHint => 'ელ-ფოსტის მისამართი...';
-
-  @override
   String get aboutApp => 'აპლიკაციის შესახებ';
 
   @override
@@ -469,12 +451,6 @@ class AppLocalizationsKa extends AppLocalizations {
 
   @override
   String get keepScreenOnSub => 'რუკაზე მუშაობისას';
-
-  @override
-  String get emailListTitle => 'ელ-ფოსტის მისამართები';
-
-  @override
-  String get noEmailsAdded => 'ელ-ფოსტა არ არის დამატებული';
 
   @override
   String get newEmailHint => 'ახალი ელ-ფოსტა';
@@ -815,6 +791,9 @@ class AppLocalizationsKa extends AppLocalizations {
   @override
   String get appPurposeAndAuthor =>
       'პროგრამა შექმნილია სტუდენტებისთვის — ლანდშაფტური გეოგრაფიის საველე კვლევების სასწავლო და სამეცნიერო პრაქტიკისათვის. ავტორი შპს ბიზნესისა და ტექნოლოგიების უნივერსიტეტის (BTU) ასოცირებული პროფესორი გიორგი კაპანაძე';
+
+  @override
+  String get shareFailed => 'გაზიარება ვერ მოხერხდა';
 
   @override
   String get mapTools => 'ინსტრუმენტები';

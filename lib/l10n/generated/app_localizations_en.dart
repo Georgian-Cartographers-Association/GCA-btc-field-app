@@ -48,19 +48,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get email => 'Email';
 
   @override
-  String get sendByEmail => 'Send by Email';
-
-  @override
-  String get emailAddress => 'Email Address';
-
-  @override
-  String get emailSent => 'Sent';
-
-  @override
   String get copyToClipboard => 'Copy';
-
-  @override
-  String get paste => 'Paste';
 
   @override
   String get language => 'Language';
@@ -302,12 +290,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pdfScrollRemembered => 'PDF position saved';
 
   @override
-  String get defaultEmail => 'Default Email';
-
-  @override
-  String get defaultEmailHint => 'Email address...';
-
-  @override
   String get aboutApp => 'About';
 
   @override
@@ -468,12 +450,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get keepScreenOnSub => 'While using the map';
-
-  @override
-  String get emailListTitle => 'Email Addresses';
-
-  @override
-  String get noEmailsAdded => 'No emails added';
 
   @override
   String get newEmailHint => 'New email';
@@ -815,6 +791,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get appPurposeAndAuthor =>
       'Created for students, for teaching and research practice in landscape geography field studies. Author: Giorgi Kapanadze, Associate Professor, Business and Technology University (BTU) LLC';
+
+  @override
+  String get shareFailed => 'Could not share';
 
   @override
   String get mapTools => 'Map tools';

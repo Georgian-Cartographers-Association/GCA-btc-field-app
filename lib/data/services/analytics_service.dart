@@ -37,9 +37,6 @@ class AnalyticsService {
   static Future<void> logRecordDeleted() =>
       _log('btk_record_deleted');
 
-  static Future<void> logEmailSent(int recipientCount) =>
-      _log('btk_email_sent', {'recipients': recipientCount});
-
   // ── Map ────────────────────────────────────────────────────────────────────
 
   static Future<void> logGpsDetect() =>
