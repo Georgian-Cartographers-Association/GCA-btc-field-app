@@ -290,4 +290,50 @@ void main() {
       expect((await BtkDatabase.getAllRecords()).single.name, 'edited');
     });
   });
+
+  group('PDF photos', () {
+    late Directory dir;
+    setUp(() async {
+      sqfliteFfiInit();
+      databaseFactory = databaseFactoryFfi;
+      dir = await Directory.systemTemp.createTemp('btk_pdf_test');
+      await BtkDatabase.openAt(p.join(dir.path, 'test.db'));
+    });
+    tearDown(() => dir.delete(recursive: true));
+
+    // The test image has transparency, so each photo gets exactly one mask.
+    int imagesIn(List<int> pdf) =>
+        RegExp(r'/SMask').allMatches(latin1.decode(pdf)).length;
+
+    Future<void> addPhotos(String key, int count) async {
+      final image = await File('web/favicon.png').readAsBytes();
+      for (var i = 0; i < count; i++) {
+        final file = File(p.join(dir.path, '$key$i.png'));
+        await file.writeAsBytes(image);
+        await BtkDatabase.insertPhoto(Photo(
+            id: '$key$i', recordId: key, filePath: file.path, createdAt: DateTime(2026)));
+      }
+    }
+
+    final record = BtkRecord(id: 'A', date: DateTime(2026));
+
+    test('prints the Photos tab along with the section photos', () async {
+      await addPhotos('A', 2);
+      await addPhotos('A_soil', 1);
+      await addPhotos('A_vertStruct', 1);
+      expect(imagesIn(await ExportService.buildPdf([record])), 4);
+    });
+
+    test('more photos than fit on one page continue on the next', () async {
+      await addPhotos('A', 40);
+      expect(imagesIn(await ExportService.buildPdf([record])), 40);
+    });
+
+    test('a missing photo file does not stop the PDF', () async {
+      await addPhotos('A', 1);
+      await BtkDatabase.insertPhoto(Photo(
+          id: 'gone', recordId: 'A', filePath: p.join(dir.path, 'gone.png'), createdAt: DateTime(2026)));
+      expect(imagesIn(await ExportService.buildPdf([record])), 1);
+    });
+  });
 }
