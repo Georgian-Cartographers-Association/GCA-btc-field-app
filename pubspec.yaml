@@ -84,6 +84,7 @@ dependencies:
   firebase_auth: ^5.7.0
   cloud_firestore: ^5.6.12
   archive: ^4.0.9
+  lottie: ^3.7.0
 
 dev_dependencies:
   flutter_test:
@@ -100,3 +101,4 @@ flutter:
     - assets/geojson/Regions.geojson
     - assets/geojson/Municipalities.geojson
     - assets/rasters/
+    - assets/lottie/cat.json
