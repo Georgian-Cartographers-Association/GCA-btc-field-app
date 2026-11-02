@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/app_messenger.dart';
 import '../../../models/btk_record.dart';
+import '../domain/record_filter.dart';
+import 'record_filter_sheet.dart';
 import '../../../models/record_quality.dart';
 import '../../form/ui/widgets/record_tools.dart' show editedStamp;
 import '../domain/btk_provider.dart';
@@ -50,6 +52,54 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
           (r.latitude?.toStringAsFixed(4).contains(q) ?? false) ||
           r.geologicalFormation.toLowerCase().contains(q);
     }).toList();
+  }
+
+  Future<void> _groupSelected() async {
+    final l10n = AppLocalizations.of(context)!;
+    final all = ref.read(btkProvider);
+    final ctrl = TextEditingController();
+    final group = await showDialog<String>(
+      context: context,
+      builder: (dCtx) => AlertDialog(
+        title: Text(l10n.setGroup),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextField(
+              controller: ctrl,
+              autofocus: true,
+              decoration: InputDecoration(
+                  labelText: l10n.recordGroup, helperText: l10n.setGroupHelp),
+            ),
+            Wrap(
+              spacing: 6,
+              children: [
+                for (final g in groupsIn(all))
+                  ActionChip(label: Text(g), onPressed: () => Navigator.pop(dCtx, g)),
+              ],
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(dCtx), child: Text(l10n.cancel)),
+          FilledButton(
+              onPressed: () => Navigator.pop(dCtx, ctrl.text.trim()),
+              child: Text(l10n.save)),
+        ],
+      ),
+    );
+    ctrl.dispose();
+    if (group == null) return;
+    final notifier = ref.read(btkProvider.notifier);
+    try {
+      for (final r in all.where((r) => _selected.contains(r.id))) {
+        await notifier.update(r..group = group);
+      }
+    } catch (_) {
+      AppMessenger.showError((l10n) => l10n.saveFailed);
+    }
+    _clearSelection();
   }
 
   // ── Selection helpers ────────────────────────────────────────────────────────
@@ -292,7 +342,8 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final all = ref.watch(btkProvider);
-    final records = _filter(all);
+    final recordFilter = ref.watch(recordFilterProvider);
+    final records = _filter(recordFilter.apply(all));
 
     return Scaffold(
       appBar: _selectionMode
@@ -303,6 +354,11 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
               ),
               title: Text(l10n.recordsCount(_selected.length)),
               actions: [
+                IconButton(
+                  icon: const Icon(Icons.folder_outlined),
+                  tooltip: l10n.setGroup,
+                  onPressed: _groupSelected,
+                ),
                 IconButton(
                   icon: const Icon(Icons.import_export_outlined),
                   tooltip: l10n.exportBtc,
@@ -323,6 +379,13 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
           : AppBar(
               title: Text(l10n.savedRecords),
               actions: [
+                IconButton(
+                  icon: Icon(recordFilter.isActive
+                      ? Icons.filter_alt
+                      : Icons.filter_alt_outlined),
+                  tooltip: l10n.filterTitle,
+                  onPressed: () => showRecordFilterSheet(context),
+                ),
                 IconButton(
                   icon: const Icon(Icons.bar_chart_outlined),
                   tooltip: l10n.statistics,
@@ -418,7 +481,23 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
                 ),
               ),
             ),
-      body: records.isEmpty
+      body: Column(
+        children: [
+          if (recordFilter.isActive && !_selectionMode)
+            ListTile(
+              dense: true,
+              leading: const Icon(Icons.filter_alt, size: 18),
+              title: Text(l10n.filterShown(recordFilter.apply(all).length, all.length)),
+              trailing: TextButton(
+                onPressed: () => ref
+                    .read(recordFilterProvider.notifier)
+                    .state = const RecordFilter(),
+                child: Text(l10n.filterClear),
+              ),
+              onTap: () => showRecordFilterSheet(context),
+            ),
+          Expanded(
+            child: records.isEmpty
           ? Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -432,7 +511,9 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    _query.isEmpty
+                    recordFilter.isActive && all.isNotEmpty && _query.isEmpty
+                        ? l10n.filterShown(0, all.length)
+                        : _query.isEmpty
                         ? l10n.noRecords
                         : l10n.queryNotFound(_query),
                     style: const TextStyle(color: Colors.grey),
@@ -456,6 +537,9 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
                 );
               },
             ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -559,6 +643,9 @@ class _RecordTile extends ConsumerWidget {
                       const TextStyle(fontSize: 11, color: Colors.grey)),
             Text(r.date.toString().split(' ')[0]),
             if (r.location.isNotEmpty) Text(r.location),
+            if (r.group.trim().isNotEmpty)
+              Text(r.group,
+                  style: TextStyle(fontSize: 11, color: groupColor(r.group))),
             Text(l10n.lastEdited(editedStamp(r.updatedAt)),
                 style: const TextStyle(fontSize: 11, color: Colors.grey)),
             if (r.isUnfinished)
@@ -567,7 +654,7 @@ class _RecordTile extends ConsumerWidget {
                       fontSize: 11,
                       color: Color(0xFFE65100),
                       fontWeight: FontWeight.bold)),
-            if (r.latitude != null)
+            if (r.mapPoint != null)
               Text(
                 '${r.latitude!.toStringAsFixed(4)}, '
                 '${r.longitude!.toStringAsFixed(4)}',

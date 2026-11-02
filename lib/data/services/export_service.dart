@@ -203,7 +203,7 @@ class ExportService {
             // Basic info
             _pdfRow('ID', r.id, style),
             _pdfRow('თარიღი', r.date.toString().split(' ')[0], style),
-            if (r.latitude != null)
+            if (r.latitude != null && r.longitude != null)
               _pdfRow('კოორდ.',
                   '${r.latitude!.toStringAsFixed(6)}, ${r.longitude!.toStringAsFixed(6)}',
                   style),

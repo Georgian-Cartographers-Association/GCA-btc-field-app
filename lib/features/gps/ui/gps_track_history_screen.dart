@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/extensions/datetime_extensions.dart';
 import '../../../core/extensions/gps_track_extensions.dart';
+import '../../../core/app_messenger.dart';
 import '../../../database/btk_database.dart';
+import '../../records/domain/btk_provider.dart';
+import '../domain/gps_track_provider.dart';
 import '../../../models/gps_track.dart';
 import '../../../data/services/export_service.dart';
 import '../../../l10n/generated/app_localizations.dart';
 
-final _gpsHistoryProvider = FutureProvider<List<GpsTrack>>((ref) async {
-  return BtkDatabase.getAllTracks();
-});
+// Disposed with the screen, so opening it always shows the current tracks.
+final _gpsHistoryProvider =
+    FutureProvider.autoDispose<({List<GpsTrack> tracks, int skipped})>(
+        (ref) => BtkDatabase.readAllTracks());
 
 class GpsTrackHistoryScreen extends ConsumerWidget {
   const GpsTrackHistoryScreen({super.key});
@@ -33,23 +37,54 @@ class GpsTrackHistoryScreen extends ConsumerWidget {
       body: tracksAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text(l10n.errorWithDetail('$e'))),
-        data: (tracks) => tracks.isEmpty
-            ? _EmptyState()
-            : ListView.separated(
-                padding: const EdgeInsets.all(12),
-                itemCount: tracks.length,
-                separatorBuilder: (_, _) => const SizedBox(height: 8),
-                itemBuilder: (_, i) => _TrackCard(
-                  track: tracks[i],
-                  onExport: () => ExportService.shareGpx(tracks[i], l10n),
-                  onDelete: () async {
-                    final ok = await _confirmDelete(context);
-                    if (!ok) return;
-                    await BtkDatabase.deleteTrack(tracks[i].id);
-                    ref.invalidate(_gpsHistoryProvider);
-                  },
+        data: (result) {
+          final tracks = result.tracks;
+          final current = ref.watch(gpsTrackProvider);
+          final records = ref.watch(btkProvider);
+          return Column(
+            children: [
+              if (result.skipped > 0)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                  child: Text(l10n.tracksUnreadable(result.skipped),
+                      style: const TextStyle(color: Color(0xFFE65100))),
                 ),
+              Expanded(
+                child: tracks.isEmpty
+                    ? _EmptyState()
+                    : ListView.separated(
+                        padding: const EdgeInsets.all(12),
+                        itemCount: tracks.length,
+                        separatorBuilder: (_, _) => const SizedBox(height: 8),
+                        itemBuilder: (_, i) => _TrackCard(
+                          track: tracks[i],
+                          isRecording:
+                              current?.id == tracks[i].id && current?.endedAt == null,
+                          linkedRecords:
+                              records.where((r) => r.trackId == tracks[i].id).length,
+                          onShow: tracks[i].points.isEmpty
+                              ? null
+                              : () {
+                                  ref.read(shownTrackProvider.notifier).state = tracks[i];
+                                  Navigator.of(context).pop();
+                                },
+                          onExport: () => ExportService.shareGpx(tracks[i], l10n),
+                          onDelete: () async {
+                            final ok = await _confirmDelete(context);
+                            if (!ok) return;
+                            try {
+                              await BtkDatabase.deleteTrack(tracks[i].id);
+                            } catch (_) {
+                              AppMessenger.showError((l10n) => l10n.deleteFailed);
+                            }
+                            ref.invalidate(_gpsHistoryProvider);
+                          },
+                        ),
+                      ),
               ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -126,11 +161,17 @@ class _EmptyState extends StatelessWidget {
 
 class _TrackCard extends StatelessWidget {
   final GpsTrack track;
+  final bool isRecording;
+  final int linkedRecords;
+  final VoidCallback? onShow;
   final VoidCallback onExport;
   final VoidCallback onDelete;
 
   const _TrackCard({
     required this.track,
+    required this.isRecording,
+    required this.linkedRecords,
+    required this.onShow,
     required this.onExport,
     required this.onDelete,
   });
@@ -138,10 +179,14 @@ class _TrackCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final isActive = track.endedAt == null;
+    final isActive = isRecording;
+    final interrupted = track.endedAt == null && !isRecording;
 
     return Card(
       elevation: 2,
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+      onTap: onShow,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
         child: Row(
@@ -184,7 +229,21 @@ class _TrackCard extends StatelessWidget {
                     const SizedBox(width: 8),
                     _Chip(Icons.location_on_outlined,
                         '${track.points.length}'),
+                    if (linkedRecords > 0) ...[
+                      const SizedBox(width: 8),
+                      _Chip(Icons.description_outlined, '$linkedRecords'),
+                    ],
                   ]),
+                  if (interrupted) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      l10n.trackInterrupted,
+                      style: const TextStyle(
+                          fontSize: 11,
+                          color: Color(0xFFE65100),
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ],
                   if (isActive) ...[
                     const SizedBox(height: 4),
                     Text(
@@ -203,6 +262,13 @@ class _TrackCard extends StatelessWidget {
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                if (onShow != null)
+                  IconButton(
+                    icon: const Icon(Icons.map_outlined),
+                    tooltip: l10n.showOnMap,
+                    onPressed: onShow,
+                    iconSize: 20,
+                  ),
                 if (!isActive)
                   IconButton(
                     icon: const Icon(Icons.download_outlined),
@@ -210,16 +276,18 @@ class _TrackCard extends StatelessWidget {
                     onPressed: onExport,
                     iconSize: 20,
                   ),
-                IconButton(
-                  icon: const Icon(Icons.delete_outline, color: Colors.red),
-                  tooltip: l10n.delete,
-                  onPressed: onDelete,
-                  iconSize: 20,
-                ),
+                if (!isActive)
+                  IconButton(
+                    icon: const Icon(Icons.delete_outline, color: Colors.red),
+                    tooltip: l10n.delete,
+                    onPressed: onDelete,
+                    iconSize: 20,
+                  ),
               ],
             ),
           ],
         ),
+      ),
       ),
     );
   }

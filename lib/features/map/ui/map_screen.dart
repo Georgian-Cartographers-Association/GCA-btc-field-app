@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io' show File;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_compass/flutter_compass.dart';
@@ -31,6 +30,16 @@ import 'widgets/measurement_panel.dart';
 import 'widgets/weather_panel.dart';
 import '../../../models/gps_track.dart';
 import '../../gps/domain/gps_track_provider.dart';
+import '../../form/ui/widgets/record_tools.dart' show editedStamp;
+import '../../records/domain/record_filter.dart';
+import '../../records/ui/record_filter_sheet.dart';
+import '../domain/geojson_parse.dart';
+import '../../../models/btk_record.dart';
+import '../../../models/record_quality.dart';
+import '../../gps/domain/location_settings.dart';
+import '../../gps/ui/location_access.dart';
+import '../../gps/ui/track_status_bar.dart';
+import '../../../database/btk_database.dart';
 import '../../settings/domain/settings_provider.dart';
 import '../../../data/services/analytics_service.dart';
 import '../../../data/services/export_service.dart';
@@ -76,6 +85,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     if (!kIsWeb) {
       _initCompass();
       _initTileCache();
+      WidgetsBinding.instance
+          .addPostFrameCallback((_) => _checkInterruptedTrack());
     }
   }
 
@@ -100,28 +111,10 @@ class _MapScreenState extends ConsumerState<MapScreen> {
       String assetPath, void Function(List<List<LatLng>>) setter) async {
     try {
       final raw = await rootBundle.loadString(assetPath);
-      final geo = jsonDecode(raw) as Map<String, dynamic>;
-      final features = geo['features'] as List<dynamic>;
-      final polys = <List<LatLng>>[];
-      for (final f in features) {
-        final geom = f['geometry'] as Map<String, dynamic>;
-        final type = geom['type'] as String;
-        final coords = geom['coordinates'] as List<dynamic>;
-        if (type == 'Polygon') {
-          polys.add(_parseRing(coords[0] as List<dynamic>));
-        } else if (type == 'MultiPolygon') {
-          for (final poly in coords) {
-            polys.add(_parseRing((poly as List<dynamic>)[0] as List<dynamic>));
-          }
-        }
-      }
+      final polys = await parsePolygons(raw);
       if (mounted) setState(() => setter(polys));
     } catch (_) {}
   }
-
-  List<LatLng> _parseRing(List<dynamic> ring) =>
-      ring.map((c) => LatLng((c[1] as num).toDouble(), (c[0] as num).toDouble()))
-          .toList();
 
   // ── Raster / Tile layers ──────────────────────────────────────────────────
 
@@ -178,13 +171,13 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 transparent: true,
                 version: '1.1.1',
               ),
-              userAgentPackageName: 'ge.cartographers.btk',
+              userAgentPackageName: 'ge.btc.field_app',
             );
           } else {
             layer = TileLayer(
               urlTemplate: s.urlTemplate,
               subdomains: s.subdomains,
-              userAgentPackageName: 'ge.cartographers.btk',
+              userAgentPackageName: 'ge.btc.field_app',
               tileProvider: kIsWeb ? null : CachedTileProvider(store: _cacheStore),
             );
           }
@@ -195,18 +188,142 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         .toList();
   }
 
+  // ── Interrupted track ─────────────────────────────────────────────────────
+
+  LocationSettings _trackSettings(AppLocalizations l10n) => trackLocationSettings(
+        notificationTitle: l10n.trackNotificationTitle,
+        notificationText: l10n.trackNotificationText,
+      );
+
+  // A crash or a restart leaves a track with no end. The newest one is offered
+  // for resuming, and older ones are closed with their points kept.
+  Future<void> _checkInterruptedTrack() async {
+    final notifier = ref.read(gpsTrackProvider.notifier);
+    if (notifier.isTracking) return;
+    final List<GpsTrack> tracks;
+    try {
+      tracks = await BtkDatabase.getUnfinishedTracks();
+    } catch (_) {
+      return;
+    }
+    if (tracks.isEmpty || !mounted || notifier.isTracking) return;
+
+    Future<void> close(GpsTrack t) => BtkDatabase.finishTrack(
+        t.id, t.points.isNotEmpty ? t.points.last.time : t.startedAt);
+    try {
+      for (final t in tracks.skip(1)) {
+        await close(t);
+      }
+    } catch (_) {
+      // They stay as interrupted, and the check runs again on the next start.
+    }
+    if (!mounted) return;
+
+    final l10n = AppLocalizations.of(context)!;
+    final latest = tracks.first;
+    final goOn = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dCtx) => AlertDialog(
+        title: Text(l10n.trackInterruptedTitle),
+        content: Text(l10n.trackInterruptedMessage(latest.points.length)),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(dCtx, false),
+              child: Text(l10n.finishAction)),
+          FilledButton(
+              onPressed: () => Navigator.pop(dCtx, true),
+              child: Text(l10n.continueAction)),
+        ],
+      ),
+    );
+    if (!mounted) return;
+    if (goOn == true && await ensureLocationAccess(context)) {
+      notifier.resume(latest, _trackSettings(l10n));
+      return;
+    }
+    if (goOn != true) {
+      try {
+        await close(latest);
+      } catch (_) {
+        AppMessenger.showError((l10n) => l10n.trackSaveFailed);
+      }
+    }
+  }
+
+  // ── Records and tracks on the map ─────────────────────────────────────────
+
+  void _fitTrack(GpsTrack track) {
+    if (track.points.isEmpty) return;
+    final pts = [for (final p in track.points) LatLng(p.lat, p.lon)];
+    if (pts.length == 1) {
+      _mapController.move(pts.first, 15);
+      return;
+    }
+    _mapController.fitCamera(CameraFit.bounds(
+      bounds: LatLngBounds.fromPoints(pts),
+      padding: const EdgeInsets.all(48),
+    ));
+  }
+
+  void _showRecordsInView() {
+    final l10n = AppLocalizations.of(context)!;
+    final bounds = _mapController.camera.visibleBounds;
+    final filter = ref.read(recordFilterProvider);
+    final inView = recordsWithin(
+      filter.apply(ref.read(btkProvider)),
+      contains: bounds.contains,
+    );
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) => SafeArea(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.7),
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              ListTile(
+                title: Text(l10n.recordsInView,
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                subtitle: Text(l10n.recordsCount(inView.length)),
+              ),
+              for (final r in inView)
+                ListTile(
+                  leading: SizedBox(width: 28, height: 28, child: _RecordSymbol(record: r)),
+                  title: Text(r.name.isNotEmpty ? r.name : l10n.btkNumber(r.id)),
+                  subtitle: Text(
+                      [if (r.location.isNotEmpty) r.location, if (r.group.isNotEmpty) r.group]
+                          .join(' · ')),
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    context.push('/form', extra: r);
+                  },
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   // ── Location ──────────────────────────────────────────────────────────────
 
   Future<void> _goToMyLocation() async {
-    LocationPermission perm = await Geolocator.checkPermission();
-    if (perm == LocationPermission.denied) {
-      perm = await Geolocator.requestPermission();
-    }
-    if (perm == LocationPermission.deniedForever ||
-        perm == LocationPermission.denied) {
+    if (!await ensureLocationAccess(context)) return;
+    final Position pos;
+    try {
+      pos = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+          timeLimit: Duration(seconds: 30),
+        ),
+      );
+    } catch (_) {
+      AppMessenger.showError((l10n) => l10n.locationFailed);
       return;
     }
-    final pos = await Geolocator.getCurrentPosition();
+    if (!mounted) return;
     _mapController.move(LatLng(pos.latitude, pos.longitude), 13.0);
     AnalyticsService.logGpsDetect();
   }
@@ -246,32 +363,12 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     Future<void> load(String asset, String field, LocalizedText label) async {
       try {
         final raw = await rootBundle.loadString(asset);
-        final features = (jsonDecode(raw) as Map)['features'] as List;
-        for (final f in features) {
-          final name = ((f['properties'] as Map)[field] as String?) ?? '';
-          if (name.isEmpty) continue;
-          final geom = f['geometry'] as Map;
-          final coords = geom['coordinates'] as List;
-          final rings = geom['type'] == 'Polygon'
-              ? [_parseRing(coords[0] as List)]
-              : coords
-                  .map((p) => _parseRing((p as List)[0] as List))
-                  .toList();
-          final pts = rings.expand((r) => r).toList();
-          if (pts.isEmpty) continue;
-          double minLat = pts[0].latitude, maxLat = pts[0].latitude;
-          double minLon = pts[0].longitude, maxLon = pts[0].longitude;
-          for (final p in pts) {
-            if (p.latitude < minLat) minLat = p.latitude;
-            if (p.latitude > maxLat) maxLat = p.latitude;
-            if (p.longitude < minLon) minLon = p.longitude;
-            if (p.longitude > maxLon) maxLon = p.longitude;
-          }
+        for (final p in await parsePlaces(raw, field)) {
           index.add(GeoSearchResult(
-            name: name,
+            name: p.name,
             subtitle: label,
-            center: LatLng((minLat + maxLat) / 2, (minLon + maxLon) / 2),
-            bounds: LatLngBounds(LatLng(minLat, minLon), LatLng(maxLat, maxLon)),
+            center: LatLng((p.minLat + p.maxLat) / 2, (p.minLon + p.maxLon) / 2),
+            bounds: LatLngBounds(LatLng(p.minLat, p.minLon), LatLng(p.maxLat, p.maxLon)),
           ));
         }
       } catch (_) {}
@@ -441,6 +538,11 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final filter = ref.watch(recordFilterProvider);
+    final shownTrack = ref.watch(shownTrackProvider);
+    ref.listen(shownTrackProvider, (_, track) {
+      if (track != null) _fitTrack(track);
+    });
     final layers = ref.watch(mapLayersProvider);
     final records = ref.watch(btkProvider);
     final measuring = _measureMode != MeasureMode.none;
@@ -467,7 +569,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
               if (layers.showOsm)
                 TileLayer(
                   urlTemplate: AppConstants.osmTileUrl,
-                  userAgentPackageName: 'ge.cartographers.btk',
+                  userAgentPackageName: 'ge.btc.field_app',
                   tileProvider: kIsWeb
                       ? null
                       : CachedTileProvider(store: _cacheStore),
@@ -478,7 +580,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                   child: TileLayer(
                     urlTemplate: AppConstants.topoTileUrl,
                     subdomains: AppConstants.topoSubdomains,
-                    userAgentPackageName: 'ge.cartographers.btk',
+                    userAgentPackageName: 'ge.btc.field_app',
                     tileProvider: kIsWeb
                         ? null
                         : CachedTileProvider(store: _cacheStore),
@@ -519,6 +621,35 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                       .toList(),
                 ),
               ..._buildAssetRasterLayers(),
+              if (shownTrack != null && shownTrack.points.isNotEmpty) ...[
+                PolylineLayer(polylines: [
+                  Polyline(
+                    points: [
+                      for (final p in shownTrack.points) LatLng(p.lat, p.lon)
+                    ],
+                    color: Colors.indigo,
+                    strokeWidth: 3.0,
+                  ),
+                ]),
+                MarkerLayer(markers: [
+                  for (final (p, color) in [
+                    (shownTrack.points.first, Colors.green),
+                    (shownTrack.points.last, Colors.red),
+                  ])
+                    Marker(
+                      point: LatLng(p.lat, p.lon),
+                      width: 14,
+                      height: 14,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: color,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 2),
+                        ),
+                      ),
+                    ),
+                ]),
+              ],
               Builder(builder: (ctx) {
                 final track = ref.watch(gpsTrackProvider);
                 if (track == null || track.points.length < 2) {
@@ -536,26 +667,16 @@ class _MapScreenState extends ConsumerState<MapScreen> {
               }),
               if (layers.showPoints)
                 MarkerLayer(
-                  markers: records.map((r) {
-                    if (r.latitude == null) return null;
+                  markers: filter.apply(records).map((r) {
+                    final point = r.mapPoint;
+                    if (point == null) return null;
                     return Marker(
-                      point: LatLng(r.latitude!, r.longitude!),
+                      point: point,
                       width: 36,
                       height: 36,
                       child: GestureDetector(
                         onTap: () => context.push('/form', extra: r),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primary,
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 2),
-                            boxShadow: const [
-                              BoxShadow(blurRadius: 4, color: Colors.black26)
-                            ],
-                          ),
-                          child: const Icon(Icons.location_pin,
-                              color: Colors.white, size: 18),
-                        ),
+                        child: _RecordSymbol(record: r),
                       ),
                     );
                   }).whereType<Marker>().toList(),
@@ -566,6 +687,37 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 scheme: Theme.of(context).colorScheme,
               ),
             ],
+          ),
+
+          // ── Filter and shown track, so nothing looks missing ────────────
+          Positioned(
+            left: 12,
+            right: 72,
+            top: MediaQuery.of(context).padding.top + 52,
+            child: Wrap(
+              spacing: 6,
+              runSpacing: 4,
+              children: [
+                if (filter.isActive)
+                  InputChip(
+                    avatar: const Icon(Icons.filter_alt, size: 16),
+                    label: Text(l10n.filterShown(
+                        filter.apply(records).length, records.length)),
+                    onPressed: () => showRecordFilterSheet(context),
+                    onDeleted: () => ref
+                        .read(recordFilterProvider.notifier)
+                        .state = const RecordFilter(),
+                  ),
+                if (shownTrack != null)
+                  InputChip(
+                    avatar: const Icon(Icons.route, size: 16),
+                    label: Text(editedStamp(shownTrack.startedAt)),
+                    onPressed: () => _fitTrack(shownTrack),
+                    onDeleted: () =>
+                        ref.read(shownTrackProvider.notifier).state = null,
+                  ),
+              ],
+            ),
           ),
 
           // ── Adding point hint ───────────────────────────────────────────
@@ -603,6 +755,14 @@ class _MapScreenState extends ConsumerState<MapScreen> {
             ),
 
           // ── Right-side buttons ──────────────────────────────────────────
+          if (!kIsWeb)
+            Positioned(
+              left: 12,
+              right: 72,
+              top: MediaQuery.of(context).padding.top + 12,
+              child: const Align(
+                  alignment: Alignment.centerLeft, child: TrackStatusBar()),
+            ),
           Positioned(
             right: 12,
             top: MediaQuery.of(context).padding.top + 80,
@@ -612,6 +772,19 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                   icon: Icons.search,
                   tooltip: l10n.search,
                   onTap: _openSearch,
+                ),
+                const SizedBox(height: 8),
+                _MapButton(
+                  icon: Icons.format_list_bulleted,
+                  tooltip: l10n.recordsInView,
+                  onTap: _showRecordsInView,
+                ),
+                const SizedBox(height: 8),
+                _MapButton(
+                  icon: filter.isActive ? Icons.filter_alt : Icons.filter_alt_outlined,
+                  active: filter.isActive,
+                  tooltip: l10n.filterTitle,
+                  onTap: () => showRecordFilterSheet(context),
                 ),
                 const SizedBox(height: 16),
                 _MapButton(
@@ -656,7 +829,15 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                             _showTrackFinishedSheet(ctx, finished);
                           }
                         } else {
-                          await trackNotifier.startTracking();
+                          if (!await ensureLocationAccess(ctx)) return;
+                          if (!ctx.mounted) return;
+                          try {
+                            await trackNotifier.startTracking(
+                                _trackSettings(AppLocalizations.of(ctx)!));
+                          } catch (_) {
+                            AppMessenger.showError(
+                                (l10n) => l10n.trackStartFailed);
+                          }
                         }
                       },
                     );
@@ -894,6 +1075,31 @@ class _BottomBarButton extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+// ── A record on the map ───────────────────────────────────────────────────────
+
+/// Colour shows the group. A hollow symbol means the record is unfinished.
+class _RecordSymbol extends StatelessWidget {
+  final BtkRecord record;
+  const _RecordSymbol({required this.record});
+
+  @override
+  Widget build(BuildContext context) {
+    final color = record.group.trim().isEmpty
+        ? Theme.of(context).colorScheme.primary
+        : groupColor(record.group);
+    final hollow = record.isUnfinished;
+    return Container(
+      decoration: BoxDecoration(
+        color: hollow ? Colors.white : color,
+        shape: BoxShape.circle,
+        border: Border.all(color: hollow ? color : Colors.white, width: 2),
+        boxShadow: const [BoxShadow(blurRadius: 4, color: Colors.black26)],
+      ),
+      child: Icon(Icons.location_pin, color: hollow ? color : Colors.white, size: 18),
     );
   }
 }

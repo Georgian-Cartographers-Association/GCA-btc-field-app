@@ -207,6 +207,9 @@ class BtkRecord {
   double? longitude;
   double? altitude;  // metres above sea level
   double? aspect;    // compass bearing 0–360°
+  double? coordAccuracy; // metres, set only when the coordinates came from GPS
+  String trackId;    // GPS track this record is linked to, or empty
+  String group;      // the user's grouping of records, or empty
   String location;
 
   // Physical-geographic
@@ -251,6 +254,9 @@ class BtkRecord {
     this.longitude,
     this.altitude,
     this.aspect,
+    this.coordAccuracy,
+    this.trackId = '',
+    this.group = '',
     this.location = '',
     this.geologicalFormation = '',
     this.reliefType = '',
@@ -286,6 +292,9 @@ class BtkRecord {
         'longitude': longitude,
         'altitude': altitude,
         'aspect': aspect,
+        if (coordAccuracy != null) 'coordAccuracy': coordAccuracy,
+        if (trackId.isNotEmpty) 'trackId': trackId,
+        if (group.isNotEmpty) 'group': group,
         'location': location,
         'geologicalFormation': geologicalFormation,
         'reliefType': reliefType,
@@ -319,6 +328,9 @@ class BtkRecord {
       longitude: _num(j['longitude']),
       altitude: _num(j['altitude']),
       aspect: _num(j['aspect']),
+      coordAccuracy: _num(j['coordAccuracy']),
+      trackId: _str(j['trackId']),
+      group: _str(j['group']),
       location: _str(j['location']),
       geologicalFormation: _str(j['geologicalFormation']),
       reliefType: _str(j['reliefType']),
@@ -357,7 +369,7 @@ class BtkRecord {
     buf.writeln('ბუნებრივ-ტერიტორიული კომპლექსის (ბტკ) აღწერა');
     buf.writeln('ID: $id');
     buf.writeln('თარიღი: ${date.toString().split(' ')[0]}');
-    if (latitude != null) buf.writeln('კოორდინატები: $latitude, $longitude');
+    if (latitude != null && longitude != null) buf.writeln('კოორდინატები: $latitude, $longitude');
     buf.writeln('ადგილმდებარეობა: $location');
     buf.writeln('---');
     buf.writeln('გეოლ. ფორმაცია: $geologicalFormation');

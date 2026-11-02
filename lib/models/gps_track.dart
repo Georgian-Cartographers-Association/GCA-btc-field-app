@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:latlong2/latlong.dart';
 
 class GpsPoint {
   final double lat;
@@ -6,11 +7,15 @@ class GpsPoint {
   final double altitude;
   final DateTime time;
 
+  /// Horizontal accuracy in metres. Points from before 1.22 don't have it.
+  final double? accuracy;
+
   const GpsPoint({
     required this.lat,
     required this.lon,
     required this.altitude,
     required this.time,
+    this.accuracy,
   });
 
   Map<String, dynamic> toJson() => {
@@ -18,6 +23,7 @@ class GpsPoint {
         'lon': lon,
         'alt': altitude,
         'time': time.toIso8601String(),
+        if (accuracy != null) 'acc': accuracy,
       };
 
   factory GpsPoint.fromJson(Map<String, dynamic> j) => GpsPoint(
@@ -25,6 +31,7 @@ class GpsPoint {
         lon: (j['lon'] as num).toDouble(),
         altitude: (j['alt'] as num?)?.toDouble() ?? 0,
         time: DateTime.parse(j['time'] as String),
+        accuracy: (j['acc'] as num?)?.toDouble(),
       );
 }
 
@@ -48,38 +55,20 @@ class GpsTrack {
         points: points ?? this.points,
       );
 
-  Duration get duration =>
-      (endedAt ?? DateTime.now()).difference(startedAt);
-
-  double get distanceKm {
-    if (points.length < 2) return 0;
-    double total = 0;
-    for (int i = 1; i < points.length; i++) {
-      total += _haversineKm(points[i - 1], points[i]);
+  /// The point closest to the given place, or null if there are no points.
+  GpsPoint? nearestTo(double lat, double lon) {
+    const calc = Distance();
+    final here = LatLng(lat, lon);
+    GpsPoint? best;
+    var bestDistance = double.infinity;
+    for (final p in points) {
+      final d = calc(here, LatLng(p.lat, p.lon));
+      if (d < bestDistance) {
+        best = p;
+        bestDistance = d;
+      }
     }
-    return total;
-  }
-
-  static double _haversineKm(GpsPoint a, GpsPoint b) {
-    const r = 6371.0;
-    final dLat = _rad(b.lat - a.lat);
-    final dLon = _rad(b.lon - a.lon);
-    final sinLat = (dLat / 2);
-    final sinLon = (dLon / 2);
-    final h = sinLat * sinLat +
-        (b.lat.abs() + a.lat.abs()) * 0 + // unused, kept for readability
-        sinLon * sinLon;
-    // simplified planar approx for short distances
-    final dx = (b.lon - a.lon) * 111.32 * _cos(_rad((a.lat + b.lat) / 2));
-    final dy = (b.lat - a.lat) * 110.574;
-    return ((dx * dx + dy * dy) > 0) ? ((dx * dx + dy * dy) / (r * r) + h * 0) : 0;
-  }
-
-  // Accurate Haversine
-  static double _rad(double d) => d * 3.141592653589793 / 180;
-  static double _cos(double r) {
-    // Taylor series cos approximation (accurate enough for small angles)
-    return 1 - r * r / 2 + r * r * r * r / 24;
+    return best;
   }
 
   Map<String, dynamic> toMap() => {
@@ -89,10 +78,14 @@ class GpsTrack {
         'points_json': jsonEncode(points.map((p) => p.toJson()).toList()),
       };
 
+  /// One damaged point is skipped, so it can't cost the rest of the track.
   factory GpsTrack.fromMap(Map<String, dynamic> m) {
-    final pts = (jsonDecode(m['points_json'] as String) as List<dynamic>)
-        .map((e) => GpsPoint.fromJson(e as Map<String, dynamic>))
-        .toList();
+    final pts = <GpsPoint>[];
+    for (final e in jsonDecode(m['points_json'] as String) as List<dynamic>) {
+      try {
+        pts.add(GpsPoint.fromJson(Map<String, dynamic>.from(e as Map)));
+      } catch (_) {}
+    }
     return GpsTrack(
       id: m['id'] as String,
       startedAt: DateTime.parse(m['started_at'] as String),

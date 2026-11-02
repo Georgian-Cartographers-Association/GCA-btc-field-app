@@ -81,7 +81,7 @@ void main() {
     final ids = (await BtkDatabase.getAllRecords()).map((r) => r.id);
     expect(ids, unorderedEquals(['OLD00001', 'NEW00001']));
     expect(await BtkDatabase.getAllTracks(), isEmpty);
-    expect(await (await BtkDatabase.database).getVersion(), 4);
+    expect(await (await BtkDatabase.database).getVersion(), 5);
   }
 
   test('new database saves and reads a record', () async {
@@ -133,5 +133,19 @@ void main() {
     expect(photos.firstWhere((p) => p.id == 'P1').caption, 'ჭრილი');
     expect(photos.firstWhere((p) => p.id == 'P2').caption, '');
     expect(photos.firstWhere((p) => p.id == 'P1').filePath, '/x/P1.jpg');
+  });
+
+  test('version 4 database gains the track points table and keeps its data', () async {
+    await createOld(4, [
+      _recordsV1,
+      _photosV1,
+      _tracksV2,
+      "ALTER TABLE btk_records ADD COLUMN name TEXT DEFAULT ''",
+    ]);
+    await BtkDatabase.openAt(dbPath);
+    await expectOldKeptAndSaveWorks();
+    final db = await BtkDatabase.database;
+    expect(await db.getVersion(), 5);
+    expect(await db.query('gps_track_points'), isEmpty);
   });
 }

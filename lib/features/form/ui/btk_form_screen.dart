@@ -9,9 +9,15 @@ import 'package:flutter_compass/flutter_compass.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/app_messenger.dart';
+import '../../../database/btk_database.dart';
 import '../../../models/btk_record.dart';
+import '../../../models/gps_track.dart';
+import '../../gps/domain/gps_track_provider.dart';
+import '../../gps/domain/location_settings.dart';
+import '../../gps/ui/location_access.dart';
 import '../../../models/record_quality.dart';
 import '../../records/domain/btk_provider.dart';
+import '../../records/domain/record_filter.dart';
 import '../../settings/domain/settings_provider.dart';
 import '../../../data/services/analytics_service.dart';
 import '../../pdf/ui/pdf_viewer_screen.dart';
@@ -152,62 +158,7 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
 
   Future<void> _detectGps() async {
     final l10n = AppLocalizations.of(context)!;
-    // 1. Check if GPS hardware/service is enabled
-    final serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      if (!mounted) return;
-      final open = await showDialog<bool>(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: Text(l10n.gpsOff),
-          content: Text(
-              l10n.gpsOffMessage),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: Text(l10n.cancel),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: Text(l10n.enableGps),
-            ),
-          ],
-        ),
-      );
-      if (open == true) await Geolocator.openLocationSettings();
-      return;
-    }
-
-    // 2. Check / request permission
-    LocationPermission perm = await Geolocator.checkPermission();
-    if (perm == LocationPermission.denied) {
-      perm = await Geolocator.requestPermission();
-    }
-    if (perm == LocationPermission.deniedForever) {
-      if (!mounted) return;
-      final open = await showDialog<bool>(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: Text(l10n.locationBlocked),
-          content: Text(
-              l10n.locationBlockedMessage),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: Text(l10n.cancel),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: Text(l10n.settings),
-            ),
-          ],
-        ),
-      );
-      if (open == true) await Geolocator.openAppSettings();
-      return;
-    }
-    if (perm == LocationPermission.denied) return;
-
+    if (!await ensureLocationAccess(context)) return;
     if (!mounted) return;
     if (_record.latitude != null || _record.longitude != null) {
       final replace = await showDialog<bool>(
@@ -235,12 +186,7 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
         duration: Duration(seconds: 2)));
     final Position pos;
     try {
-      pos = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.best,
-          timeLimit: Duration(seconds: 30),
-        ),
-      );
+      pos = await currentFix(recording: _activeTrackId != null);
     } catch (_) {
       AppMessenger.showError((l10n) => l10n.locationFailed);
       return;
@@ -264,7 +210,64 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
       ..latitude = pos.latitude
       ..longitude = pos.longitude
       ..altitude = pos.altitude
+      ..coordAccuracy = pos.accuracy
+      ..trackId = _activeTrackId ?? _record.trackId
       ..aspect = heading ?? _record.aspect);
+  }
+
+  String? get _activeTrackId {
+    final track = ref.read(gpsTrackProvider);
+    return track != null && track.endedAt == null ? track.id : null;
+  }
+
+  // Links the record to a track's closest point. Coordinates are only taken
+  // from the track when the record has none.
+  Future<void> _linkTrack() async {
+    final l10n = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
+    final List<GpsTrack> tracks;
+    try {
+      tracks = (await BtkDatabase.getAllTracks())
+          .where((t) => t.points.isNotEmpty)
+          .take(10)
+          .toList();
+    } catch (_) {
+      AppMessenger.showError((l10n) => l10n.locationFailed);
+      return;
+    }
+    if (!mounted) return;
+    if (tracks.isEmpty) {
+      messenger.showSnackBar(SnackBar(content: Text(l10n.noTracksFound)));
+      return;
+    }
+    final chosen = await showModalBottomSheet<GpsTrack>(
+      context: context,
+      builder: (ctx) => SafeArea(
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            for (final t in tracks)
+              ListTile(
+                leading: const Icon(Icons.route),
+                title: Text(editedStamp(t.startedAt)),
+                subtitle: Text(l10n.trackPointsCount(t.points.length)),
+                onTap: () => Navigator.pop(ctx, t),
+              ),
+          ],
+        ),
+      ),
+    );
+    if (chosen == null || !mounted) return;
+    _record.trackId = chosen.id;
+    if (_record.latitude == null || _record.longitude == null) {
+      final p = chosen.points.last;
+      _record
+        ..latitude = p.lat
+        ..longitude = p.lon
+        ..altitude = _record.altitude ?? p.altitude
+        ..coordAccuracy = p.accuracy;
+    }
+    _update(_record);
   }
 
   // ─── Email sending ──────────────────────────────────────────────────────────
@@ -586,7 +589,7 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
     return TabBarView(
       controller: _tabController,
       children: [
-        BasicInfoSection(key: ValueKey('basic$g'), record: _record, onChanged: _update, onDetectGps: _detectGps),
+        BasicInfoSection(key: ValueKey('basic$g'), record: _record, onChanged: _update, onDetectGps: _detectGps, onLinkTrack: kIsWeb ? null : _linkTrack, groupSuggestions: groupsIn(ref.read(btkProvider))),
         PhysicalGeoSection(key: ValueKey('physGeo$g'), record: _record, onChanged: _update),
         VegetationSection(key: ValueKey('vegetation$g'), record: _record, onChanged: _update),
         SoilSection(key: ValueKey('soil$g'), record: _record, onChanged: _update),
