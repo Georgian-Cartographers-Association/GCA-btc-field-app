@@ -4,10 +4,11 @@ import 'package:archive/archive.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:printing/printing.dart' show PdfGoogleFonts, Printing;
+import 'package:printing/printing.dart' show Printing;
 import 'package:share_plus/share_plus.dart';
 import '../../models/btk_record.dart';
 import '../../models/photo.dart';
@@ -169,10 +170,9 @@ class ExportService {
   // ─── PDF ─────────────────────────────────────────────────────────────────────
 
   static Future<Uint8List> buildPdf(List<BtkRecord> records) async {
-    pw.Font? geoFont;
-    try {
-      geoFont = await PdfGoogleFonts.notoSansGeorgianRegular();
-    } catch (_) {}
+    // Bundled, so Georgian text prints without a network connection.
+    final geoFont = pw.Font.ttf(
+        await rootBundle.load('assets/fonts/NotoSansGeorgian-Regular.ttf'));
 
     pw.TextStyle style(
             {double size = 10, bool bold = false, pw.Font? font}) =>

@@ -329,6 +329,11 @@ void main() {
       expect(imagesIn(await ExportService.buildPdf([record])), 40);
     });
 
+    test('embeds the bundled Georgian font, which needs no network', () async {
+      final pdf = await ExportService.buildPdf([record]);
+      expect(latin1.decode(pdf), contains('NotoSansGeorgian'));
+    });
+
     test('a missing photo file does not stop the PDF', () async {
       await addPhotos('A', 1);
       await BtkDatabase.insertPhoto(Photo(

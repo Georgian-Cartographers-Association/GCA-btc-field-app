@@ -102,3 +102,4 @@ flutter:
     - assets/geojson/Municipalities.geojson
     - assets/rasters/
     - assets/lottie/cat.json
+    - assets/fonts/NotoSansGeorgian-Regular.ttf
