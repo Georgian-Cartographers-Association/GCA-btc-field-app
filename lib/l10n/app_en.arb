@@ -217,6 +217,8 @@
   "share": "Share",
   "saveAsFile": "Save as file",
   "pdfPreparing": "Preparing PDF...",
+  "pdfPreview": "PDF preview",
+  "pdfBuildFailed": "Could not create the PDF",
   "duplicate": "Duplicate",
   "dataLayers": "Data layers",
   "rasters": "Rasters",

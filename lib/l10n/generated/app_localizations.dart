@@ -1352,6 +1352,18 @@ abstract class AppLocalizations {
   /// **'PDF მზადდება...'**
   String get pdfPreparing;
 
+  /// No description provided for @pdfPreview.
+  ///
+  /// In ka, this message translates to:
+  /// **'PDF-ის გადახედვა'**
+  String get pdfPreview;
+
+  /// No description provided for @pdfBuildFailed.
+  ///
+  /// In ka, this message translates to:
+  /// **'PDF ვერ შეიქმნა'**
+  String get pdfBuildFailed;
+
   /// No description provided for @duplicate.
   ///
   /// In ka, this message translates to:

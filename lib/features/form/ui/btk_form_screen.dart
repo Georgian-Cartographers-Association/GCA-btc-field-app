@@ -18,7 +18,7 @@ import '../../../models/record_quality.dart';
 import '../../records/domain/btk_provider.dart';
 import '../../records/domain/record_filter.dart';
 import '../../../data/services/analytics_service.dart';
-import '../../../data/services/export_service.dart';
+import '../../pdf/ui/pdf_preview_screen.dart';
 import '../../pdf/ui/pdf_viewer_screen.dart';
 import 'sections/photos_section.dart';
 import 'sections/basic_info_section.dart';
@@ -269,20 +269,7 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
     _update(_record);
   }
 
-  // ─── Email sending ──────────────────────────────────────────────────────────
-
-  Future<void> _share() async {
-    final l10n = AppLocalizations.of(context)!;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(l10n.pdfPreparing),
-      duration: const Duration(seconds: 3),
-    ));
-    try {
-      await ExportService.sharePdf([_record], l10n);
-    } catch (_) {
-      AppMessenger.showError((l10n) => l10n.shareFailed);
-    }
-  }
+  void _openPdf() => PdfPreviewScreen.open(context, [_record]);
 
   // ─── Build ──────────────────────────────────────────────────────────────────
 
@@ -373,8 +360,8 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
                   onSelected: (action) => action(),
                   itemBuilder: (_) => [
                     PopupMenuItem(value: _fillFromOther, child: Text(l10n.fillFromOther)),
+                    PopupMenuItem(value: _openPdf, child: Text(l10n.pdfPreview)),
                     PopupMenuItem(value: _saveTemplate, child: Text(l10n.recordSaveAsTemplate)),
-                    PopupMenuItem(value: _share, child: Text(l10n.share)),
                     PopupMenuItem(
                       value: _revert,
                       enabled: _snapshot(_record) != _opened,

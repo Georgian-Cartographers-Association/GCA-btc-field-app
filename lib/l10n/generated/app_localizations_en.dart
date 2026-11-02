@@ -654,6 +654,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pdfPreparing => 'Preparing PDF...';
 
   @override
+  String get pdfPreview => 'PDF preview';
+
+  @override
+  String get pdfBuildFailed => 'Could not create the PDF';
+
+  @override
   String get duplicate => 'Duplicate';
 
   @override

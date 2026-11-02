@@ -218,6 +218,8 @@
   "share": "გაზიარება",
   "saveAsFile": "ფაილად შენახვა",
   "pdfPreparing": "PDF მზადდება...",
+  "pdfPreview": "PDF-ის გადახედვა",
+  "pdfBuildFailed": "PDF ვერ შეიქმნა",
   "duplicate": "დუბლირება",
   "dataLayers": "მონაცემთა შრეები",
   "rasters": "რასტრები",

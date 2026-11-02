@@ -404,10 +404,7 @@ class ExportService {
   }
 
   static Future<void> sharePdf(
-      List<BtkRecord> records, AppLocalizations l10n) async {
-    final bytes = await buildPdf(records);
-    final filename = _pdfFilename(records);
-
+      Uint8List bytes, String filename, AppLocalizations l10n) async {
     if (kIsWeb) {
       await Printing.sharePdf(bytes: bytes, filename: filename);
     } else {
@@ -422,10 +419,8 @@ class ExportService {
   }
 
   static Future<void> savePdf(
-      List<BtkRecord> records, BuildContext context) async {
-        final l10n = AppLocalizations.of(context)!;
-    final bytes = await buildPdf(records);
-    final filename = _pdfFilename(records);
+      Uint8List bytes, String filename, BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
 
     if (kIsWeb) {
       await Printing.sharePdf(bytes: bytes, filename: filename);
@@ -480,7 +475,7 @@ class ExportService {
       ? _safeName(r.name)
       : r.id.substring(0, r.id.length < 8 ? r.id.length : 8);
 
-  static String _pdfFilename(List<BtkRecord> records) {
+  static String pdfFilename(List<BtkRecord> records) {
     if (records.length == 1) {
       final r = records.first;
       return 'btk_${_label(r)}_${_fmtDate(r.date)}.pdf';

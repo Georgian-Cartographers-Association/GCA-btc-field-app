@@ -654,6 +654,12 @@ class AppLocalizationsKa extends AppLocalizations {
   String get pdfPreparing => 'PDF მზადდება...';
 
   @override
+  String get pdfPreview => 'PDF-ის გადახედვა';
+
+  @override
+  String get pdfBuildFailed => 'PDF ვერ შეიქმნა';
+
+  @override
   String get duplicate => 'დუბლირება';
 
   @override
