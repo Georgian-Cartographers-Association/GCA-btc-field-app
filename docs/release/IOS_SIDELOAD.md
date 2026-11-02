@@ -2,11 +2,12 @@
 
 For testing on your own iPhone or iPad. This build does not go through the App Store or TestFlight.
 
-**Status:** the workflow has not been run yet, and the app has not been run on an iOS device. The first `v*` tag will show whether the build succeeds.
+**Status:** the app has not been run on an iOS device, so everything below about how it behaves comes from the code.
 
 ## How the file is built
 
-Pushing a `v*` tag runs the `build-ios` job in `.github/workflows/release.yml`. It attaches `btk-ios-unsigned.ipa` to the GitHub release.
+- Pushing a `v*` tag runs the `build-ios` job in `.github/workflows/release.yml`, which attaches `btk-ios-unsigned.ipa` to the GitHub release.
+- A pull request that touches iOS runs `.github/workflows/ios.yml`, which keeps the IPA for 14 days as a workflow artifact. Use this to test without making a release.
 
 The file has no signature, so iOS will not install it until a sideloading tool signs it with your Apple ID.
 
@@ -27,16 +28,23 @@ The file has no signature, so iOS will not install it until a sideloading tool s
 | Feature | iOS build | Why |
 |---|---|---|
 | Local records, map, export | Should work | Not yet tested on a device |
-| Account, Cloud and Expedition modes | **Not available** | `lib/firebase_options.dart` has no iOS configuration, so the app starts in local mode only |
+| Account, Cloud and Expedition modes | **Not available** | `lib/firebase_options.dart` has no iOS configuration. Settings turns these modes off and says why |
 | Analytics | Off | Same reason |
-| GPS track recording with the screen off | **Not available** | The app has no iOS background location mode, so iOS can suspend recording |
+| GPS track recording with the screen off | Should work | Uses the iOS background location mode, and iOS shows a location indicator while recording |
+| Sharing on iPad | Should work | The share sheet gets a position to attach to |
 | Update notice | On | The Android-only block doesn't apply, so the app checks GitHub releases |
 
-To enable accounts and sync, add an iOS app in the Firebase console, then run `flutterfire configure --project=gca-btk-field-app`.
+## Turn on accounts and sync
+
+1. Decide the bundle ID first, because Firebase registers the app under it. It is `ge.cartographers.btkFieldApp` today.
+2. Add an iOS app with that bundle ID in the Firebase console.
+3. Run `flutterfire configure --project=gca-btk-field-app`, or add the new app's values to `lib/firebase_options.dart` by hand.
+
+A sideloading tool that changes the bundle ID can affect this, so test sign-in on a device.
 
 ## Keep your data
 
-Records stay on the device, and there is no cloud copy on iOS.
+Records stay on the device, and there is no cloud copy on iOS. The app's folder is visible in the Files app, under On My iPhone.
 
 - Deleting the app deletes its records and photos.
 - Sign again with the same Apple ID and the same bundle ID. A tool that changes the bundle ID installs a separate app with no records.
@@ -48,6 +56,7 @@ Records stay on the device, and there is no cloud copy on iOS.
 
 | Key | Used for |
 |---|---|
+| `UIBackgroundModes` (`location`) | Recording a track with the screen off |
 | `NSLocationWhenInUseUsageDescription` | Coordinates, tracks and compass |
 | `NSCameraUsageDescription` | Taking record photos |
 | `NSPhotoLibraryUsageDescription` | Choosing record photos |
@@ -61,4 +70,5 @@ Add the matching key when adding a plugin that needs a new permission.
 | App won't open after a week | The free signature expired. Sign it again |
 | "Untrusted Developer" | Trust your Apple ID, step 4 above |
 | Records are missing after reinstalling | The app was deleted, or the bundle ID changed |
-| Sign-in doesn't work | Expected. See "What works on iOS" |
+| Cloud and Expedition are greyed out | Expected. See "What works on iOS" |
+| Photos are missing after an update | They should come back: saved paths are moved to the new app folder when read. If not, please report it |

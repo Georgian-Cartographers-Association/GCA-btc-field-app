@@ -18,6 +18,20 @@ import '../../database/btk_database.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 class ExportService {
+
+  /// iPads show the share sheet as a popover, and refuse to open it with no
+  /// position to attach to.
+  static Future<void> _shareFiles(List<XFile> files, {String? subject}) async {
+    final view = WidgetsBinding.instance.platformDispatcher.views.first;
+    final size = view.physicalSize / view.devicePixelRatio;
+    await Share.shareXFiles(
+      files,
+      subject: subject,
+      sharePositionOrigin:
+          Rect.fromCenter(center: size.center(Offset.zero), width: 1, height: 1),
+    );
+  }
+
   // ─── CSV ─────────────────────────────────────────────────────────────────────
 
   static String buildCsv(List<BtkRecord> records,
@@ -141,7 +155,7 @@ class ExportService {
     final file = XFile.fromData(bytes,
         name: 'btk_records.geojson',
         mimeType: 'application/geo+json');
-    await Share.shareXFiles([file], subject: l10n.shareRecordsGeoJson);
+    await _shareFiles([file], subject: l10n.shareRecordsGeoJson);
   }
 
   static Future<void> shareCsv(List<BtkRecord> records, AppLocalizations l10n,
@@ -149,7 +163,7 @@ class ExportService {
     final csv = buildCsv(records, coordFormat: coordFormat);
     final bytes = Uint8List.fromList(utf8.encode(csv));
     final file = XFile.fromData(bytes, name: 'btk_records.csv', mimeType: 'text/csv');
-    await Share.shareXFiles([file], subject: l10n.shareRecordsCsv);
+    await _shareFiles([file], subject: l10n.shareRecordsCsv);
   }
 
   // ─── PDF ─────────────────────────────────────────────────────────────────────
@@ -378,7 +392,7 @@ class ExportService {
     final file = XFile.fromData(bytes,
         name: 'track_$dateStr.gpx',
         mimeType: 'application/gpx+xml');
-    await Share.shareXFiles([file], subject: l10n.shareGpsTrack(dateStr));
+    await _shareFiles([file], subject: l10n.shareGpsTrack(dateStr));
   }
 
   static Future<void> sharePdf(
@@ -392,7 +406,7 @@ class ExportService {
       final tmp = await getTemporaryDirectory();
       final file = File('${tmp.path}/$filename');
       await file.writeAsBytes(bytes);
-      await Share.shareXFiles(
+      await _shareFiles(
         [XFile(file.path)],
         subject: l10n.shareBtkFile(filename),
       );
@@ -493,7 +507,7 @@ class ExportService {
         name: filename,
         mimeType: 'application/json',
       );
-      await Share.shareXFiles([file], subject: filename);
+      await _shareFiles([file], subject: filename);
       return;
     }
 
@@ -602,13 +616,13 @@ class ExportService {
     if (kIsWeb) {
       final file = XFile.fromData(bytes, name: filename,
           mimeType: 'application/vnd.google-earth.kml+xml');
-      await Share.shareXFiles([file], subject: filename);
+      await _shareFiles([file], subject: filename);
       return;
     }
     final tmp = await getTemporaryDirectory();
     final file = File('${tmp.path}/$filename');
     await file.writeAsBytes(bytes);
-    await Share.shareXFiles([XFile(file.path)], subject: l10n.shareRecordsKml);
+    await _shareFiles([XFile(file.path)], subject: l10n.shareRecordsKml);
   }
 
   // ── .btkz (ZIP with photos) ──────────────────────────────────────────────────
@@ -625,7 +639,7 @@ class ExportService {
         : 'btk_export_${_fmtDate(DateTime.now())}.btkz';
 
     if (kIsWeb) {
-      await Share.shareXFiles(
+      await _shareFiles(
           [XFile.fromData(zipBytes, name: filename)],
           subject: filename);
       return;

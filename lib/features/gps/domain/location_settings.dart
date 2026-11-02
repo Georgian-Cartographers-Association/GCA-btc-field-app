@@ -4,13 +4,23 @@ import 'package:geolocator/geolocator.dart';
 
 bool get _isAndroid => !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
 
-/// Settings for recording a track. On Android, the foreground service keeps
-/// recording with the screen off. It starts while the app is open, so it needs
-/// no background location permission.
+/// Settings for recording a track. The foreground service on Android and the
+/// background location mode on iOS keep recording with the screen off. Recording
+/// starts while the app is open, so neither needs a background permission.
 LocationSettings trackLocationSettings({
   required String notificationTitle,
   required String notificationText,
 }) {
+  if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) {
+    return AppleSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 10,
+      activityType: ActivityType.fitness,
+      pauseLocationUpdatesAutomatically: false,
+      allowBackgroundLocationUpdates: true,
+      showBackgroundLocationIndicator: true,
+    );
+  }
   if (!_isAndroid) {
     return const LocationSettings(accuracy: LocationAccuracy.high, distanceFilter: 10);
   }
