@@ -2,7 +2,7 @@
 
 For testing on your own iPhone or iPad. This build does not go through the App Store or TestFlight.
 
-**Status:** the app has not been run on an iOS device, so everything below about how it behaves comes from the code.
+**Status:** the IPA builds on GitHub's macOS runner. The app has not been run on an iOS device, so everything below about how it behaves comes from the code.
 
 ## How the file is built
 
@@ -36,9 +36,7 @@ The file has no signature, so iOS will not install it until a sideloading tool s
 
 ## Turn on accounts and sync
 
-1. Decide the bundle ID first, because Firebase registers the app under it. It is `ge.cartographers.btkFieldApp` today.
-2. Add an iOS app with that bundle ID in the Firebase console.
-3. Run `flutterfire configure --project=gca-btk-field-app`, or add the new app's values to `lib/firebase_options.dart` by hand.
+The bundle ID `ge.btc.fieldApp` is registered in Firebase as the app `BTC Field App iOS`. What remains is adding its values to `lib/firebase_options.dart`.
 
 A sideloading tool that changes the bundle ID can affect this, so test sign-in on a device.
 
