@@ -1676,6 +1676,24 @@ abstract class AppLocalizations {
   /// **'პროგრამა შექმნილია სტუდენტებისთვის — ლანდშაფტური გეოგრაფიის საველე კვლევების სასწავლო და სამეცნიერო პრაქტიკისათვის. ავტორი შპს ბიზნესისა და ტექნოლოგიების უნივერსიტეტის (BTU) ასოცირებული პროფესორი გიორგი კაპანაძე'**
   String get appPurposeAndAuthor;
 
+  /// No description provided for @mapTools.
+  ///
+  /// In ka, this message translates to:
+  /// **'ინსტრუმენტები'**
+  String get mapTools;
+
+  /// No description provided for @trackStart.
+  ///
+  /// In ka, this message translates to:
+  /// **'ტრეკის ჩაწერა'**
+  String get trackStart;
+
+  /// No description provided for @trackStop.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩაწერის დასრულება'**
+  String get trackStop;
+
   /// No description provided for @organizationLabel.
   ///
   /// In ka, this message translates to:
