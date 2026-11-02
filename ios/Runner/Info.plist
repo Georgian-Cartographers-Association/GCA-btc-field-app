@@ -66,5 +66,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>მდებარეობა გამოიყენება საველე წერტილების კოორდინატებისა და კომპასისთვის.</string>
 </dict>
 </plist>
