@@ -72,6 +72,7 @@ A joint project of Tbilisi State University and the **Georgian Cartographers Ass
 | **Linux** | `btk-linux-X.Y.Z.AppImage` | ნებისმიერი distro — `chmod +x` |
 | **Linux** | `btk-linux-X.Y.Z.deb` | Debian / Ubuntu / Mint |
 | **Linux** | `btk-linux-X.Y.Z.rpm` | Fedora / RHEL / openSUSE |
+| **iOS** | `btk-ios-unsigned.ipa` | ტესტირებისთვის, sideload-ით, ანგარიშისა და სინქრონიზაციის გარეშე — [ინსტრუქცია](docs/release/IOS_SIDELOAD.md) |
 | **Web** | — | **[btc.qgis.ge](https://btc.qgis.ge)** |
 
 SHA256 checksums: `checksums-android.txt` · `checksums-windows.txt` · `checksums-linux.txt`
@@ -200,6 +201,7 @@ flutter run -d linux
 - [Upload key setup](docs/release/UPLOAD_KEY_SETUP.md)
 - [Android release build](docs/release/ANDROID_RELEASE_BUILD.md)
 - [Key backup and recovery](docs/release/KEY_BACKUP_AND_RECOVERY.md)
+- [iOS sideload build](docs/release/IOS_SIDELOAD.md)
 - Store-ის გრაფიკა: [`docs/store/`](docs/store) (`generate_art.py` ხელახლა ქმნის ხატულებს), სურათები: [`docs/screenshots/play/`](docs/screenshots/play)
 
 ## CI/CD
@@ -209,6 +211,7 @@ flutter run -d linux
 | `build-apk` | `git tag v*` | arm64 / arm32 / x86_64 APK + AAB + SHA256 |
 | `build-windows` | `git tag v*` | Setup .exe + Portable .zip + SHA256 |
 | `build-linux` | `git tag v*` | AppImage + .deb + .rpm + SHA256 |
+| `build-ios` | `git tag v*` | Unsigned IPA for sideloading, [not yet run](docs/release/IOS_SIDELOAD.md) |
 | `pages.yml` | push to `main` | Web build → [btc.qgis.ge](https://btc.qgis.ge), მათ შორის `privacy.html` |
 
 ```bash

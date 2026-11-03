@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Btk Field App</string>
+	<string>BTC Field App</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -66,5 +66,23 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>mailto</string>
+	</array>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>კამერა გამოიყენება საველე ჩანაწერის ფოტოების გადასაღებად.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>ფოტოების ბიბლიოთეკა გამოიყენება საველე ჩანაწერზე ფოტოების დასამატებლად.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>მდებარეობა გამოიყენება საველე წერტილების კოორდინატებისა და კომპასისთვის.</string>
 </dict>
 </plist>

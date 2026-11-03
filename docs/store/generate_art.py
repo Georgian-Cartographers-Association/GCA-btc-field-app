@@ -120,6 +120,24 @@ def legacy(size):
     im.putalpha(mask.resize((size, size), Image.LANCZOS))
     return im
 
+IOS_ICONS = {
+    "20x20@1x": 20, "20x20@2x": 40, "20x20@3x": 60,
+    "29x29@1x": 29, "29x29@2x": 58, "29x29@3x": 87,
+    "40x40@1x": 40, "40x40@2x": 80, "40x40@3x": 120,
+    "60x60@2x": 120, "60x60@3x": 180,
+    "76x76@1x": 76, "76x76@2x": 152,
+    "83.5x83.5@2x": 167, "1024x1024@1x": 1024,
+}
+
+
+def ios_icons():
+    # iOS rounds the corners itself and rejects icons with an alpha channel.
+    d = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../ios/Runner/Assets.xcassets/AppIcon.appiconset")
+    master = icon(1024).convert("RGB")
+    for name, size in IOS_ICONS.items():
+        master.resize((size, size), Image.LANCZOS).save(f"{d}/Icon-App-{name}.png", optimize=True)
+
+
 DENSITIES = {"mdpi": 1, "hdpi": 1.5, "xhdpi": 2, "xxhdpi": 3, "xxxhdpi": 4}
 
 if __name__ == "__main__":
@@ -131,4 +149,5 @@ if __name__ == "__main__":
         legacy(int(48 * k)).save(f"{d}/ic_launcher.png", optimize=True)
         adaptive_background(int(108 * k)).save(f"{d}/ic_launcher_background.png", optimize=True)
         adaptive_foreground(int(108 * k)).save(f"{d}/ic_launcher_foreground.png", optimize=True)
+    ios_icons()
     print("ok")
