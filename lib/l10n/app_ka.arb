@@ -689,5 +689,10 @@
   "statsChartTooFew": "გრაფიკს სულ მცირე 2 წერტილი სჭირდება. ახლა არის {count}.",
   "statsChartNoAltitude": "არ ჩანს {count} ჩანაწერი: სიმაღლე არ აქვს.",
   "statsChartUnreadable": "არ ჩანს {count} ჩანაწერი: ჯამი ვერ წაიკითხა.",
-  "statsChartNote": "წერტილების განლაგება კავშირს არ ამტკიცებს, ამიტომ ტენდენციის ხაზი განზრახ არ არის."
+  "statsChartNote": "წერტილების განლაგება კავშირს არ ამტკიცებს, ამიტომ ტენდენციის ხაზი განზრახ არ არის.",
+  "statsExportAction": "შედეგების ექსპორტი (CSV)",
+  "statsExportSubject": "ბტკ სტატისტიკა — CSV",
+  "statsExportCovers": "მოიცავს {count} ჩანაწერს {total}-დან",
+  "statsExportNote": "ეს შეყვანილი მონაცემების დათვლაა და არა დასკვნა.",
+  "statsExportRecords": "ჩანაწერები"
 }

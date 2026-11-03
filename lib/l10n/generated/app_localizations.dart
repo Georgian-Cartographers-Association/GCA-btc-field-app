@@ -3937,6 +3937,36 @@ abstract class AppLocalizations {
   /// In ka, this message translates to:
   /// **'წერტილების განლაგება კავშირს არ ამტკიცებს, ამიტომ ტენდენციის ხაზი განზრახ არ არის.'**
   String get statsChartNote;
+
+  /// No description provided for @statsExportAction.
+  ///
+  /// In ka, this message translates to:
+  /// **'შედეგების ექსპორტი (CSV)'**
+  String get statsExportAction;
+
+  /// No description provided for @statsExportSubject.
+  ///
+  /// In ka, this message translates to:
+  /// **'ბტკ სტატისტიკა — CSV'**
+  String get statsExportSubject;
+
+  /// No description provided for @statsExportCovers.
+  ///
+  /// In ka, this message translates to:
+  /// **'მოიცავს {count} ჩანაწერს {total}-დან'**
+  String statsExportCovers(Object count, Object total);
+
+  /// No description provided for @statsExportNote.
+  ///
+  /// In ka, this message translates to:
+  /// **'ეს შეყვანილი მონაცემების დათვლაა და არა დასკვნა.'**
+  String get statsExportNote;
+
+  /// No description provided for @statsExportRecords.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩანაწერები'**
+  String get statsExportRecords;
 }
 
 class _AppLocalizationsDelegate

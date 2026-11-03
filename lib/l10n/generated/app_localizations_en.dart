@@ -2111,4 +2111,22 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get statsChartNote =>
       'The pattern of dots doesn\'t prove a relationship, so there is deliberately no trend line.';
+
+  @override
+  String get statsExportAction => 'Export results (CSV)';
+
+  @override
+  String get statsExportSubject => 'BTC statistics — CSV';
+
+  @override
+  String statsExportCovers(Object count, Object total) {
+    return 'Covers $count of $total records';
+  }
+
+  @override
+  String get statsExportNote =>
+      'These are counts of the values entered, not conclusions.';
+
+  @override
+  String get statsExportRecords => 'Records';
 }

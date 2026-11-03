@@ -2068,4 +2068,22 @@ class AppLocalizationsKa extends AppLocalizations {
   @override
   String get statsChartNote =>
       'წერტილების განლაგება კავშირს არ ამტკიცებს, ამიტომ ტენდენციის ხაზი განზრახ არ არის.';
+
+  @override
+  String get statsExportAction => 'შედეგების ექსპორტი (CSV)';
+
+  @override
+  String get statsExportSubject => 'ბტკ სტატისტიკა — CSV';
+
+  @override
+  String statsExportCovers(Object count, Object total) {
+    return 'მოიცავს $count ჩანაწერს $total-დან';
+  }
+
+  @override
+  String get statsExportNote =>
+      'ეს შეყვანილი მონაცემების დათვლაა და არა დასკვნა.';
+
+  @override
+  String get statsExportRecords => 'ჩანაწერები';
 }

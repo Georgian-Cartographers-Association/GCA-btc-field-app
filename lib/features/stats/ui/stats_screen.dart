@@ -5,24 +5,71 @@ import 'package:latlong2/latlong.dart';
 import '../../../models/btk_record.dart';
 import '../../records/domain/record_filter.dart';
 import '../../records/domain/btk_provider.dart';
+import '../../records/ui/record_filter_sheet.dart';
+import '../../../data/services/export_service.dart';
 import '../domain/geomass_analytics.dart';
 import '../domain/group_analytics.dart';
 import '../domain/record_analytics.dart';
 import '../domain/record_comparison.dart';
+import '../domain/results_export.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import 'compare_screen.dart';
 import 'mass_chart.dart';
 
+/// The altitude band step, kept here so an export matches what's on screen.
+final _bandStepProvider = StateProvider<int>((ref) => altitudeBandSteps.last);
+
 class StatsScreen extends ConsumerWidget {
   const StatsScreen({super.key});
+
+  Future<void> _export(BuildContext context, WidgetRef ref, List<BtkRecord> records,
+      int total, RecordFilter filter) async {
+    final l10n = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
+    final now = DateTime.now();
+    try {
+      await ExportService.shareResultsCsv(
+        buildResultsCsv(
+          records: records,
+          totalRecords: total,
+          filter: filter,
+          bandStep: ref.read(_bandStepProvider),
+          l10n: l10n,
+          now: now,
+        ),
+        'btc_statistics_${shortDate(now)}.csv',
+        l10n,
+      );
+    } catch (e) {
+      messenger.showSnackBar(SnackBar(content: Text(l10n.errorWithDetail('$e'))));
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final records = ref.watch(btkProvider);
+    final all = ref.watch(btkProvider);
+    final filter = ref.watch(recordFilterProvider);
+    final records = filter.apply(all);
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.statistics)),
-      body: records.isEmpty
+      appBar: AppBar(
+        title: Text(l10n.statistics),
+        actions: [
+          if (all.isNotEmpty)
+            IconButton(
+              icon: Icon(filter.isActive ? Icons.filter_alt : Icons.filter_alt_outlined),
+              tooltip: l10n.filterTitle,
+              onPressed: () => showRecordFilterSheet(context),
+            ),
+          if (records.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.file_download_outlined),
+              tooltip: l10n.statsExportAction,
+              onPressed: () => _export(context, ref, records, all.length, filter),
+            ),
+        ],
+      ),
+      body: all.isEmpty
           ? Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -34,7 +81,28 @@ class StatsScreen extends ConsumerWidget {
                 ],
               ),
             )
-          : _StatsBody(records: records),
+          : Column(
+              children: [
+                if (filter.isActive)
+                  ListTile(
+                    dense: true,
+                    leading: const Icon(Icons.filter_alt, size: 18),
+                    title: Text(l10n.filterShown(records.length, all.length)),
+                    trailing: TextButton(
+                      onPressed: () => ref
+                          .read(recordFilterProvider.notifier)
+                          .state = const RecordFilter(),
+                      child: Text(l10n.filterClear),
+                    ),
+                    onTap: () => showRecordFilterSheet(context),
+                  ),
+                Expanded(
+                  child: records.isEmpty
+                      ? const SizedBox.shrink()
+                      : _StatsBody(records: records),
+                ),
+              ],
+            ),
     );
   }
 }
@@ -418,20 +486,14 @@ Widget _cell(String? text, {bool bold = false}) => Padding(
       ),
     );
 
-class _AltitudeBands extends StatefulWidget {
+class _AltitudeBands extends ConsumerWidget {
   final List<BtkRecord> records;
   const _AltitudeBands({required this.records});
 
   @override
-  State<_AltitudeBands> createState() => _AltitudeBandsState();
-}
-
-class _AltitudeBandsState extends State<_AltitudeBands> {
-  int _step = altitudeBandSteps.last;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final step = ref.watch(_bandStepProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -442,15 +504,16 @@ class _AltitudeBandsState extends State<_AltitudeBands> {
             for (final s in altitudeBandSteps)
               ButtonSegment(value: s, label: Text('$s')),
           ],
-          selected: {_step},
+          selected: {step},
           showSelectedIcon: false,
-          onSelectionChanged: (v) => setState(() => _step = v.first),
+          onSelectionChanged: (v) =>
+              ref.read(_bandStepProvider.notifier).state = v.first,
         ),
         const SizedBox(height: 8),
         _GroupTable(
           firstColumn: l10n.statsAltitudeBand,
           unlabelled: l10n.statsNoAltitude,
-          groups: altitudeBands(widget.records, _step),
+          groups: altitudeBands(records, step),
         ),
         const SizedBox(height: 8),
         Text(l10n.statsBandNote,

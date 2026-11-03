@@ -647,5 +647,10 @@
   "statsChartTooFew": "The chart needs at least 2 points. There are {count} now.",
   "statsChartNoAltitude": "{count} records not shown: no altitude.",
   "statsChartUnreadable": "{count} records not shown: total can't be read.",
-  "statsChartNote": "The pattern of dots doesn't prove a relationship, so there is deliberately no trend line."
+  "statsChartNote": "The pattern of dots doesn't prove a relationship, so there is deliberately no trend line.",
+  "statsExportAction": "Export results (CSV)",
+  "statsExportSubject": "BTC statistics — CSV",
+  "statsExportCovers": "Covers {count} of {total} records",
+  "statsExportNote": "These are counts of the values entered, not conclusions.",
+  "statsExportRecords": "Records"
 }
