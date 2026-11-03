@@ -3128,6 +3128,144 @@ abstract class AppLocalizations {
   /// **'ტ/ჰა'**
   String get unitTHa;
 
+  /// No description provided for @compareAction.
+  ///
+  /// In ka, this message translates to:
+  /// **'შედარება'**
+  String get compareAction;
+
+  /// No description provided for @compareTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'ბტკ-ების შედარება'**
+  String get compareTitle;
+
+  /// No description provided for @compareOnlyDifferences.
+  ///
+  /// In ka, this message translates to:
+  /// **'მხოლოდ განსხვავებები'**
+  String get compareOnlyDifferences;
+
+  /// No description provided for @compareNoDifferences.
+  ///
+  /// In ka, this message translates to:
+  /// **'განსხვავება არ არის'**
+  String get compareNoDifferences;
+
+  /// No description provided for @compareLegend.
+  ///
+  /// In ka, this message translates to:
+  /// **'— არ არის შევსებული. ? შევსებულია, მაგრამ ვერ გამოიყენება: რიცხვი ვერ წაიკითხა ან სიღრმის ერთეული არ არის არჩეული. ჯამები მხოლოდ შეყვანილ მნიშვნელობებს აერთიანებს და დასკვნა არ არის.'**
+  String get compareLegend;
+
+  /// No description provided for @compareVegRows.
+  ///
+  /// In ka, this message translates to:
+  /// **'მცენარეულობის სტრიქონები'**
+  String get compareVegRows;
+
+  /// No description provided for @compareMaxHeight.
+  ///
+  /// In ka, this message translates to:
+  /// **'უდიდესი სიმაღლე (მ)'**
+  String get compareMaxHeight;
+
+  /// No description provided for @compareHorizons.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჰორიზონტების რაოდენობა'**
+  String get compareHorizons;
+
+  /// No description provided for @compareDeepest.
+  ///
+  /// In ka, this message translates to:
+  /// **'უდიდესი სიღრმე (სმ)'**
+  String get compareDeepest;
+
+  /// No description provided for @comparePedomass.
+  ///
+  /// In ka, this message translates to:
+  /// **'პედომასა, ჯამი (ტ/ჰა)'**
+  String get comparePedomass;
+
+  /// No description provided for @compareLithomass.
+  ///
+  /// In ka, this message translates to:
+  /// **'ლითომასა, ჯამი (ტ/ჰა)'**
+  String get compareLithomass;
+
+  /// No description provided for @compareHydromass.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჰიდრომასა, ჯამი (ტ/ჰა)'**
+  String get compareHydromass;
+
+  /// No description provided for @comparePhytomassWet.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფიტომასა სველი, ჯამი (ტ/ჰა)'**
+  String get comparePhytomassWet;
+
+  /// No description provided for @comparePhytomassDry.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფიტომასა მშრალი, ჯამი (ტ/ჰა)'**
+  String get comparePhytomassDry;
+
+  /// No description provided for @compareTreeWet.
+  ///
+  /// In ka, this message translates to:
+  /// **'ხე-მცენარეები სველი, ჯამი (ტ/ჰა)'**
+  String get compareTreeWet;
+
+  /// No description provided for @compareTreeDry.
+  ///
+  /// In ka, this message translates to:
+  /// **'ხე-მცენარეები მშრალი, ჯამი (ტ/ჰა)'**
+  String get compareTreeDry;
+
+  /// No description provided for @unitCm.
+  ///
+  /// In ka, this message translates to:
+  /// **'სმ'**
+  String get unitCm;
+
+  /// No description provided for @depthUnit.
+  ///
+  /// In ka, this message translates to:
+  /// **'სიღრმის ერთეული'**
+  String get depthUnit;
+
+  /// No description provided for @depthUnitNotChosen.
+  ///
+  /// In ka, this message translates to:
+  /// **'სიღრმის ერთეული არ არის არჩეული'**
+  String get depthUnitNotChosen;
+
+  /// No description provided for @qualityDepthUnitMissing.
+  ///
+  /// In ka, this message translates to:
+  /// **'აირჩიეთ სიღრმის ერთეული: სმ ან მ'**
+  String get qualityDepthUnitMissing;
+
+  /// No description provided for @hydromassInfoTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჰიდრომასის განმარტება'**
+  String get hydromassInfoTitle;
+
+  /// No description provided for @hydromassWetInfo.
+  ///
+  /// In ka, this message translates to:
+  /// **'სველი (ჰიდ.სვ.): ნიმუშის მასა ველზე აღებისას, მასში არსებული წყლის ჩათვლით.'**
+  String get hydromassWetInfo;
+
+  /// No description provided for @hydromassDryInfo.
+  ///
+  /// In ka, this message translates to:
+  /// **'მშრალი (ჰიდ.მშ.): იმავე ნიმუშის მასა გამოშრობის შემდეგ, წყლის გარეშე.'**
+  String get hydromassDryInfo;
+
   /// No description provided for @unitTM3.
   ///
   /// In ka, this message translates to:
@@ -3559,6 +3697,276 @@ abstract class AppLocalizations {
   /// In ka, this message translates to:
   /// **'ამ მოწყობილობაზე ანგარიში და ღრუბელი მიუწვდომელია. ჩანაწერები მხოლოდ აქ ინახება, ამიტომ დროდადრო გააკეთე სარეზერვო ასლი.'**
   String get onlyLocalStorageHere;
+
+  /// No description provided for @compareTiers.
+  ///
+  /// In ka, this message translates to:
+  /// **'იარუსები'**
+  String get compareTiers;
+
+  /// No description provided for @compareHorizonOrder.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჰორიზონტების რიგი'**
+  String get compareHorizonOrder;
+
+  /// No description provided for @statsVegStructure.
+  ///
+  /// In ka, this message translates to:
+  /// **'მცენარეულობის სტრუქტურა'**
+  String get statsVegStructure;
+
+  /// No description provided for @statsSoilHorizons.
+  ///
+  /// In ka, this message translates to:
+  /// **'ნიადაგის ჰორიზონტები'**
+  String get statsSoilHorizons;
+
+  /// No description provided for @statsRecordsWithData.
+  ///
+  /// In ka, this message translates to:
+  /// **'მონაცემი აქვს {count} ჩანაწერს {total}-დან'**
+  String statsRecordsWithData(Object count, Object total);
+
+  /// No description provided for @statsTierRecords.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩანაწ.'**
+  String get statsTierRecords;
+
+  /// No description provided for @statsTierSpecies.
+  ///
+  /// In ka, this message translates to:
+  /// **'სახეობა'**
+  String get statsTierSpecies;
+
+  /// No description provided for @statsNoTier.
+  ///
+  /// In ka, this message translates to:
+  /// **'იარუსის გარეშე'**
+  String get statsNoTier;
+
+  /// No description provided for @statsSpeciesFrequency.
+  ///
+  /// In ka, this message translates to:
+  /// **'სახეობები (რამდენ ჩანაწერშია)'**
+  String get statsSpeciesFrequency;
+
+  /// No description provided for @statsHorizonFrequency.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჰორიზონტები (რამდენ ჩანაწერშია)'**
+  String get statsHorizonFrequency;
+
+  /// No description provided for @statsHorizonOrders.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჰორიზონტების რიგი (რამდენ ჩანაწერშია)'**
+  String get statsHorizonOrders;
+
+  /// No description provided for @statsMoreItems.
+  ///
+  /// In ka, this message translates to:
+  /// **'და კიდევ {count}'**
+  String statsMoreItems(Object count);
+
+  /// No description provided for @statsAnalysisNote.
+  ///
+  /// In ka, this message translates to:
+  /// **'ეს შეყვანილი მონაცემების დათვლაა და არა დასკვნა. სხვანაირად დაწერილი სახელი ცალკე ითვლება. „?“ ნიშნავს, რომ მნიშვნელობა შევსებულია, მაგრამ ვერ გამოიყენება.'**
+  String get statsAnalysisNote;
+
+  /// No description provided for @statsGeomass.
+  ///
+  /// In ka, this message translates to:
+  /// **'გეომასა'**
+  String get statsGeomass;
+
+  /// No description provided for @statsGeomassTotals.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჯამები ჩანაწერების მიხედვით: უმცირესი და უდიდესი'**
+  String get statsGeomassTotals;
+
+  /// No description provided for @statsGeomassComponent.
+  ///
+  /// In ka, this message translates to:
+  /// **'მასა'**
+  String get statsGeomassComponent;
+
+  /// No description provided for @statsGeomassRange.
+  ///
+  /// In ka, this message translates to:
+  /// **'დიაპაზონი'**
+  String get statsGeomassRange;
+
+  /// No description provided for @statsDepthLayers.
+  ///
+  /// In ka, this message translates to:
+  /// **'სიღრმის ფენები (სმ, მასები ტ/ჰა)'**
+  String get statsDepthLayers;
+
+  /// No description provided for @statsDepthLayer.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფენა'**
+  String get statsDepthLayer;
+
+  /// No description provided for @statsDepthUnknown.
+  ///
+  /// In ka, this message translates to:
+  /// **'უცნობი'**
+  String get statsDepthUnknown;
+
+  /// No description provided for @statsPhytomassWet.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფიტომასა სველი'**
+  String get statsPhytomassWet;
+
+  /// No description provided for @statsPhytomassDry.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფიტომასა მშრალი'**
+  String get statsPhytomassDry;
+
+  /// No description provided for @statsGeomassNote.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფენები ზუსტად შეყვანილი სიღრმით ჯგუფდება. სიღრმე უცნობია, თუ არ არის შევსებული, ვერ წაიკითხა ან ერთეული არ არის არჩეული. ჯამში ერთი წაუკითხავი მნიშვნელობა მთელ ჯამს „?“-ად აქცევს.'**
+  String get statsGeomassNote;
+
+  /// No description provided for @statsAltitudeBands.
+  ///
+  /// In ka, this message translates to:
+  /// **'სიმაღლის ზოლები (მ)'**
+  String get statsAltitudeBands;
+
+  /// No description provided for @statsAltitudeBand.
+  ///
+  /// In ka, this message translates to:
+  /// **'ზოლი'**
+  String get statsAltitudeBand;
+
+  /// No description provided for @statsNoAltitude.
+  ///
+  /// In ka, this message translates to:
+  /// **'სიმაღლის გარეშე'**
+  String get statsNoAltitude;
+
+  /// No description provided for @statsBandNote.
+  ///
+  /// In ka, this message translates to:
+  /// **'ეს თანაბარი ზოლებია და არა სიმაღლებრივი სარტყლები. მასები ჩანაწერების ჯამების უმცირესი და უდიდესი მნიშვნელობაა (ტ/ჰა).'**
+  String get statsBandNote;
+
+  /// No description provided for @statsByYear.
+  ///
+  /// In ka, this message translates to:
+  /// **'წლების მიხედვით'**
+  String get statsByYear;
+
+  /// No description provided for @statsYear.
+  ///
+  /// In ka, this message translates to:
+  /// **'წელი'**
+  String get statsYear;
+
+  /// No description provided for @statsRepeatedPlaces.
+  ///
+  /// In ka, this message translates to:
+  /// **'რამდენჯერმე აღწერილი ადგილები'**
+  String get statsRepeatedPlaces;
+
+  /// No description provided for @statsRepeatedCount.
+  ///
+  /// In ka, this message translates to:
+  /// **'{count} ჩანაწერი, {first} – {last}'**
+  String statsRepeatedCount(Object count, Object first, Object last);
+
+  /// No description provided for @statsTimeNote.
+  ///
+  /// In ka, this message translates to:
+  /// **'ადგილი ემთხვევა მხოლოდ ერთნაირად დაწერილი ადგილმდებარეობით. ცხრილი აჩვენებს, რა არის შეყვანილი, და ცვლილებას არ ადასტურებს: წლებს შორის შეიძლება სხვადასხვა ადგილი იყოს აღწერილი. დააჭირე ადგილს შესადარებლად.'**
+  String get statsTimeNote;
+
+  /// No description provided for @statsChart.
+  ///
+  /// In ka, this message translates to:
+  /// **'გრაფიკი: თითო წერტილი ერთი ჩანაწერის ჯამია'**
+  String get statsChart;
+
+  /// No description provided for @statsChartAltitude.
+  ///
+  /// In ka, this message translates to:
+  /// **'სიმაღლე'**
+  String get statsChartAltitude;
+
+  /// No description provided for @statsChartMetres.
+  ///
+  /// In ka, this message translates to:
+  /// **'მ'**
+  String get statsChartMetres;
+
+  /// No description provided for @statsChartTap.
+  ///
+  /// In ka, this message translates to:
+  /// **'დააჭირე წერტილს, რომ ნახო რომელი ჩანაწერია.'**
+  String get statsChartTap;
+
+  /// No description provided for @statsChartTooFew.
+  ///
+  /// In ka, this message translates to:
+  /// **'გრაფიკს სულ მცირე 2 წერტილი სჭირდება. ახლა არის {count}.'**
+  String statsChartTooFew(Object count);
+
+  /// No description provided for @statsChartNoAltitude.
+  ///
+  /// In ka, this message translates to:
+  /// **'არ ჩანს {count} ჩანაწერი: სიმაღლე არ აქვს.'**
+  String statsChartNoAltitude(Object count);
+
+  /// No description provided for @statsChartUnreadable.
+  ///
+  /// In ka, this message translates to:
+  /// **'არ ჩანს {count} ჩანაწერი: ჯამი ვერ წაიკითხა.'**
+  String statsChartUnreadable(Object count);
+
+  /// No description provided for @statsChartNote.
+  ///
+  /// In ka, this message translates to:
+  /// **'წერტილების განლაგება კავშირს არ ამტკიცებს, ამიტომ ტენდენციის ხაზი განზრახ არ არის.'**
+  String get statsChartNote;
+
+  /// No description provided for @statsExportAction.
+  ///
+  /// In ka, this message translates to:
+  /// **'შედეგების ექსპორტი (CSV)'**
+  String get statsExportAction;
+
+  /// No description provided for @statsExportSubject.
+  ///
+  /// In ka, this message translates to:
+  /// **'ბტკ სტატისტიკა — CSV'**
+  String get statsExportSubject;
+
+  /// No description provided for @statsExportCovers.
+  ///
+  /// In ka, this message translates to:
+  /// **'მოიცავს {count} ჩანაწერს {total}-დან'**
+  String statsExportCovers(Object count, Object total);
+
+  /// No description provided for @statsExportNote.
+  ///
+  /// In ka, this message translates to:
+  /// **'ეს შეყვანილი მონაცემების დათვლაა და არა დასკვნა.'**
+  String get statsExportNote;
+
+  /// No description provided for @statsExportRecords.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩანაწერები'**
+  String get statsExportRecords;
 }
 
 class _AppLocalizationsDelegate

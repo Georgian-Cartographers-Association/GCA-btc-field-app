@@ -235,6 +235,7 @@ class BtkRecord {
 
   // Tree phytomass
   String experimentPlotSize;
+  String depthUnit;  // geomass depth: depthUnitCm, depthUnitM, or empty if not chosen
   List<TreePhytomassRow> treePhytomass;
 
   // Vertical structure
@@ -272,6 +273,7 @@ class BtkRecord {
     this.soilSurfaceFormation = '',
     List<GeomassRow>? geomasses,
     this.experimentPlotSize = '',
+    this.depthUnit = '',
     List<TreePhytomassRow>? treePhytomass,
     this.vertStructTypeName = '',
     this.vertStructIndex = '',
@@ -310,6 +312,7 @@ class BtkRecord {
         'soilSurfaceFormation': soilSurfaceFormation,
         'geomasses': geomasses.map((g) => g.toJson()).toList(),
         'experimentPlotSize': experimentPlotSize,
+        if (depthUnit.isNotEmpty) 'depthUnit': depthUnit,
         'treePhytomass': treePhytomass.map((t) => t.toJson()).toList(),
         'vertStructTypeName': vertStructTypeName,
         'vertStructIndex': vertStructIndex,
@@ -346,6 +349,7 @@ class BtkRecord {
       soilSurfaceFormation: _str(j['soilSurfaceFormation']),
       geomasses: _rows(j['geomasses'], GeomassRow.fromJson),
       experimentPlotSize: _str(j['experimentPlotSize']),
+      depthUnit: _str(j['depthUnit']),
       treePhytomass: _rows(j['treePhytomass'], TreePhytomassRow.fromJson),
       vertStructTypeName: _str(j['vertStructTypeName']),
       vertStructIndex: _str(j['vertStructIndex']),
@@ -363,4 +367,23 @@ class BtkRecord {
 
   MeasureRange? get vertHeightRange => Measures.vertHeight.range(vertStructHeight);
   double? get plotArea => Measures.plotSize.area(experimentPlotSize);
+
+  /// The depth of [row] in centimetres, for comparing records. Null while no
+  /// unit is chosen: older records have none, and guessing one would turn a
+  /// depth in metres into one a hundred times too small.
+  MeasureRange? depthRangeCm(GeomassRow row) {
+    final range = row.depthRange;
+    if (range == null) return null;
+    switch (depthUnit) {
+      case depthUnitCm:
+        return range;
+      case depthUnitM:
+        return MeasureRange(range.from * 100, range.to * 100);
+      default:
+        return null;
+    }
+  }
 }
+
+const depthUnitCm = 'cm';
+const depthUnitM = 'm';

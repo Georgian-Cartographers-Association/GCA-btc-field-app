@@ -1608,6 +1608,78 @@ class AppLocalizationsKa extends AppLocalizations {
   String get unitTHa => 'ტ/ჰა';
 
   @override
+  String get compareAction => 'შედარება';
+
+  @override
+  String get compareTitle => 'ბტკ-ების შედარება';
+
+  @override
+  String get compareOnlyDifferences => 'მხოლოდ განსხვავებები';
+
+  @override
+  String get compareNoDifferences => 'განსხვავება არ არის';
+
+  @override
+  String get compareLegend =>
+      '— არ არის შევსებული. ? შევსებულია, მაგრამ ვერ გამოიყენება: რიცხვი ვერ წაიკითხა ან სიღრმის ერთეული არ არის არჩეული. ჯამები მხოლოდ შეყვანილ მნიშვნელობებს აერთიანებს და დასკვნა არ არის.';
+
+  @override
+  String get compareVegRows => 'მცენარეულობის სტრიქონები';
+
+  @override
+  String get compareMaxHeight => 'უდიდესი სიმაღლე (მ)';
+
+  @override
+  String get compareHorizons => 'ჰორიზონტების რაოდენობა';
+
+  @override
+  String get compareDeepest => 'უდიდესი სიღრმე (სმ)';
+
+  @override
+  String get comparePedomass => 'პედომასა, ჯამი (ტ/ჰა)';
+
+  @override
+  String get compareLithomass => 'ლითომასა, ჯამი (ტ/ჰა)';
+
+  @override
+  String get compareHydromass => 'ჰიდრომასა, ჯამი (ტ/ჰა)';
+
+  @override
+  String get comparePhytomassWet => 'ფიტომასა სველი, ჯამი (ტ/ჰა)';
+
+  @override
+  String get comparePhytomassDry => 'ფიტომასა მშრალი, ჯამი (ტ/ჰა)';
+
+  @override
+  String get compareTreeWet => 'ხე-მცენარეები სველი, ჯამი (ტ/ჰა)';
+
+  @override
+  String get compareTreeDry => 'ხე-მცენარეები მშრალი, ჯამი (ტ/ჰა)';
+
+  @override
+  String get unitCm => 'სმ';
+
+  @override
+  String get depthUnit => 'სიღრმის ერთეული';
+
+  @override
+  String get depthUnitNotChosen => 'სიღრმის ერთეული არ არის არჩეული';
+
+  @override
+  String get qualityDepthUnitMissing => 'აირჩიეთ სიღრმის ერთეული: სმ ან მ';
+
+  @override
+  String get hydromassInfoTitle => 'ჰიდრომასის განმარტება';
+
+  @override
+  String get hydromassWetInfo =>
+      'სველი (ჰიდ.სვ.): ნიმუშის მასა ველზე აღებისას, მასში არსებული წყლის ჩათვლით.';
+
+  @override
+  String get hydromassDryInfo =>
+      'მშრალი (ჰიდ.მშ.): იმავე ნიმუშის მასა გამოშრობის შემდეგ, წყლის გარეშე.';
+
+  @override
   String get unitTM3 => 'ტ/მ³';
 
   @override
@@ -1858,4 +1930,160 @@ class AppLocalizationsKa extends AppLocalizations {
   @override
   String get onlyLocalStorageHere =>
       'ამ მოწყობილობაზე ანგარიში და ღრუბელი მიუწვდომელია. ჩანაწერები მხოლოდ აქ ინახება, ამიტომ დროდადრო გააკეთე სარეზერვო ასლი.';
+
+  @override
+  String get compareTiers => 'იარუსები';
+
+  @override
+  String get compareHorizonOrder => 'ჰორიზონტების რიგი';
+
+  @override
+  String get statsVegStructure => 'მცენარეულობის სტრუქტურა';
+
+  @override
+  String get statsSoilHorizons => 'ნიადაგის ჰორიზონტები';
+
+  @override
+  String statsRecordsWithData(Object count, Object total) {
+    return 'მონაცემი აქვს $count ჩანაწერს $total-დან';
+  }
+
+  @override
+  String get statsTierRecords => 'ჩანაწ.';
+
+  @override
+  String get statsTierSpecies => 'სახეობა';
+
+  @override
+  String get statsNoTier => 'იარუსის გარეშე';
+
+  @override
+  String get statsSpeciesFrequency => 'სახეობები (რამდენ ჩანაწერშია)';
+
+  @override
+  String get statsHorizonFrequency => 'ჰორიზონტები (რამდენ ჩანაწერშია)';
+
+  @override
+  String get statsHorizonOrders => 'ჰორიზონტების რიგი (რამდენ ჩანაწერშია)';
+
+  @override
+  String statsMoreItems(Object count) {
+    return 'და კიდევ $count';
+  }
+
+  @override
+  String get statsAnalysisNote =>
+      'ეს შეყვანილი მონაცემების დათვლაა და არა დასკვნა. სხვანაირად დაწერილი სახელი ცალკე ითვლება. „?“ ნიშნავს, რომ მნიშვნელობა შევსებულია, მაგრამ ვერ გამოიყენება.';
+
+  @override
+  String get statsGeomass => 'გეომასა';
+
+  @override
+  String get statsGeomassTotals =>
+      'ჯამები ჩანაწერების მიხედვით: უმცირესი და უდიდესი';
+
+  @override
+  String get statsGeomassComponent => 'მასა';
+
+  @override
+  String get statsGeomassRange => 'დიაპაზონი';
+
+  @override
+  String get statsDepthLayers => 'სიღრმის ფენები (სმ, მასები ტ/ჰა)';
+
+  @override
+  String get statsDepthLayer => 'ფენა';
+
+  @override
+  String get statsDepthUnknown => 'უცნობი';
+
+  @override
+  String get statsPhytomassWet => 'ფიტომასა სველი';
+
+  @override
+  String get statsPhytomassDry => 'ფიტომასა მშრალი';
+
+  @override
+  String get statsGeomassNote =>
+      'ფენები ზუსტად შეყვანილი სიღრმით ჯგუფდება. სიღრმე უცნობია, თუ არ არის შევსებული, ვერ წაიკითხა ან ერთეული არ არის არჩეული. ჯამში ერთი წაუკითხავი მნიშვნელობა მთელ ჯამს „?“-ად აქცევს.';
+
+  @override
+  String get statsAltitudeBands => 'სიმაღლის ზოლები (მ)';
+
+  @override
+  String get statsAltitudeBand => 'ზოლი';
+
+  @override
+  String get statsNoAltitude => 'სიმაღლის გარეშე';
+
+  @override
+  String get statsBandNote =>
+      'ეს თანაბარი ზოლებია და არა სიმაღლებრივი სარტყლები. მასები ჩანაწერების ჯამების უმცირესი და უდიდესი მნიშვნელობაა (ტ/ჰა).';
+
+  @override
+  String get statsByYear => 'წლების მიხედვით';
+
+  @override
+  String get statsYear => 'წელი';
+
+  @override
+  String get statsRepeatedPlaces => 'რამდენჯერმე აღწერილი ადგილები';
+
+  @override
+  String statsRepeatedCount(Object count, Object first, Object last) {
+    return '$count ჩანაწერი, $first – $last';
+  }
+
+  @override
+  String get statsTimeNote =>
+      'ადგილი ემთხვევა მხოლოდ ერთნაირად დაწერილი ადგილმდებარეობით. ცხრილი აჩვენებს, რა არის შეყვანილი, და ცვლილებას არ ადასტურებს: წლებს შორის შეიძლება სხვადასხვა ადგილი იყოს აღწერილი. დააჭირე ადგილს შესადარებლად.';
+
+  @override
+  String get statsChart => 'გრაფიკი: თითო წერტილი ერთი ჩანაწერის ჯამია';
+
+  @override
+  String get statsChartAltitude => 'სიმაღლე';
+
+  @override
+  String get statsChartMetres => 'მ';
+
+  @override
+  String get statsChartTap => 'დააჭირე წერტილს, რომ ნახო რომელი ჩანაწერია.';
+
+  @override
+  String statsChartTooFew(Object count) {
+    return 'გრაფიკს სულ მცირე 2 წერტილი სჭირდება. ახლა არის $count.';
+  }
+
+  @override
+  String statsChartNoAltitude(Object count) {
+    return 'არ ჩანს $count ჩანაწერი: სიმაღლე არ აქვს.';
+  }
+
+  @override
+  String statsChartUnreadable(Object count) {
+    return 'არ ჩანს $count ჩანაწერი: ჯამი ვერ წაიკითხა.';
+  }
+
+  @override
+  String get statsChartNote =>
+      'წერტილების განლაგება კავშირს არ ამტკიცებს, ამიტომ ტენდენციის ხაზი განზრახ არ არის.';
+
+  @override
+  String get statsExportAction => 'შედეგების ექსპორტი (CSV)';
+
+  @override
+  String get statsExportSubject => 'ბტკ სტატისტიკა — CSV';
+
+  @override
+  String statsExportCovers(Object count, Object total) {
+    return 'მოიცავს $count ჩანაწერს $total-დან';
+  }
+
+  @override
+  String get statsExportNote =>
+      'ეს შეყვანილი მონაცემების დათვლაა და არა დასკვნა.';
+
+  @override
+  String get statsExportRecords => 'ჩანაწერები';
 }

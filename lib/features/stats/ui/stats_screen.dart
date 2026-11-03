@@ -5,18 +5,71 @@ import 'package:latlong2/latlong.dart';
 import '../../../models/btk_record.dart';
 import '../../records/domain/record_filter.dart';
 import '../../records/domain/btk_provider.dart';
+import '../../records/ui/record_filter_sheet.dart';
+import '../../../data/services/export_service.dart';
+import '../domain/geomass_analytics.dart';
+import '../domain/group_analytics.dart';
+import '../domain/record_analytics.dart';
+import '../domain/record_comparison.dart';
+import '../domain/results_export.dart';
 import '../../../l10n/generated/app_localizations.dart';
+import 'compare_screen.dart';
+import 'mass_chart.dart';
+
+/// The altitude band step, kept here so an export matches what's on screen.
+final _bandStepProvider = StateProvider<int>((ref) => altitudeBandSteps.last);
 
 class StatsScreen extends ConsumerWidget {
   const StatsScreen({super.key});
 
+  Future<void> _export(BuildContext context, WidgetRef ref, List<BtkRecord> records,
+      int total, RecordFilter filter) async {
+    final l10n = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
+    final now = DateTime.now();
+    try {
+      await ExportService.shareResultsCsv(
+        buildResultsCsv(
+          records: records,
+          totalRecords: total,
+          filter: filter,
+          bandStep: ref.read(_bandStepProvider),
+          l10n: l10n,
+          now: now,
+        ),
+        'btc_statistics_${shortDate(now)}.csv',
+        l10n,
+      );
+    } catch (e) {
+      messenger.showSnackBar(SnackBar(content: Text(l10n.errorWithDetail('$e'))));
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final records = ref.watch(btkProvider);
+    final all = ref.watch(btkProvider);
+    final filter = ref.watch(recordFilterProvider);
+    final records = filter.apply(all);
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.statistics)),
-      body: records.isEmpty
+      appBar: AppBar(
+        title: Text(l10n.statistics),
+        actions: [
+          if (all.isNotEmpty)
+            IconButton(
+              icon: Icon(filter.isActive ? Icons.filter_alt : Icons.filter_alt_outlined),
+              tooltip: l10n.filterTitle,
+              onPressed: () => showRecordFilterSheet(context),
+            ),
+          if (records.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.file_download_outlined),
+              tooltip: l10n.statsExportAction,
+              onPressed: () => _export(context, ref, records, all.length, filter),
+            ),
+        ],
+      ),
+      body: all.isEmpty
           ? Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -28,7 +81,28 @@ class StatsScreen extends ConsumerWidget {
                 ],
               ),
             )
-          : _StatsBody(records: records),
+          : Column(
+              children: [
+                if (filter.isActive)
+                  ListTile(
+                    dense: true,
+                    leading: const Icon(Icons.filter_alt, size: 18),
+                    title: Text(l10n.filterShown(records.length, all.length)),
+                    trailing: TextButton(
+                      onPressed: () => ref
+                          .read(recordFilterProvider.notifier)
+                          .state = const RecordFilter(),
+                      child: Text(l10n.filterClear),
+                    ),
+                    onTap: () => showRecordFilterSheet(context),
+                  ),
+                Expanded(
+                  child: records.isEmpty
+                      ? const SizedBox.shrink()
+                      : _StatsBody(records: records),
+                ),
+              ],
+            ),
     );
   }
 }
@@ -61,6 +135,8 @@ class _StatsBody extends StatelessWidget {
             .length,
     };
     final maxM = monthly.values.fold(0, (a, b) => a > b ? a : b);
+    final analytics = RecordAnalytics.of(records);
+    final geomass = GeomassAnalytics.of(records);
 
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -108,6 +184,74 @@ class _StatsBody extends StatelessWidget {
           _SectionTitle(l10n.statsSoilTypes),
           const SizedBox(height: 8),
           _FreqBars(entries: soilFreq.take(5).toList(), color: Colors.brown),
+          const SizedBox(height: 20),
+        ],
+
+        // ── Vegetation structure ────────────────────────────────────────────
+        if (analytics.hasVegetation) ...[
+          _SectionTitle(l10n.statsVegStructure),
+          _DataShare(count: analytics.recordsWithVegetation, total: records.length),
+          const SizedBox(height: 8),
+          _TierTable(tiers: analytics.tiers),
+          if (analytics.species.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            _SubTitle(l10n.statsSpeciesFrequency),
+            _LongFreqBars(entries: analytics.species, color: Colors.green),
+          ],
+          const SizedBox(height: 20),
+        ],
+
+        // ── Soil horizons ───────────────────────────────────────────────────
+        if (analytics.hasHorizons) ...[
+          _SectionTitle(l10n.statsSoilHorizons),
+          _DataShare(count: analytics.recordsWithHorizons, total: records.length),
+          const SizedBox(height: 8),
+          _SubTitle(l10n.statsHorizonFrequency),
+          _LongFreqBars(entries: analytics.horizons, color: Colors.brown),
+          const SizedBox(height: 12),
+          _SubTitle(l10n.statsHorizonOrders),
+          _LongFreqBars(entries: analytics.horizonOrders, color: Colors.brown),
+          const SizedBox(height: 20),
+        ],
+
+        // ── Geomass ─────────────────────────────────────────────────────────
+        if (geomass.hasData) ...[
+          _SectionTitle(l10n.statsGeomass),
+          _DataShare(count: geomass.recordsWithData, total: records.length),
+          const SizedBox(height: 8),
+          if (geomass.components.isNotEmpty) ...[
+            _SubTitle(l10n.statsGeomassTotals),
+            _ComponentTable(components: geomass.components),
+            const SizedBox(height: 12),
+          ],
+          if (geomass.layers.isNotEmpty) ...[
+            _SubTitle(l10n.statsDepthLayers),
+            _LayerTable(layers: geomass.layers),
+            const SizedBox(height: 8),
+          ],
+          Text(l10n.statsGeomassNote,
+              style: TextStyle(fontSize: 12, color: cs.onSurfaceVariant)),
+          const SizedBox(height: 20),
+        ],
+
+        // ── Mass chart ──────────────────────────────────────────────────────
+        if (geomass.components.isNotEmpty) ...[
+          MassChart(records: records),
+          const SizedBox(height: 20),
+        ],
+
+        // ── Altitude bands ──────────────────────────────────────────────────
+        if (records.any((r) => r.altitude != null)) ...[
+          _AltitudeBands(records: records),
+          const SizedBox(height: 20),
+        ],
+
+        // ── Change over time ────────────────────────────────────────────────
+        _TimeSection(records: records),
+
+        if (analytics.hasVegetation || analytics.hasHorizons) ...[
+          Text(l10n.statsAnalysisNote,
+              style: TextStyle(fontSize: 12, color: cs.onSurfaceVariant)),
           const SizedBox(height: 20),
         ],
 
@@ -304,7 +448,310 @@ class _FreqBars extends StatelessWidget {
   }
 }
 
+/// [_FreqBars] for lists that can run long, saying how many were left out.
+class _LongFreqBars extends StatelessWidget {
+  static const _shown = 10;
+
+  final List<MapEntry<String, int>> entries;
+  final Color color;
+  const _LongFreqBars({required this.entries, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final hidden = entries.length - _shown;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _FreqBars(entries: entries.take(_shown).toList(), color: color),
+        if (hidden > 0)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
+            child: Text(l10n.statsMoreItems(hidden),
+                style: const TextStyle(fontSize: 11, color: Colors.grey)),
+          ),
+      ],
+    );
+  }
+}
+
+Widget _cell(String? text, {bool bold = false}) => Padding(
+      padding: const EdgeInsets.all(6),
+      child: Text(
+        text ?? '—',
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+    );
+
+class _AltitudeBands extends ConsumerWidget {
+  final List<BtkRecord> records;
+  const _AltitudeBands({required this.records});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final step = ref.watch(_bandStepProvider);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _SectionTitle(l10n.statsAltitudeBands),
+        const SizedBox(height: 8),
+        SegmentedButton<int>(
+          segments: [
+            for (final s in altitudeBandSteps)
+              ButtonSegment(value: s, label: Text('$s')),
+          ],
+          selected: {step},
+          showSelectedIcon: false,
+          onSelectionChanged: (v) =>
+              ref.read(_bandStepProvider.notifier).state = v.first,
+        ),
+        const SizedBox(height: 8),
+        _GroupTable(
+          firstColumn: l10n.statsAltitudeBand,
+          unlabelled: l10n.statsNoAltitude,
+          groups: altitudeBands(records, step),
+        ),
+        const SizedBox(height: 8),
+        Text(l10n.statsBandNote,
+            style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).colorScheme.onSurfaceVariant)),
+      ],
+    );
+  }
+}
+
+class _TimeSection extends StatelessWidget {
+  final List<BtkRecord> records;
+  const _TimeSection({required this.records});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final places = repeatedPlaces(records);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _SectionTitle(l10n.statsByYear),
+        const SizedBox(height: 8),
+        _GroupTable(
+          firstColumn: l10n.statsYear,
+          unlabelled: '',
+          groups: yearGroups(records),
+        ),
+        if (places.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          _SubTitle(l10n.statsRepeatedPlaces),
+          Card(
+            child: Column(
+              children: [
+                for (final p in places)
+                  ListTile(
+                    dense: true,
+                    title: Text(p.place),
+                    subtitle: Text(l10n.statsRepeatedCount(
+                        p.records.length, shortDate(p.first), shortDate(p.last))),
+                    trailing: const Icon(Icons.compare_arrows),
+                    onTap: () => CompareScreen.open(context, p.records),
+                  ),
+              ],
+            ),
+          ),
+        ],
+        const SizedBox(height: 8),
+        Text(l10n.statsTimeNote,
+            style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).colorScheme.onSurfaceVariant)),
+        const SizedBox(height: 20),
+      ],
+    );
+  }
+}
+
+class _GroupTable extends StatelessWidget {
+  final String firstColumn;
+  final String unlabelled;
+  final List<RecordGroup> groups;
+  const _GroupTable({
+    required this.firstColumn,
+    required this.unlabelled,
+    required this.groups,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final masses = usedMassColumns(groups);
+    return Card(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.all(6),
+        child: Table(
+          defaultColumnWidth: const FixedColumnWidth(96),
+          columnWidths: const {
+            0: FixedColumnWidth(84),
+            1: FixedColumnWidth(54),
+            2: FixedColumnWidth(72),
+          },
+          children: [
+            TableRow(children: [
+              _cell(firstColumn, bold: true),
+              _cell(l10n.statsTierRecords, bold: true),
+              _cell(l10n.statsTierSpecies, bold: true),
+              for (final i in masses) _cell(geomassComponents[i].label(l10n), bold: true),
+            ]),
+            for (final g in groups)
+              TableRow(children: [
+                _cell(g.label ?? unlabelled),
+                _cell('${g.records}'),
+                _cell('${g.species}'),
+                for (final i in masses) _cell(g.masses[i].text),
+              ]),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ComponentTable extends StatelessWidget {
+  final List<ComponentSummary> components;
+  const _ComponentTable({required this.components});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(6),
+        child: Table(
+          columnWidths: const {
+            0: FlexColumnWidth(5),
+            1: FlexColumnWidth(2),
+            2: FlexColumnWidth(4),
+          },
+          children: [
+            TableRow(children: [
+              _cell(l10n.statsGeomassComponent, bold: true),
+              _cell(l10n.statsTierRecords, bold: true),
+              _cell(l10n.statsGeomassRange, bold: true),
+            ]),
+            for (final c in components)
+              TableRow(children: [
+                _cell(c.component.label(l10n)),
+                _cell('${c.records}'),
+                _cell(c.totals.text),
+              ]),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LayerTable extends StatelessWidget {
+  final List<DepthLayer> layers;
+  const _LayerTable({required this.layers});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Card(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.all(6),
+        child: Table(
+          defaultColumnWidth: const FixedColumnWidth(84),
+          columnWidths: const {
+            0: FixedColumnWidth(64),
+            1: FixedColumnWidth(54),
+          },
+          children: [
+            TableRow(children: [
+              _cell(l10n.statsDepthLayer, bold: true),
+              _cell(l10n.statsTierRecords, bold: true),
+              for (final c in layerColumns) _cell(c.label(l10n), bold: true),
+            ]),
+            for (final layer in layers)
+              TableRow(children: [
+                _cell(layer.text ?? l10n.statsDepthUnknown),
+                _cell('${layer.records}'),
+                for (final v in layer.values) _cell(v.text),
+              ]),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TierTable extends StatelessWidget {
+  final List<TierSummary> tiers;
+  const _TierTable({required this.tiers});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(6),
+        child: Table(
+          columnWidths: const {
+            0: FlexColumnWidth(3),
+            1: FlexColumnWidth(2),
+            2: FlexColumnWidth(2),
+            3: FlexColumnWidth(3),
+          },
+          children: [
+            TableRow(children: [
+              _cell(l10n.vegTier, bold: true),
+              _cell(l10n.statsTierRecords, bold: true),
+              _cell(l10n.statsTierSpecies, bold: true),
+              _cell(l10n.vegHeightM, bold: true),
+            ]),
+            for (final t in tiers)
+              TableRow(children: [
+                _cell(t.tier.isEmpty ? l10n.statsNoTier : t.tier),
+                _cell('${t.records}'),
+                _cell('${t.species}'),
+                _cell(rangeText(t.minHeight, t.maxHeight, t.unreadableHeights)),
+              ]),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
+
+class _DataShare extends StatelessWidget {
+  final int count;
+  final int total;
+  const _DataShare({required this.count, required this.total});
+
+  @override
+  Widget build(BuildContext context) => Text(
+        AppLocalizations.of(context)!.statsRecordsWithData(count, total),
+        style: const TextStyle(fontSize: 11, color: Colors.grey),
+      );
+}
+
+class _SubTitle extends StatelessWidget {
+  final String text;
+  const _SubTitle(this.text);
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(bottom: 4),
+        child: Text(text, style: const TextStyle(fontSize: 12)),
+      );
+}
 
 class _Card extends StatelessWidget {
   final String label;
