@@ -17,6 +17,10 @@ import '../../features/settings/domain/settings_provider.dart';
 import '../../models/gps_track.dart';
 import '../../database/btk_database.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../../models/record_quality.dart';
+import '../../features/records/domain/record_filter.dart';
+import 'pdf_map.dart';
+import 'records_workbook.dart';
 
 class ExportService {
 
@@ -43,7 +47,9 @@ class ExportService {
       'ID,თარიღი,განედი,გრძედი,ადგილმდებარეობა,'
       'გეოლ.ფ.,რელიეფი,მორფ.დახ.,გეომ.პრ.,მიგ.რეჟ.,დატ.ხ.,'
       'ნიადაგ.ტიპი,გეოჰ.ინდ.,ნ.ზ.ფ.ტ.,'
-      'ვ.ს.ტიპ.,ვ.ს.ინდ.,ვ.ს.სიმ.',
+      'ვ.ს.ტიპ.,ვ.ს.ინდ.,ვ.ს.სიმ.,'
+      // Added later, and last, so reading the older columns by position still works.
+      'სახელი,ჯგუფი,სიმაღლე,ასპექტი,ნიად.პროფ.დახ.,ვ.ს.აღწ.,ექსპ.ნაკვ.,სიღ.ერთ.',
     );
     for (final r in records) {
       final (latStr, lonStr) = _fmtCoordPair(
@@ -66,6 +72,14 @@ class ExportService {
         _q(r.vertStructTypeName),
         _q(r.vertStructIndex),
         _q(r.vertStructHeight),
+        _q(r.name),
+        _q(r.group),
+        r.altitude == null ? '' : _plain(r.altitude!),
+        r.aspect == null ? '' : _plain(r.aspect!),
+        _q(r.soilProfileDesc),
+        _q(r.vertStructDesc),
+        _q(r.experimentPlotSize),
+        _q(r.depthUnit),
       ].join(','));
     }
     return buf.toString();
@@ -103,7 +117,16 @@ class ExportService {
     );
   }
 
-  static String _q(String s) => '"${s.replaceAll('"', '""')}"';
+  // Web prints a whole double as "1880" and native as "1880.0".
+  static String _plain(double v) =>
+      v == v.truncateToDouble() ? v.toInt().toString() : v.toString();
+
+  // A spreadsheet runs a cell starting with one of these as a formula, and a name
+  // can come from an imported file. A plain negative number is left alone.
+  static String _q(String s) {
+    final safe = RegExp(r'^[=+@\t\r]|^-(?!\d)').hasMatch(s) ? "'$s" : s;
+    return '"${safe.replaceAll('"', '""')}"';
+  }
 
   // ─── GeoJSON ──────────────────────────────────────────────────────────────────
 
@@ -134,6 +157,18 @@ class ExportService {
           'vert_struct_type': r.vertStructTypeName,
           'vert_struct_index': r.vertStructIndex,
           'vert_struct_height': r.vertStructHeight,
+          'name': r.name,
+          'group': r.group,
+          'altitude': r.altitude,
+          'aspect': r.aspect,
+          'soil_profile_desc': r.soilProfileDesc,
+          'vert_struct_desc': r.vertStructDesc,
+          'experiment_plot_size': r.experimentPlotSize,
+          'depth_unit': r.depthUnit,
+          'vegetation': _filledRows(r.vegetation, (v) => v.toJson()),
+          'soil_horizons': _filledRows(r.soilHorizons, (h) => h.toJson()),
+          'geomasses': _filledRows(r.geomasses, (g) => g.toJson()),
+          'tree_phytomass': _filledRows(r.treePhytomass, (t) => t.toJson()),
         },
       };
     }).toList();
@@ -149,6 +184,10 @@ class ExportService {
     });
   }
 
+  static List<Map<String, dynamic>> _filledRows<T>(
+          List<T> rows, Map<String, dynamic> Function(T) json) =>
+      rows.map(json).where((row) => !isBlankRow(row)).toList();
+
   static Future<void> shareGeoJson(
       List<BtkRecord> records, AppLocalizations l10n) async {
     final json = buildGeoJson(records);
@@ -162,9 +201,18 @@ class ExportService {
   static Future<void> shareCsv(List<BtkRecord> records, AppLocalizations l10n,
       {ExportCoordFormat coordFormat = ExportCoordFormat.dd}) async {
     final csv = buildCsv(records, coordFormat: coordFormat);
-    final bytes = Uint8List.fromList(utf8.encode(csv));
+    final bytes = Uint8List.fromList(utf8.encode('\uFEFF$csv'));
     final file = XFile.fromData(bytes, name: 'btk_records.csv', mimeType: 'text/csv');
     await _shareFiles([file], subject: l10n.shareRecordsCsv);
+  }
+
+  static Future<void> shareXlsx(List<BtkRecord> records, AppLocalizations l10n) async {
+    final file = XFile.fromData(
+      buildRecordsWorkbook(records, l10n),
+      name: 'btc_records.xlsx',
+      mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    );
+    await _shareFiles([file], subject: l10n.shareRecordsXlsx);
   }
 
   /// Starts with a byte order mark, without which Excel misreads Georgian text.
@@ -176,7 +224,7 @@ class ExportService {
 
   // ─── PDF ─────────────────────────────────────────────────────────────────────
 
-  static Future<Uint8List> buildPdf(List<BtkRecord> records) async {
+  static Future<Uint8List> buildPdf(List<BtkRecord> records, {TileFetcher? fetchTile}) async {
     // Bundled, so Georgian text prints without a network connection.
     final geoFont = pw.Font.ttf(
         await rootBundle.load('assets/fonts/NotoSansGeorgian-Regular.ttf'));
@@ -185,6 +233,8 @@ class ExportService {
             {double size = 10, bool bold = false, pw.Font? font}) =>
         pw.TextStyle(
           font: font ?? geoFont,
+          // The Georgian font has no superscripts, which print as black boxes.
+          fontFallback: [pw.Font.helvetica()],
           fontSize: size,
           fontWeight: bold ? pw.FontWeight.bold : pw.FontWeight.normal,
         );
@@ -193,7 +243,14 @@ class ExportService {
     final generalImgMap = <String, List<pw.MemoryImage>>{};
     final soilImgMap = <String, List<pw.MemoryImage>>{};
     final vertImgMap = <String, List<pw.MemoryImage>>{};
+    final maps = <String, List<PlacedTile>>{};
+    final mapLoader = PdfMapLoader(fetch: fetchTile);
     for (final r in records) {
+      final point = r.mapPoint;
+      if (point != null) {
+        final map = await mapLoader.load(point.latitude, point.longitude);
+        if (map != null) maps[r.id] = map;
+      }
       generalImgMap[r.id] = await _loadPdfImages(r.id);
       soilImgMap[r.id] = await _loadPdfImages('${r.id}_soil');
       vertImgMap[r.id] = await _loadPdfImages('${r.id}_vertStruct');
@@ -226,12 +283,21 @@ class ExportService {
             pw.SizedBox(height: 8),
             // Basic info
             _pdfRow('ID', r.id, style),
+            if (r.name.isNotEmpty) _pdfRow('სახელი', r.name, style),
+            if (r.group.isNotEmpty) _pdfRow('ჯგუფი', r.group, style),
             _pdfRow('თარიღი', r.date.toString().split(' ')[0], style),
             if (r.latitude != null && r.longitude != null)
               _pdfRow('კოორდ.',
                   '${r.latitude!.toStringAsFixed(6)}, ${r.longitude!.toStringAsFixed(6)}',
                   style),
+            if (r.altitude != null)
+              _pdfRow('სიმაღლე', '${_plain(r.altitude!)} მ', style),
+            if (r.aspect != null) _pdfRow('ასპექტი', '${_plain(r.aspect!)}°', style),
             _pdfRow('ადგილმდ.', r.location, style),
+            if (maps[r.id] != null) ...[
+              pw.SizedBox(height: 4),
+              _pdfMap(maps[r.id]!, style),
+            ],
             _pdfSep,
             // Physical geo
             _pdfHeader('ფიზიკურ-გეოგრაფიული დახასიათება', style),
@@ -243,11 +309,12 @@ class ExportService {
             _pdfRow('დატ. ხ.', r.moistureDegree, style),
             _pdfSep,
             // Vegetation table
-            if (r.vegetation.isNotEmpty) ...[
+            if (r.vegetation.any((v) => !isBlankRow(v.toJson()))) ...[
               _pdfHeader('მცენარეულობა', style),
               pw.TableHelper.fromTextArray(
                 headers: ['იარ.', 'სიმ.', 'სიმძლ.', 'ფენოფ.', 'სახეობა'],
                 data: r.vegetation
+                    .where((v) => !isBlankRow(v.toJson()))
                     .map((v) =>
                         [v.tier, v.height, v.density, v.phenophase, v.species])
                     .toList(),
@@ -262,10 +329,11 @@ class ExportService {
             _pdfHeader('ნიადაგი', style),
             _pdfRow('ტიპი', r.soilTypeName, style),
             _pdfRow('პროფ. დახ.', r.soilProfileDesc, style),
-            if (r.soilHorizons.isNotEmpty)
+            if (r.soilHorizons.any((h) => !isBlankRow(h.toJson())))
               pw.TableHelper.fromTextArray(
                 headers: ['ჰ-ტი', 'დახასიათება'],
                 data: r.soilHorizons
+                    .where((h) => !isBlankRow(h.toJson()))
                     .map((h) => [h.horizon, h.description])
                     .toList(),
                 columnWidths: {
@@ -283,6 +351,13 @@ class ExportService {
               ..._pdfPhotoRows(soilImgs),
             ],
             _pdfSep,
+            // Geomasses and tree phytomass
+            if (r.geomasses.any((g) => !isBlankRow(g.toJson())) ||
+                r.treePhytomass.any((t) => !isBlankRow(t.toJson())) ||
+                r.experimentPlotSize.isNotEmpty) ...[
+              ..._pdfGeomass(r, style),
+              _pdfSep,
+            ],
             // Vertical structure
             _pdfHeader('ბტკ-ის ვერტიკალური სტრუქტურა', style),
             _pdfRow('ტიპი', r.vertStructTypeName, style),
@@ -304,6 +379,142 @@ class ExportService {
     }
 
     return doc.save();
+  }
+
+  static pw.Widget _pdfMap(List<PlacedTile> tiles,
+      pw.TextStyle Function({double size, bool bold, pw.Font? font}) style) {
+    const pageWidth = 531.0;
+    const scale = pageWidth / pdfMapWidth;
+    const marker = 10.0;
+    return pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.end,
+      children: [
+        pw.ClipRect(
+          child: pw.SizedBox(
+            width: pageWidth,
+            height: pdfMapHeight * scale,
+            child: pw.Stack(
+              overflow: pw.Overflow.clip,
+              children: [
+                for (final t in tiles)
+                  pw.Positioned(
+                    left: t.left * scale,
+                    top: t.top * scale,
+                    child: pw.Image(pw.MemoryImage(t.bytes),
+                        width: 256 * scale, height: 256 * scale),
+                  ),
+                pw.Positioned(
+                  left: pageWidth / 2 - marker / 2,
+                  top: pdfMapHeight * scale / 2 - marker / 2,
+                  child: pw.Container(
+                    width: marker,
+                    height: marker,
+                    decoration: pw.BoxDecoration(
+                      color: PdfColors.red,
+                      shape: pw.BoxShape.circle,
+                      border: pw.Border.all(color: PdfColors.white, width: 1.5),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        // OpenStreetMap's licence requires this credit wherever the map shows.
+        pw.Text('© OpenStreetMap contributors', style: style(size: 7)),
+      ],
+    );
+  }
+
+  static List<pw.Widget> _pdfGeomass(BtkRecord r,
+      pw.TextStyle Function({double size, bool bold, pw.Font? font}) style) {
+    final depthUnit = switch (r.depthUnit) {
+      depthUnitCm => ' (სმ)',
+      depthUnitM => ' (მ)',
+      _ => '',
+    };
+    pw.Widget table(List<String> headers, List<List<String>> rows) =>
+        pw.TableHelper.fromTextArray(
+          headers: headers,
+          data: rows,
+          headerStyle: style(bold: true, size: 7),
+          cellStyle: style(size: 7),
+          cellPadding: const pw.EdgeInsets.all(2),
+          headerDecoration: const pw.BoxDecoration(color: PdfColors.green100),
+          border: pw.TableBorder.all(color: PdfColors.grey400, width: 0.5),
+        );
+    final geomasses = r.geomasses.where((g) => !isBlankRow(g.toJson())).toList();
+    final trees = r.treePhytomass.where((t) => !isBlankRow(t.toJson())).toList();
+    return [
+      _pdfHeader('გეომასების კვლევა', style),
+      if (geomasses.isNotEmpty)
+        table([
+          'სექ.',
+          'სიღ.$depthUnit',
+          'პედ.მოც. (გრ/სმ³)',
+          'პედ.რ. (ტ/ჰა)',
+          'ლით.რ. (ტ/ჰა)',
+          'ლით.სმ. (გრ/სმ³)',
+          'ჰიდ.რ. (ტ/ჰა)',
+          'ჰიდ.სვ.',
+          'ჰიდ.მშ.',
+          'ფიტ.სვ. (ტ/ჰა)',
+          'ფიტ.მშ. (ტ/ჰა)',
+        ], [
+          for (final g in geomasses)
+            [
+              g.section,
+              g.depth,
+              g.pedomassBulk,
+              g.pedomassQty,
+              g.lithomassQty,
+              g.lithomassDensity,
+              g.hydromassQty,
+              g.hydromassWet,
+              g.hydromassDry,
+              g.phytomassWet,
+              g.phytomassDry,
+            ],
+        ]),
+      if (r.experimentPlotSize.isNotEmpty) ...[
+        pw.SizedBox(height: 4),
+        _pdfRow('ექსპ. ნაკვ. ზომა', r.experimentPlotSize, style),
+      ],
+      if (trees.isNotEmpty) ...[
+        pw.SizedBox(height: 4),
+        _pdfHeader('ხე-მცენარეების ფიტომასა (ტ/ჰა)', style),
+        table([
+          'სახ.',
+          'მ.წ. (ტ/მ³)',
+          'სვ.მ.',
+          'სვ.ფ.',
+          'სვ.ტ.',
+          'სვ.ფეს.',
+          'სვ.ჯ.',
+          'მშ.მ.',
+          'მშ.ფ.',
+          'მშ.ტ.',
+          'მშ.ფეს.',
+          'მშ.ჯ.',
+        ], [
+          for (final t in trees)
+            [
+              t.species,
+              t.bulkDensity,
+              t.wetWood,
+              t.wetLeaves,
+              t.wetBranches,
+              t.wetRoots,
+              t.wetTotal,
+              t.dryWood,
+              t.dryLeaves,
+              t.dryBranches,
+              t.dryRoots,
+              t.dryTotal,
+            ],
+        ]),
+      ],
+    ];
   }
 
   static Future<List<pw.MemoryImage>> _loadPdfImages(String photoKey) async {
@@ -591,20 +802,12 @@ class ExportService {
     for (final r in records) {
       if (r.latitude == null || r.longitude == null) continue;
       final title = r.name.isNotEmpty ? r.name : 'ბტკ #${r.id}';
-      final desc = [
-        'ID: ${r.id}',
-        'თარიღი: ${_fmtDate(r.date)}',
-        if (r.location.isNotEmpty) 'ლოკაცია: ${r.location}',
-        if (r.geologicalFormation.isNotEmpty) 'გეოლ. ფორმაცია: ${r.geologicalFormation}',
-        if (r.reliefType.isNotEmpty) 'რელიეფი: ${r.reliefType}',
-        if (r.soilTypeName.isNotEmpty) 'ნიადაგი: ${r.soilTypeName}',
-        if (r.moistureDegree.isNotEmpty) 'ტენიანობა: ${r.moistureDegree}',
-      ].join('\n');
+      final desc = _kmlDescription(r);
       final alt = r.altitude ?? 0.0;
       sb
         ..writeln('  <Placemark>')
-        ..writeln('    <name><![CDATA[$title]]></name>')
-        ..writeln('    <description><![CDATA[$desc]]></description>')
+        ..writeln('    <name><![CDATA[${_cdata(title)}]]></name>')
+        ..writeln('    <description><![CDATA[${_cdata(desc)}]]></description>')
         ..writeln('    <Point>')
         ..writeln('      <coordinates>${r.longitude},'
             '${r.latitude},$alt</coordinates>')
@@ -615,6 +818,47 @@ class ExportService {
     sb.writeln('</Document>');
     sb.writeln('</kml>');
     return sb.toString();
+  }
+
+  static String _cdata(String s) => s.replaceAll(']]>', ']]]]><![CDATA[>');
+
+  static String _kmlDescription(BtkRecord r) {
+    String line(String label, String value) => value.isEmpty ? '' : '$label: $value';
+    String rows<T>(String title, List<T> table, Map<String, dynamic> Function(T) json) {
+      final filled = _filledRows(table, json);
+      if (filled.isEmpty) return '';
+      final body = filled.map((row) =>
+          row.values.where((v) => '$v'.trim().isNotEmpty).join(' | '));
+      return '$title:\n${body.join('\n')}';
+    }
+
+    return [
+      'ID: ${r.id}',
+      'თარიღი: ${_fmtDate(r.date)}',
+      line('ჯგუფი', r.group),
+      line('სიმაღლე', r.altitude == null ? '' : _plain(r.altitude!)),
+      line('ასპექტი', r.aspect == null ? '' : _plain(r.aspect!)),
+      line('ლოკაცია', r.location),
+      line('გეოლ. ფორმაცია', r.geologicalFormation),
+      line('რელიეფი', r.reliefType),
+      line('მორფ. დახ.', r.morphologicalDesc),
+      line('გეომ. პროც.', r.geomorphProcesses),
+      line('მიგრაცია', r.migrationRegime),
+      line('ტენიანობა', r.moistureDegree),
+      line('ნიადაგი', r.soilTypeName),
+      line('ნიად. პროფილი', r.soilProfileDesc),
+      line('გეოჰ. ინდექსი', r.geohorizonIndex),
+      line('ნ.ზ.ფ.ტ.', r.soilSurfaceFormation),
+      line('ექსპ. ნაკვ.', r.experimentPlotSize),
+      line('ვ.ს. ტიპი', r.vertStructTypeName),
+      line('ვ.ს. ინდექსი', r.vertStructIndex),
+      line('ვ.ს. სიმაღლე', r.vertStructHeight),
+      line('ვ.ს. აღწერა', r.vertStructDesc),
+      rows('მცენარეულობა', r.vegetation, (v) => v.toJson()),
+      rows('ჰორიზონტები', r.soilHorizons, (h) => h.toJson()),
+      rows('გეომასა', r.geomasses, (g) => g.toJson()),
+      rows('ხე-მცენარეები', r.treePhytomass, (t) => t.toJson()),
+    ].where((l) => l.isNotEmpty).join('\n');
   }
 
   static Future<void> shareKml(

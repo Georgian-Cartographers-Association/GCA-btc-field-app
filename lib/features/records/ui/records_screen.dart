@@ -220,6 +220,8 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
           await ExportService.shareGeoJson(records, l10n);
         case 'csv':
           await ExportService.shareCsv(records, l10n, coordFormat: coordFmt);
+        case 'xlsx':
+          await ExportService.shareXlsx(records, l10n);
         case 'pdf':
           if (mounted) await PdfPreviewScreen.open(context, records);
       }
@@ -459,6 +461,14 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
                         child: ListTile(
                           leading: Icon(Icons.table_chart_outlined),
                           title: Text('CSV (Excel/Sheets)'),
+                          contentPadding: EdgeInsets.zero,
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: 'xlsx',
+                        child: ListTile(
+                          leading: Icon(Icons.grid_on_outlined),
+                          title: Text(l10n.exportExcelAll),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
