@@ -14,6 +14,7 @@ import '../../../data/services/update_service.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../pdf/ui/pdf_preview_screen.dart';
 import '../../settings/domain/settings_provider.dart';
+import '../../stats/ui/compare_screen.dart';
 
 class RecordsScreen extends ConsumerStatefulWidget {
   const RecordsScreen({super.key});
@@ -353,8 +354,16 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
                 icon: const Icon(Icons.close),
                 onPressed: _clearSelection,
               ),
-              title: Text(l10n.recordsCount(_selected.length)),
+              // Just the number, which stays readable beside all the actions.
+              title: Text('${_selected.length}'),
               actions: [
+                IconButton(
+                  icon: const Icon(Icons.compare_arrows),
+                  tooltip: l10n.compareAction,
+                  onPressed: _selected.length < 2
+                      ? null
+                      : () => CompareScreen.open(context, _selectedRecords()),
+                ),
                 IconButton(
                   icon: const Icon(Icons.folder_outlined),
                   tooltip: l10n.setGroup,

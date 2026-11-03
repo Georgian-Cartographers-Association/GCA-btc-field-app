@@ -1653,6 +1653,55 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unitTHa => 't/ha';
 
   @override
+  String get compareAction => 'Compare';
+
+  @override
+  String get compareTitle => 'Compare BTCs';
+
+  @override
+  String get compareOnlyDifferences => 'Only differences';
+
+  @override
+  String get compareNoDifferences => 'No differences';
+
+  @override
+  String get compareLegend =>
+      '— not filled in. ? filled in but not usable: the number couldn\'t be read, or no depth unit is chosen. Totals only add the entered values and are not a conclusion.';
+
+  @override
+  String get compareVegRows => 'Vegetation rows';
+
+  @override
+  String get compareMaxHeight => 'Greatest height (m)';
+
+  @override
+  String get compareHorizons => 'Number of horizons';
+
+  @override
+  String get compareDeepest => 'Greatest depth (cm)';
+
+  @override
+  String get comparePedomass => 'Pedomass, total (t/ha)';
+
+  @override
+  String get compareLithomass => 'Lithomass, total (t/ha)';
+
+  @override
+  String get compareHydromass => 'Hydromass, total (t/ha)';
+
+  @override
+  String get comparePhytomassWet => 'Phytomass wet, total (t/ha)';
+
+  @override
+  String get comparePhytomassDry => 'Phytomass dry, total (t/ha)';
+
+  @override
+  String get compareTreeWet => 'Trees wet, total (t/ha)';
+
+  @override
+  String get compareTreeDry => 'Trees dry, total (t/ha)';
+
+  @override
   String get unitCm => 'cm';
 
   @override

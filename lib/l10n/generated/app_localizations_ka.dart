@@ -1608,6 +1608,55 @@ class AppLocalizationsKa extends AppLocalizations {
   String get unitTHa => 'ტ/ჰა';
 
   @override
+  String get compareAction => 'შედარება';
+
+  @override
+  String get compareTitle => 'ბტკ-ების შედარება';
+
+  @override
+  String get compareOnlyDifferences => 'მხოლოდ განსხვავებები';
+
+  @override
+  String get compareNoDifferences => 'განსხვავება არ არის';
+
+  @override
+  String get compareLegend =>
+      '— არ არის შევსებული. ? შევსებულია, მაგრამ ვერ გამოიყენება: რიცხვი ვერ წაიკითხა ან სიღრმის ერთეული არ არის არჩეული. ჯამები მხოლოდ შეყვანილ მნიშვნელობებს აერთიანებს და დასკვნა არ არის.';
+
+  @override
+  String get compareVegRows => 'მცენარეულობის სტრიქონები';
+
+  @override
+  String get compareMaxHeight => 'უდიდესი სიმაღლე (მ)';
+
+  @override
+  String get compareHorizons => 'ჰორიზონტების რაოდენობა';
+
+  @override
+  String get compareDeepest => 'უდიდესი სიღრმე (სმ)';
+
+  @override
+  String get comparePedomass => 'პედომასა, ჯამი (ტ/ჰა)';
+
+  @override
+  String get compareLithomass => 'ლითომასა, ჯამი (ტ/ჰა)';
+
+  @override
+  String get compareHydromass => 'ჰიდრომასა, ჯამი (ტ/ჰა)';
+
+  @override
+  String get comparePhytomassWet => 'ფიტომასა სველი, ჯამი (ტ/ჰა)';
+
+  @override
+  String get comparePhytomassDry => 'ფიტომასა მშრალი, ჯამი (ტ/ჰა)';
+
+  @override
+  String get compareTreeWet => 'ხე-მცენარეები სველი, ჯამი (ტ/ჰა)';
+
+  @override
+  String get compareTreeDry => 'ხე-მცენარეები მშრალი, ჯამი (ტ/ჰა)';
+
+  @override
   String get unitCm => 'სმ';
 
   @override

@@ -3128,6 +3128,102 @@ abstract class AppLocalizations {
   /// **'ტ/ჰა'**
   String get unitTHa;
 
+  /// No description provided for @compareAction.
+  ///
+  /// In ka, this message translates to:
+  /// **'შედარება'**
+  String get compareAction;
+
+  /// No description provided for @compareTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'ბტკ-ების შედარება'**
+  String get compareTitle;
+
+  /// No description provided for @compareOnlyDifferences.
+  ///
+  /// In ka, this message translates to:
+  /// **'მხოლოდ განსხვავებები'**
+  String get compareOnlyDifferences;
+
+  /// No description provided for @compareNoDifferences.
+  ///
+  /// In ka, this message translates to:
+  /// **'განსხვავება არ არის'**
+  String get compareNoDifferences;
+
+  /// No description provided for @compareLegend.
+  ///
+  /// In ka, this message translates to:
+  /// **'— არ არის შევსებული. ? შევსებულია, მაგრამ ვერ გამოიყენება: რიცხვი ვერ წაიკითხა ან სიღრმის ერთეული არ არის არჩეული. ჯამები მხოლოდ შეყვანილ მნიშვნელობებს აერთიანებს და დასკვნა არ არის.'**
+  String get compareLegend;
+
+  /// No description provided for @compareVegRows.
+  ///
+  /// In ka, this message translates to:
+  /// **'მცენარეულობის სტრიქონები'**
+  String get compareVegRows;
+
+  /// No description provided for @compareMaxHeight.
+  ///
+  /// In ka, this message translates to:
+  /// **'უდიდესი სიმაღლე (მ)'**
+  String get compareMaxHeight;
+
+  /// No description provided for @compareHorizons.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჰორიზონტების რაოდენობა'**
+  String get compareHorizons;
+
+  /// No description provided for @compareDeepest.
+  ///
+  /// In ka, this message translates to:
+  /// **'უდიდესი სიღრმე (სმ)'**
+  String get compareDeepest;
+
+  /// No description provided for @comparePedomass.
+  ///
+  /// In ka, this message translates to:
+  /// **'პედომასა, ჯამი (ტ/ჰა)'**
+  String get comparePedomass;
+
+  /// No description provided for @compareLithomass.
+  ///
+  /// In ka, this message translates to:
+  /// **'ლითომასა, ჯამი (ტ/ჰა)'**
+  String get compareLithomass;
+
+  /// No description provided for @compareHydromass.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჰიდრომასა, ჯამი (ტ/ჰა)'**
+  String get compareHydromass;
+
+  /// No description provided for @comparePhytomassWet.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფიტომასა სველი, ჯამი (ტ/ჰა)'**
+  String get comparePhytomassWet;
+
+  /// No description provided for @comparePhytomassDry.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფიტომასა მშრალი, ჯამი (ტ/ჰა)'**
+  String get comparePhytomassDry;
+
+  /// No description provided for @compareTreeWet.
+  ///
+  /// In ka, this message translates to:
+  /// **'ხე-მცენარეები სველი, ჯამი (ტ/ჰა)'**
+  String get compareTreeWet;
+
+  /// No description provided for @compareTreeDry.
+  ///
+  /// In ka, this message translates to:
+  /// **'ხე-მცენარეები მშრალი, ჯამი (ტ/ჰა)'**
+  String get compareTreeDry;
+
   /// No description provided for @unitCm.
   ///
   /// In ka, this message translates to:
