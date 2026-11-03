@@ -12,6 +12,7 @@ import '../../../data/services/analytics_service.dart';
 import '../../../data/services/export_service.dart';
 import '../../../data/services/update_service.dart';
 import '../../../l10n/generated/app_localizations.dart';
+import '../../pdf/ui/pdf_preview_screen.dart';
 import '../../settings/domain/settings_provider.dart';
 
 class RecordsScreen extends ConsumerStatefulWidget {
@@ -149,7 +150,7 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
   }
 
   Future<void> _pdfSelected() async {
-    if (mounted) await _pdfActionSheet(context, _selectedRecords());
+    if (mounted) await PdfPreviewScreen.open(context, _selectedRecords());
   }
 
   Future<void> _deleteSelected() async {
@@ -219,7 +220,7 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
         case 'csv':
           await ExportService.shareCsv(records, l10n, coordFormat: coordFmt);
         case 'pdf':
-          if (mounted) await _pdfActionSheet(context, records);
+          if (mounted) await PdfPreviewScreen.open(context, records);
       }
     } catch (e) {
       if (mounted) {
@@ -544,47 +545,6 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
   }
 }
 
-// ── PDF action sheet ──────────────────────────────────────────────────────────
-
-Future<void> _pdfActionSheet(
-    BuildContext context, List<BtkRecord> records) async {
-      final l10n = AppLocalizations.of(context)!;
-  final choice = await showModalBottomSheet<String>(
-    context: context,
-    builder: (_) => SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(
-            leading: const Icon(Icons.share_outlined),
-            title: Text(l10n.share),
-            onTap: () => Navigator.pop(context, 'share'),
-          ),
-          ListTile(
-            leading: const Icon(Icons.save_alt_outlined),
-            title: Text(l10n.saveAsFile),
-            onTap: () => Navigator.pop(context, 'save'),
-          ),
-        ],
-      ),
-    ),
-  );
-  if (choice == null || !context.mounted) return;
-  if (context.mounted) {
-    final l10n = AppLocalizations.of(context)!;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(l10n.pdfPreparing),
-      duration: Duration(seconds: 3),
-    ));
-  }
-  if (choice == 'share') {
-    final l10n = AppLocalizations.of(context)!;
-    await ExportService.sharePdf(records, l10n);
-  } else {
-    await ExportService.savePdf(records, context);
-  }
-}
-
 // ── Record tile ───────────────────────────────────────────────────────────────
 
 class _RecordTile extends ConsumerWidget {
@@ -670,7 +630,7 @@ class _RecordTile extends ConsumerWidget {
                 onSelected: (action) => action(),
                 itemBuilder: (_) => [
                   PopupMenuItem(
-                    value: () => _pdfActionSheet(context, [r]),
+                    value: () => PdfPreviewScreen.open(context, [r]),
                     child: const ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: Icon(Icons.picture_as_pdf_outlined),

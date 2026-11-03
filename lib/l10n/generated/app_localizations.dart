@@ -176,35 +176,11 @@ abstract class AppLocalizations {
   /// **'ელ-ფოსტა'**
   String get email;
 
-  /// No description provided for @sendByEmail.
-  ///
-  /// In ka, this message translates to:
-  /// **'ელ-ფოსტით გაგზავნა'**
-  String get sendByEmail;
-
-  /// No description provided for @emailAddress.
-  ///
-  /// In ka, this message translates to:
-  /// **'ელ-ფოსტის მისამართი'**
-  String get emailAddress;
-
-  /// No description provided for @emailSent.
-  ///
-  /// In ka, this message translates to:
-  /// **'გაგზავნილია'**
-  String get emailSent;
-
   /// No description provided for @copyToClipboard.
   ///
   /// In ka, this message translates to:
   /// **'კოპირება'**
   String get copyToClipboard;
-
-  /// No description provided for @paste.
-  ///
-  /// In ka, this message translates to:
-  /// **'ჩასმა'**
-  String get paste;
 
   /// No description provided for @language.
   ///
@@ -680,18 +656,6 @@ abstract class AppLocalizations {
   /// **'PDF გახსნის ადგილი დამახსოვრდა'**
   String get pdfScrollRemembered;
 
-  /// No description provided for @defaultEmail.
-  ///
-  /// In ka, this message translates to:
-  /// **'ნაგულისხმევი ელ-ფოსტა'**
-  String get defaultEmail;
-
-  /// No description provided for @defaultEmailHint.
-  ///
-  /// In ka, this message translates to:
-  /// **'ელ-ფოსტის მისამართი...'**
-  String get defaultEmailHint;
-
   /// No description provided for @aboutApp.
   ///
   /// In ka, this message translates to:
@@ -997,18 +961,6 @@ abstract class AppLocalizations {
   /// In ka, this message translates to:
   /// **'რუკაზე მუშაობისას'**
   String get keepScreenOnSub;
-
-  /// No description provided for @emailListTitle.
-  ///
-  /// In ka, this message translates to:
-  /// **'ელ-ფოსტის მისამართები'**
-  String get emailListTitle;
-
-  /// No description provided for @noEmailsAdded.
-  ///
-  /// In ka, this message translates to:
-  /// **'ელ-ფოსტა არ არის დამატებული'**
-  String get noEmailsAdded;
 
   /// No description provided for @newEmailHint.
   ///
@@ -1400,6 +1352,18 @@ abstract class AppLocalizations {
   /// **'PDF მზადდება...'**
   String get pdfPreparing;
 
+  /// No description provided for @pdfPreview.
+  ///
+  /// In ka, this message translates to:
+  /// **'PDF-ის გადახედვა'**
+  String get pdfPreview;
+
+  /// No description provided for @pdfBuildFailed.
+  ///
+  /// In ka, this message translates to:
+  /// **'PDF ვერ შეიქმნა'**
+  String get pdfBuildFailed;
+
   /// No description provided for @duplicate.
   ///
   /// In ka, this message translates to:
@@ -1669,6 +1633,36 @@ abstract class AppLocalizations {
   /// In ka, this message translates to:
   /// **'შესახებ'**
   String get aboutSection;
+
+  /// No description provided for @appPurposeAndAuthor.
+  ///
+  /// In ka, this message translates to:
+  /// **'პროგრამა შექმნილია სტუდენტებისთვის — ლანდშაფტური გეოგრაფიის საველე კვლევების სასწავლო და სამეცნიერო პრაქტიკისათვის.\n\nშექმნა და იმპლემენტაცია: შპს ბიზნესისა და ტექნოლოგიების უნივერსიტეტის (BTU) ასოცირებული პროფესორი გიორგი კაპანაძე'**
+  String get appPurposeAndAuthor;
+
+  /// No description provided for @shareFailed.
+  ///
+  /// In ka, this message translates to:
+  /// **'გაზიარება ვერ მოხერხდა'**
+  String get shareFailed;
+
+  /// No description provided for @mapTools.
+  ///
+  /// In ka, this message translates to:
+  /// **'ინსტრუმენტები'**
+  String get mapTools;
+
+  /// No description provided for @trackStart.
+  ///
+  /// In ka, this message translates to:
+  /// **'ტრეკის ჩაწერა'**
+  String get trackStart;
+
+  /// No description provided for @trackStop.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩაწერის დასრულება'**
+  String get trackStop;
 
   /// No description provided for @organizationLabel.
   ///

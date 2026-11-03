@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../core/app_messenger.dart';
 import '../../../database/btk_database.dart';
 import '../../../models/btk_record.dart';
@@ -18,8 +17,8 @@ import '../../gps/ui/location_access.dart';
 import '../../../models/record_quality.dart';
 import '../../records/domain/btk_provider.dart';
 import '../../records/domain/record_filter.dart';
-import '../../settings/domain/settings_provider.dart';
 import '../../../data/services/analytics_service.dart';
+import '../../pdf/ui/pdf_preview_screen.dart';
 import '../../pdf/ui/pdf_viewer_screen.dart';
 import 'sections/photos_section.dart';
 import 'sections/basic_info_section.dart';
@@ -270,115 +269,7 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
     _update(_record);
   }
 
-  // ─── Email sending ──────────────────────────────────────────────────────────
-
-  Future<void> _sendEmail() async {
-    final emails = ref.read(settingsProvider).emails;
-
-    List<String> targets;
-    if (emails.isEmpty) {
-      final entered = await _askEmailManually();
-      if (entered == null || entered.isEmpty) return;
-      targets = [entered];
-    } else if (emails.length == 1) {
-      targets = emails;
-    } else {
-      // Let user pick which emails to send to
-      targets = await _pickEmails(emails) ?? [];
-      if (targets.isEmpty) return;
-    }
-
-    final to = targets.join(',');
-    final subject = Uri.encodeComponent(
-        'ბტკ ჩანაწერი ${_record.id} — ${_record.date.toString().split(' ')[0]}');
-    final body = Uri.encodeComponent(_record.toEmailText());
-    final uri = Uri.parse('mailto:$to?subject=$subject&body=$body');
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-      AnalyticsService.logEmailSent(targets.length);
-    }
-  }
-
-  Future<List<String>?> _pickEmails(List<String> all) {
-    final l10n = AppLocalizations.of(context)!;
-    final selected = <String>{...all}; // all selected by default
-    return showDialog<List<String>>(
-      context: context,
-      builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setS) => AlertDialog(
-          title: Text(l10n.send),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: all
-                .map((e) => CheckboxListTile(
-                      value: selected.contains(e),
-                      title: Text(e),
-                      dense: true,
-                      onChanged: (v) => setS(() {
-                        if (v == true) {
-                          selected.add(e);
-                        } else {
-                          selected.remove(e);
-                        }
-                      }),
-                    ))
-                .toList(),
-          ),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.pop(ctx),
-                child: Text(l10n.cancel)),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(ctx, selected.toList()),
-              child: Text(l10n.send),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<String?> _askEmailManually() async {
-    final l10n = AppLocalizations.of(context)!;
-    final controller = TextEditingController();
-    final result = await showDialog<String>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(l10n.emailAddress),
-        content: Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: controller,
-                keyboardType: TextInputType.emailAddress,
-                decoration:
-                    const InputDecoration(hintText: 'example@email.com'),
-              ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.paste),
-              tooltip: l10n.paste,
-              onPressed: () async {
-                final data = await Clipboard.getData(Clipboard.kTextPlain);
-                if (data?.text != null) controller.text = data!.text!;
-              },
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: Text(l10n.cancel)),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(ctx, controller.text.trim()),
-            child: Text(l10n.send),
-          ),
-        ],
-      ),
-    );
-    controller.dispose();
-    return result;
-  }
+  void _openPdf() => PdfPreviewScreen.open(context, [_record]);
 
   // ─── Build ──────────────────────────────────────────────────────────────────
 
@@ -457,18 +348,20 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
                   onPressed: () => setState(() => _pdfOpen = !_pdfOpen),
                 ),
                 _qualityButton(l10n),
-                IconButton(
-                  icon: const Icon(Icons.save_outlined),
-                  tooltip: l10n.save,
-                  onPressed: _save,
-                ),
+                // The save button at the bottom is hidden beside the PDF.
+                if (_pdfOpen)
+                  IconButton(
+                    icon: const Icon(Icons.save_outlined),
+                    tooltip: l10n.save,
+                    onPressed: _save,
+                  ),
                 PopupMenuButton<VoidCallback>(
                   tooltip: l10n.recordMenu,
                   onSelected: (action) => action(),
                   itemBuilder: (_) => [
                     PopupMenuItem(value: _fillFromOther, child: Text(l10n.fillFromOther)),
+                    PopupMenuItem(value: _openPdf, child: Text(l10n.pdfPreview)),
                     PopupMenuItem(value: _saveTemplate, child: Text(l10n.recordSaveAsTemplate)),
-                    PopupMenuItem(value: _sendEmail, child: Text(l10n.send)),
                     PopupMenuItem(
                       value: _revert,
                       enabled: _snapshot(_record) != _opened,

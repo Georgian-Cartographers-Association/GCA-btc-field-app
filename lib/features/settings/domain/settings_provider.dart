@@ -1,4 +1,3 @@
-﻿import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,7 +17,6 @@ enum ExportCoordFormat { dd, dm, dms, utm37, utm38 }
 class SettingsState {
   final ThemeMode themeMode;
   final AppLocale appLocale;
-  final List<String> emails;
   final int pdfPage;
   final bool screenAwake; // keep screen on while map is open
   final StorageMode storageMode;
@@ -30,7 +28,6 @@ class SettingsState {
   const SettingsState({
     this.themeMode = ThemeMode.system,
     this.appLocale = AppLocale.ka,
-    this.emails = const [],
     this.pdfPage = 0,
     this.screenAwake = false,
     this.storageMode = StorageMode.local,
@@ -41,7 +38,6 @@ class SettingsState {
   SettingsState copyWith({
     ThemeMode? themeMode,
     AppLocale? appLocale,
-    List<String>? emails,
     int? pdfPage,
     bool? screenAwake,
     StorageMode? storageMode,
@@ -51,7 +47,6 @@ class SettingsState {
       SettingsState(
         themeMode: themeMode ?? this.themeMode,
         appLocale: appLocale ?? this.appLocale,
-        emails: emails ?? this.emails,
         pdfPage: pdfPage ?? this.pdfPage,
         screenAwake: screenAwake ?? this.screenAwake,
         storageMode: storageMode ?? this.storageMode,
@@ -79,19 +74,9 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
     final expeditionId = prefs.getString('expedition_id');
     final coordFmtStr = prefs.getString('export_coord_format') ?? 'dd';
 
-    List<String> emails = [];
-    final emailsJson = prefs.getString(AppConstants.prefEmails);
-    if (emailsJson != null) {
-      emails = List<String>.from(jsonDecode(emailsJson) as List);
-    } else {
-      final old = prefs.getString(AppConstants.prefEmail) ?? '';
-      if (old.isNotEmpty) emails = [old];
-    }
-
     state = SettingsState(
       themeMode: _parseTheme(themeStr),
       appLocale: AppLocale.fromCode(localeStr),
-      emails: emails,
       pdfPage: pdfPage,
       screenAwake: screenAwake,
       storageMode: _parseStorageMode(storageModeStr),
@@ -124,11 +109,6 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
         _ => 'light',
       };
 
-  Future<void> _persistEmails() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(AppConstants.prefEmails, jsonEncode(state.emails));
-  }
-
   Future<void> setTheme(ThemeMode mode) async {
     state = state.copyWith(themeMode: mode);
     final prefs = await SharedPreferences.getInstance();
@@ -145,19 +125,6 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
     state = state.copyWith(appLocale: locale);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(AppConstants.prefLocale, locale.name);
-  }
-
-  Future<void> addEmail(String email) async {
-    final e = email.trim();
-    if (e.isEmpty || state.emails.contains(e)) return;
-    state = state.copyWith(emails: [...state.emails, e]);
-    await _persistEmails();
-  }
-
-  Future<void> removeEmail(String email) async {
-    state = state.copyWith(
-        emails: state.emails.where((e) => e != email).toList());
-    await _persistEmails();
   }
 
   Future<void> savePdfPage(int page) async {

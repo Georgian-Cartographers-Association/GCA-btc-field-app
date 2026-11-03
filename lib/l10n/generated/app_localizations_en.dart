@@ -48,19 +48,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get email => 'Email';
 
   @override
-  String get sendByEmail => 'Send by Email';
-
-  @override
-  String get emailAddress => 'Email Address';
-
-  @override
-  String get emailSent => 'Sent';
-
-  @override
   String get copyToClipboard => 'Copy';
-
-  @override
-  String get paste => 'Paste';
 
   @override
   String get language => 'Language';
@@ -302,12 +290,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pdfScrollRemembered => 'PDF position saved';
 
   @override
-  String get defaultEmail => 'Default Email';
-
-  @override
-  String get defaultEmailHint => 'Email address...';
-
-  @override
   String get aboutApp => 'About';
 
   @override
@@ -468,12 +450,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get keepScreenOnSub => 'While using the map';
-
-  @override
-  String get emailListTitle => 'Email Addresses';
-
-  @override
-  String get noEmailsAdded => 'No emails added';
 
   @override
   String get newEmailHint => 'New email';
@@ -678,6 +654,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pdfPreparing => 'Preparing PDF...';
 
   @override
+  String get pdfPreview => 'PDF preview';
+
+  @override
+  String get pdfBuildFailed => 'Could not create the PDF';
+
+  @override
   String get duplicate => 'Duplicate';
 
   @override
@@ -811,6 +793,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aboutSection => 'About';
+
+  @override
+  String get appPurposeAndAuthor =>
+      'Created for students, for teaching and research practice in landscape geography field studies.\n\nCreated and implemented by Giorgi Kapanadze, Associate Professor, Business and Technology University (BTU) LLC';
+
+  @override
+  String get shareFailed => 'Could not share';
+
+  @override
+  String get mapTools => 'Map tools';
+
+  @override
+  String get trackStart => 'Record a track';
+
+  @override
+  String get trackStop => 'Stop recording';
 
   @override
   String get organizationLabel => 'Organization';
