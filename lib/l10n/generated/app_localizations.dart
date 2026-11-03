@@ -3967,6 +3967,30 @@ abstract class AppLocalizations {
   /// In ka, this message translates to:
   /// **'ჩანაწერები'**
   String get statsExportRecords;
+
+  /// No description provided for @exportDepthFromCm.
+  ///
+  /// In ka, this message translates to:
+  /// **'სიღრმე, დან (სმ)'**
+  String get exportDepthFromCm;
+
+  /// No description provided for @exportDepthToCm.
+  ///
+  /// In ka, this message translates to:
+  /// **'სიღრმე, მდე (სმ)'**
+  String get exportDepthToCm;
+
+  /// No description provided for @shareRecordsXlsx.
+  ///
+  /// In ka, this message translates to:
+  /// **'ბტკ ჩანაწერები — Excel'**
+  String get shareRecordsXlsx;
+
+  /// No description provided for @exportExcelAll.
+  ///
+  /// In ka, this message translates to:
+  /// **'Excel (ყველა ცხრილით)'**
+  String get exportExcelAll;
 }
 
 class _AppLocalizationsDelegate

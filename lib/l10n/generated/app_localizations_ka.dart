@@ -2086,4 +2086,16 @@ class AppLocalizationsKa extends AppLocalizations {
 
   @override
   String get statsExportRecords => 'ჩანაწერები';
+
+  @override
+  String get exportDepthFromCm => 'სიღრმე, დან (სმ)';
+
+  @override
+  String get exportDepthToCm => 'სიღრმე, მდე (სმ)';
+
+  @override
+  String get shareRecordsXlsx => 'ბტკ ჩანაწერები — Excel';
+
+  @override
+  String get exportExcelAll => 'Excel (ყველა ცხრილით)';
 }

@@ -652,5 +652,9 @@
   "statsExportSubject": "BTC statistics — CSV",
   "statsExportCovers": "Covers {count} of {total} records",
   "statsExportNote": "These are counts of the values entered, not conclusions.",
-  "statsExportRecords": "Records"
+  "statsExportRecords": "Records",
+  "exportDepthFromCm": "Depth, from (cm)",
+  "exportDepthToCm": "Depth, to (cm)",
+  "shareRecordsXlsx": "BTC records — Excel",
+  "exportExcelAll": "Excel (all tables)"
 }
