@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../models/btk_record.dart';
+import '../../../../models/measure.dart';
+import '../widgets/measure_text_field.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
 class VegetationSection extends StatefulWidget {
@@ -97,7 +99,21 @@ class _VegetationSectionState extends State<VegetationSection> {
                 final cs = _ctrls[i];
                 return DataRow(cells: [
                   DataCell(_tcell(cs[0], _edit((v) => r.tier = v))),
-                  DataCell(_tcell(cs[1], _edit((v) => r.height = v))),
+                  DataCell(SizedBox(
+                    width: 70,
+                    child: MeasureTextField(
+                      controller: cs[1],
+                      spec: Measures.vegHeight,
+                      onChanged: _edit((v) => r.height = v),
+                      style: const TextStyle(fontSize: 12),
+                      decoration: const InputDecoration(
+                        border: UnderlineInputBorder(),
+                        isDense: true,
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                      ),
+                    ),
+                  )),
                   DataCell(_tcell(cs[2], _edit((v) => r.density = v))),
                   DataCell(_tcell(cs[3], _edit((v) => r.phenophase = v))),
                   DataCell(_tcell(cs[4], _edit((v) => r.species = v), wide: true)),
@@ -109,6 +125,7 @@ class _VegetationSectionState extends State<VegetationSection> {
               }),
             ),
           ),
+          const MeasureLegend(),
           const SizedBox(height: 8),
           TextButton.icon(
             onPressed: _addRow,

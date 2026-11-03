@@ -16,6 +16,8 @@ class PhotosSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final photos = ref.watch(photoProvider(recordId));
+    final soil = ref.watch(photoProvider('${recordId}_soil'));
+    final vertStruct = ref.watch(photoProvider('${recordId}_vertStruct'));
     final notifier = ref.read(photoProvider(recordId).notifier);
 
     return SingleChildScrollView(
@@ -41,36 +43,59 @@ class PhotosSection extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
 
-          // ── Grid ─────────────────────────────────────────────────────
-          if (photos.isEmpty)
+          // ── Grids, one per place the photos were taken from ──────────
+          if (photos.isEmpty && soil.isEmpty && vertStruct.isEmpty)
             const _EmptyHint()
-          else
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 4,
-                mainAxisSpacing: 4,
-              ),
-              itemCount: photos.length,
-              itemBuilder: (context, i) => _PhotoTile(
-                photo: photos[i],
-                onTap: () => _openGallery(context, photos, i),
-                onDelete: () => _confirmDelete(context, notifier, photos[i]),
-              ),
-            ),
+          else ...[
+            _group(context, ref, l10n.photosGeneral, recordId, photos),
+            _group(context, ref, l10n.soil, '${recordId}_soil', soil),
+            _group(context, ref, l10n.tabVertStruct, '${recordId}_vertStruct', vertStruct),
+          ],
         ],
       ),
     );
   }
 
-  void _openGallery(BuildContext ctx, List<Photo> photos, int index) {
+  Widget _group(BuildContext context, WidgetRef ref, String title, String key,
+      List<Photo> photos) {
+    if (photos.isEmpty) return const SizedBox.shrink();
+    final notifier = ref.read(photoProvider(key).notifier);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 6),
+            child: Text('$title (${photos.length})',
+                style: Theme.of(context).textTheme.titleSmall),
+          ),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: 4,
+              mainAxisSpacing: 4,
+            ),
+            itemCount: photos.length,
+            itemBuilder: (context, i) => _PhotoTile(
+              photo: photos[i],
+              onTap: () => _openGallery(context, key, i),
+              onDelete: () => _confirmDelete(context, notifier, photos[i]),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _openGallery(BuildContext ctx, String photosKey, int index) {
     Navigator.push(
       ctx,
       MaterialPageRoute(
         builder: (_) =>
-            _FullScreenGallery(photos: photos, initialIndex: index),
+            _FullScreenGallery(photosKey: photosKey, initialIndex: index),
       ),
     );
   }
@@ -127,6 +152,22 @@ class _PhotoTile extends StatelessWidget {
                   color: Colors.grey),
             ),
           ),
+          if (photo.caption.isNotEmpty)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                color: Colors.black.withValues(alpha: 0.55),
+                padding: const EdgeInsets.all(3),
+                child: Text(
+                  photo.caption,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: Colors.white, fontSize: 11),
+                ),
+              ),
+            ),
           // Delete button (top-right)
           Positioned(
             top: 3,
@@ -197,18 +238,18 @@ class _EmptyHint extends StatelessWidget {
 
 // ── Full-screen swipeable gallery ────────────────────────────────────────────
 
-class _FullScreenGallery extends StatefulWidget {
-  final List<Photo> photos;
+class _FullScreenGallery extends ConsumerStatefulWidget {
+  final String photosKey;
   final int initialIndex;
 
   const _FullScreenGallery(
-      {required this.photos, required this.initialIndex});
+      {required this.photosKey, required this.initialIndex});
 
   @override
-  State<_FullScreenGallery> createState() => _FullScreenGalleryState();
+  ConsumerState<_FullScreenGallery> createState() => _FullScreenGalleryState();
 }
 
-class _FullScreenGalleryState extends State<_FullScreenGallery> {
+class _FullScreenGalleryState extends ConsumerState<_FullScreenGallery> {
   late final PageController _ctrl;
   late int _current;
 
@@ -225,33 +266,87 @@ class _FullScreenGalleryState extends State<_FullScreenGallery> {
     super.dispose();
   }
 
+  Future<void> _editCaption(Photo photo) async {
+    final l10n = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
+    final notifier = ref.read(photoProvider(widget.photosKey).notifier);
+    final ctrl = TextEditingController(text: photo.caption);
+    final caption = await showDialog<String>(
+      context: context,
+      builder: (dCtx) => AlertDialog(
+        title: Text(l10n.photoCaption),
+        content: TextField(controller: ctrl, autofocus: true),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(dCtx), child: Text(l10n.cancel)),
+          FilledButton(
+              onPressed: () => Navigator.pop(dCtx, ctrl.text.trim()),
+              child: Text(l10n.save)),
+        ],
+      ),
+    );
+    ctrl.dispose();
+    if (caption == null) return;
+    try {
+      await notifier.setCaption(photo, caption);
+    } catch (_) {
+      messenger.showSnackBar(SnackBar(content: Text(l10n.photoCaptionFailed)));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final photos = ref.watch(photoProvider(widget.photosKey));
+    final hasCurrent = _current < photos.length;
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
-        title: Text('${_current + 1} / ${widget.photos.length}'),
+        title: Text('${_current + 1} / ${photos.length}'),
+        actions: [
+          if (hasCurrent)
+            IconButton(
+              icon: const Icon(Icons.edit_note),
+              tooltip: l10n.photoCaption,
+              onPressed: () => _editCaption(photos[_current]),
+            ),
+        ],
       ),
-      body: PageView.builder(
-        controller: _ctrl,
-        itemCount: widget.photos.length,
-        onPageChanged: (i) => setState(() => _current = i),
-        itemBuilder: (_, i) => InteractiveViewer(
-          minScale: 1.0,
-          maxScale: 4.0,
-          child: Center(
-            child: Image.file(
-              File(widget.photos[i].filePath),
-              errorBuilder: (context, err, stack) => const Icon(
-                Icons.broken_image_outlined,
-                color: Colors.white54,
-                size: 64,
+      body: Column(
+        children: [
+          Expanded(
+            child: PageView.builder(
+              controller: _ctrl,
+              itemCount: photos.length,
+              onPageChanged: (i) => setState(() => _current = i),
+              itemBuilder: (_, i) => InteractiveViewer(
+                minScale: 1.0,
+                maxScale: 4.0,
+                child: Center(
+                  child: Image.file(
+                    File(photos[i].filePath),
+                    errorBuilder: (context, err, stack) => const Icon(
+                      Icons.broken_image_outlined,
+                      color: Colors.white54,
+                      size: 64,
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
-        ),
+          if (hasCurrent && photos[_current].caption.isNotEmpty)
+            SafeArea(
+              top: false,
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Text(photos[_current].caption,
+                    style: const TextStyle(color: Colors.white)),
+              ),
+            ),
+        ],
       ),
     );
   }

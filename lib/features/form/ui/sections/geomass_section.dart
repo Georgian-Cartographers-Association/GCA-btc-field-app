@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../models/btk_record.dart';
+import '../../../../models/measure.dart';
+import '../widgets/measure_text_field.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
 class GeomassSection extends StatefulWidget {
@@ -148,15 +150,15 @@ class _GeomassSectionState extends State<GeomassSection> {
               columns: [
                 DataColumn(label: Text(l10n.gmSection, style: TextStyle(fontSize: 11))),
                 DataColumn(label: Text(l10n.gmDepth, style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text(l10n.gmPedBulk, style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text(l10n.gmPedQty, style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text(l10n.gmLithQty, style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text(l10n.gmLithDens, style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text(l10n.gmHydQty, style: TextStyle(fontSize: 11))),
+                DataColumn(label: _withUnit(l10n.gmPedBulk, l10n.unitGCm3)),
+                DataColumn(label: _withUnit(l10n.gmPedQty, l10n.unitTHa)),
+                DataColumn(label: _withUnit(l10n.gmLithQty, l10n.unitTHa)),
+                DataColumn(label: _withUnit(l10n.gmLithDens, l10n.unitGCm3)),
+                DataColumn(label: _withUnit(l10n.gmHydQty, l10n.unitTHa)),
                 DataColumn(label: Text(l10n.gmHydWet, style: TextStyle(fontSize: 11))),
                 DataColumn(label: Text(l10n.gmHydDry, style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text(l10n.gmPhytWet, style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text(l10n.gmPhytDry, style: TextStyle(fontSize: 11))),
+                DataColumn(label: _withUnit(l10n.gmPhytWet, l10n.unitTHa)),
+                DataColumn(label: _withUnit(l10n.gmPhytDry, l10n.unitTHa)),
                 DataColumn(label: Text('', style: TextStyle(fontSize: 11))),
               ],
               rows: List.generate(widget.record.geomasses.length, (i) {
@@ -164,16 +166,16 @@ class _GeomassSectionState extends State<GeomassSection> {
                 final cs = _geoCtrls[i];
                 return DataRow(cells: [
                   DataCell(_gcell(cs[0], _edit((v) => g.section = v))),
-                  DataCell(_gcell(cs[1], _edit((v) => g.depth = v))),
-                  DataCell(_gcell(cs[2], _edit((v) => g.pedomassBulk = v))),
-                  DataCell(_gcell(cs[3], _edit((v) => g.pedomassQty = v))),
-                  DataCell(_gcell(cs[4], _edit((v) => g.lithomassQty = v))),
-                  DataCell(_gcell(cs[5], _edit((v) => g.lithomassDensity = v))),
-                  DataCell(_gcell(cs[6], _edit((v) => g.hydromassQty = v))),
-                  DataCell(_gcell(cs[7], _edit((v) => g.hydromassWet = v))),
-                  DataCell(_gcell(cs[8], _edit((v) => g.hydromassDry = v))),
-                  DataCell(_gcell(cs[9], _edit((v) => g.phytomassWet = v))),
-                  DataCell(_gcell(cs[10], _edit((v) => g.phytomassDry = v))),
+                  DataCell(_gcell(cs[1], _edit((v) => g.depth = v), spec: Measures.depth)),
+                  DataCell(_gcell(cs[2], _edit((v) => g.pedomassBulk = v), spec: Measures.soilBulkDensity)),
+                  DataCell(_gcell(cs[3], _edit((v) => g.pedomassQty = v), spec: Measures.geomass)),
+                  DataCell(_gcell(cs[4], _edit((v) => g.lithomassQty = v), spec: Measures.geomass)),
+                  DataCell(_gcell(cs[5], _edit((v) => g.lithomassDensity = v), spec: Measures.rockDensity)),
+                  DataCell(_gcell(cs[6], _edit((v) => g.hydromassQty = v), spec: Measures.geomass)),
+                  DataCell(_gcell(cs[7], _edit((v) => g.hydromassWet = v), spec: Measures.plain)),
+                  DataCell(_gcell(cs[8], _edit((v) => g.hydromassDry = v), spec: Measures.plain)),
+                  DataCell(_gcell(cs[9], _edit((v) => g.phytomassWet = v), spec: Measures.geomass)),
+                  DataCell(_gcell(cs[10], _edit((v) => g.phytomassDry = v), spec: Measures.geomass)),
                   DataCell(IconButton(
                     icon: const Icon(Icons.remove_circle_outline,
                         size: 16, color: Colors.red),
@@ -183,6 +185,7 @@ class _GeomassSectionState extends State<GeomassSection> {
               }),
             ),
           ),
+          const MeasureLegend(),
           TextButton.icon(
               onPressed: _addRow,
               icon: const Icon(Icons.add),
@@ -190,14 +193,16 @@ class _GeomassSectionState extends State<GeomassSection> {
           const SizedBox(height: 20),
           _header(context, l10n.treePhytomassHeader),
           const SizedBox(height: 8),
-          TextField(
+          MeasureTextField(
             controller: _expPlotSizeCtrl,
+            spec: Measures.plotSize,
             onChanged: (v) {
               widget.record.experimentPlotSize = v;
               widget.onChanged(widget.record);
             },
             decoration: InputDecoration(
               labelText: l10n.experimentPlotSize,
+              hintText: '50x100',
               border: OutlineInputBorder(),
               isDense: true,
               contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -215,17 +220,17 @@ class _GeomassSectionState extends State<GeomassSection> {
               columnSpacing: 8,
               columns: [
                 DataColumn(label: Text(l10n.tpSpecies, style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text(l10n.tpVolume, style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text(l10n.tpWetWood, style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text(l10n.tpWetLeaves, style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text(l10n.tpWetBranches, style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text(l10n.tpWetRoots, style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text(l10n.tpWetTotal, style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text(l10n.tpDryWood, style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text(l10n.tpDryLeaves, style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text(l10n.tpDryBranches, style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text(l10n.tpDryRoots, style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text(l10n.tpDryTotal, style: TextStyle(fontSize: 11))),
+                DataColumn(label: _withUnit(l10n.tpVolume, l10n.unitTM3)),
+                DataColumn(label: _withUnit(l10n.tpWetWood, l10n.unitTHa)),
+                DataColumn(label: _withUnit(l10n.tpWetLeaves, l10n.unitTHa)),
+                DataColumn(label: _withUnit(l10n.tpWetBranches, l10n.unitTHa)),
+                DataColumn(label: _withUnit(l10n.tpWetRoots, l10n.unitTHa)),
+                DataColumn(label: _withUnit(l10n.tpWetTotal, l10n.unitTHa)),
+                DataColumn(label: _withUnit(l10n.tpDryWood, l10n.unitTHa)),
+                DataColumn(label: _withUnit(l10n.tpDryLeaves, l10n.unitTHa)),
+                DataColumn(label: _withUnit(l10n.tpDryBranches, l10n.unitTHa)),
+                DataColumn(label: _withUnit(l10n.tpDryRoots, l10n.unitTHa)),
+                DataColumn(label: _withUnit(l10n.tpDryTotal, l10n.unitTHa)),
                 DataColumn(label: Text('', style: TextStyle(fontSize: 11))),
               ],
               rows: List.generate(widget.record.treePhytomass.length, (i) {
@@ -233,17 +238,17 @@ class _GeomassSectionState extends State<GeomassSection> {
                 final cs = _treeCtrls[i];
                 return DataRow(cells: [
                   DataCell(_gcell(cs[0], _edit((v) => t.species = v), wide: true)),
-                  DataCell(_gcell(cs[1], _edit((v) => t.bulkDensity = v))),
-                  DataCell(_gcell(cs[2], _edit((v) => t.wetWood = v))),
-                  DataCell(_gcell(cs[3], _edit((v) => t.wetLeaves = v))),
-                  DataCell(_gcell(cs[4], _edit((v) => t.wetBranches = v))),
-                  DataCell(_gcell(cs[5], _edit((v) => t.wetRoots = v))),
-                  DataCell(_gcell(cs[6], _edit((v) => t.wetTotal = v))),
-                  DataCell(_gcell(cs[7], _edit((v) => t.dryWood = v))),
-                  DataCell(_gcell(cs[8], _edit((v) => t.dryLeaves = v))),
-                  DataCell(_gcell(cs[9], _edit((v) => t.dryBranches = v))),
-                  DataCell(_gcell(cs[10], _edit((v) => t.dryRoots = v))),
-                  DataCell(_gcell(cs[11], _edit((v) => t.dryTotal = v))),
+                  DataCell(_gcell(cs[1], _edit((v) => t.bulkDensity = v), spec: Measures.woodDensity)),
+                  DataCell(_gcell(cs[2], _edit((v) => t.wetWood = v), spec: Measures.geomass)),
+                  DataCell(_gcell(cs[3], _edit((v) => t.wetLeaves = v), spec: Measures.geomass)),
+                  DataCell(_gcell(cs[4], _edit((v) => t.wetBranches = v), spec: Measures.geomass)),
+                  DataCell(_gcell(cs[5], _edit((v) => t.wetRoots = v), spec: Measures.geomass)),
+                  DataCell(_gcell(cs[6], _edit((v) => t.wetTotal = v), spec: Measures.geomass)),
+                  DataCell(_gcell(cs[7], _edit((v) => t.dryWood = v), spec: Measures.geomass)),
+                  DataCell(_gcell(cs[8], _edit((v) => t.dryLeaves = v), spec: Measures.geomass)),
+                  DataCell(_gcell(cs[9], _edit((v) => t.dryBranches = v), spec: Measures.geomass)),
+                  DataCell(_gcell(cs[10], _edit((v) => t.dryRoots = v), spec: Measures.geomass)),
+                  DataCell(_gcell(cs[11], _edit((v) => t.dryTotal = v), spec: Measures.geomass)),
                   DataCell(IconButton(
                     icon: const Icon(Icons.remove_circle_outline,
                         size: 16, color: Colors.red),
@@ -253,6 +258,7 @@ class _GeomassSectionState extends State<GeomassSection> {
               }),
             ),
           ),
+          const MeasureLegend(),
           TextButton.icon(
               onPressed: _addTree,
               icon: const Icon(Icons.add),
@@ -276,18 +282,32 @@ Widget _header(BuildContext context, String title) => Container(
               color: Theme.of(context).colorScheme.onPrimaryContainer)),
     );
 
+Widget _withUnit(String label, String unit) =>
+    Text('$label\n$unit', style: const TextStyle(fontSize: 11));
+
 Widget _gcell(TextEditingController ctrl, ValueChanged<String> onChanged,
-        {bool wide = false}) =>
-    SizedBox(
-      width: wide ? 90 : 55,
-      child: TextField(
-        controller: ctrl,
-        onChanged: onChanged,
-        style: const TextStyle(fontSize: 11),
-        decoration: const InputDecoration(
-          border: UnderlineInputBorder(),
-          isDense: true,
-          contentPadding: EdgeInsets.symmetric(horizontal: 2, vertical: 4),
-        ),
-      ),
-    );
+    {bool wide = false, MeasureSpec? spec}) {
+  const style = TextStyle(fontSize: 11);
+  const decoration = InputDecoration(
+    border: UnderlineInputBorder(),
+    isDense: true,
+    contentPadding: EdgeInsets.symmetric(horizontal: 2, vertical: 4),
+  );
+  return SizedBox(
+    width: wide ? 90 : 55,
+    child: spec == null
+        ? TextField(
+            controller: ctrl,
+            onChanged: onChanged,
+            style: style,
+            decoration: decoration,
+          )
+        : MeasureTextField(
+            controller: ctrl,
+            spec: spec,
+            onChanged: onChanged,
+            style: style,
+            decoration: decoration,
+          ),
+  );
+}

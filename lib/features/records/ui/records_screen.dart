@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/app_messenger.dart';
 import '../../../models/btk_record.dart';
+import '../../../models/record_quality.dart';
+import '../../form/ui/widgets/record_tools.dart' show editedStamp;
 import '../domain/btk_provider.dart';
 import '../../../data/services/analytics_service.dart';
 import '../../../data/services/export_service.dart';
@@ -557,6 +559,14 @@ class _RecordTile extends ConsumerWidget {
                       const TextStyle(fontSize: 11, color: Colors.grey)),
             Text(r.date.toString().split(' ')[0]),
             if (r.location.isNotEmpty) Text(r.location),
+            Text(l10n.lastEdited(editedStamp(r.updatedAt)),
+                style: const TextStyle(fontSize: 11, color: Colors.grey)),
+            if (r.isUnfinished)
+              Text(l10n.unfinishedRecord,
+                  style: const TextStyle(
+                      fontSize: 11,
+                      color: Color(0xFFE65100),
+                      fontWeight: FontWeight.bold)),
             if (r.latitude != null)
               Text(
                 '${r.latitude!.toStringAsFixed(4)}, '
@@ -568,24 +578,33 @@ class _RecordTile extends ConsumerWidget {
         ),
         trailing: selectionMode
             ? null
-            : Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.picture_as_pdf_outlined,
-                        size: 20),
-                    tooltip: 'PDF',
-                    onPressed: () => _pdfActionSheet(context, [r]),
+            : PopupMenuButton<VoidCallback>(
+                tooltip: l10n.recordMenu,
+                onSelected: (action) => action(),
+                itemBuilder: (_) => [
+                  PopupMenuItem(
+                    value: () => _pdfActionSheet(context, [r]),
+                    child: const ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: Icon(Icons.picture_as_pdf_outlined),
+                      title: Text('PDF'),
+                    ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.copy_outlined, size: 20),
-                    tooltip: l10n.duplicate,
-                    onPressed: onDuplicate,
+                  PopupMenuItem(
+                    value: onDuplicate,
+                    child: ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: const Icon(Icons.copy_outlined),
+                      title: Text(l10n.duplicate),
+                    ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.delete_outline,
-                        color: Colors.red, size: 20),
-                    onPressed: onDelete,
+                  PopupMenuItem(
+                    value: onDelete,
+                    child: ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: const Icon(Icons.delete_outline, color: Colors.red),
+                      title: Text(l10n.delete),
+                    ),
                   ),
                 ],
               ),

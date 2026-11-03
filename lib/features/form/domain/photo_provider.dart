@@ -68,6 +68,15 @@ class PhotoNotifier extends StateNotifier<List<Photo>> {
     }
   }
 
+  /// Throws if the write fails, and the old caption stays.
+  Future<void> setCaption(Photo photo, String caption) async {
+    await BtkDatabase.updatePhotoCaption(photo.id, caption);
+    state = [
+      for (final p in state)
+        if (p.id == photo.id) p.withCaption(caption) else p
+    ];
+  }
+
   Future<void> delete(Photo photo) async {
     await BtkDatabase.deletePhoto(photo.id);
     try {

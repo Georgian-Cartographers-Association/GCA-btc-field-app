@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../models/btk_record.dart';
+import '../../../../models/measure.dart';
 import '../../domain/photo_provider.dart';
+import '../widgets/measure_text_field.dart';
 import '../widgets/section_photo_panel.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
@@ -88,11 +90,12 @@ class _VerticalStructureSectionState
               ),
               const SizedBox(width: 8),
               Expanded(
-                child: TextField(
+                child: MeasureTextField(
                   controller: _heightCtrl,
+                  spec: Measures.vertHeight,
                   onChanged: (v) => widget.onChanged(r..vertStructHeight = v),
                   decoration: InputDecoration(
-                    labelText: l10n.vegHeight,
+                    labelText: l10n.vegHeightM,
                     border: OutlineInputBorder(),
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 12, vertical: 8),

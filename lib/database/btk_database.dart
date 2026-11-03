@@ -195,6 +195,12 @@ class BtkDatabase {
         conflictAlgorithm: ConflictAlgorithm.ignore);
   }
 
+  static Future<void> updatePhotoCaption(String id, String caption) async {
+    final db = await database;
+    await db.update('photos', {'caption': caption},
+        where: 'id = ?', whereArgs: [id]);
+  }
+
   static Future<void> deletePhoto(String id) async {
     final db = await database;
     await db.delete('photos', where: 'id = ?', whereArgs: [id]);
