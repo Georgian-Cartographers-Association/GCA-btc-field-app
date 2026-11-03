@@ -1608,6 +1608,29 @@ class AppLocalizationsKa extends AppLocalizations {
   String get unitTHa => 'ტ/ჰა';
 
   @override
+  String get unitCm => 'სმ';
+
+  @override
+  String get depthUnit => 'სიღრმის ერთეული';
+
+  @override
+  String get depthUnitNotChosen => 'სიღრმის ერთეული არ არის არჩეული';
+
+  @override
+  String get qualityDepthUnitMissing => 'აირჩიეთ სიღრმის ერთეული: სმ ან მ';
+
+  @override
+  String get hydromassInfoTitle => 'ჰიდრომასის განმარტება';
+
+  @override
+  String get hydromassWetInfo =>
+      'სველი (ჰიდ.სვ.): ნიმუშის მასა ველზე აღებისას, მასში არსებული წყლის ჩათვლით.';
+
+  @override
+  String get hydromassDryInfo =>
+      'მშრალი (ჰიდ.მშ.): იმავე ნიმუშის მასა გამოშრობის შემდეგ, წყლის გარეშე.';
+
+  @override
   String get unitTM3 => 'ტ/მ³';
 
   @override

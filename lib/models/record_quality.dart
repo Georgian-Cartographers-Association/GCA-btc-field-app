@@ -128,6 +128,10 @@ extension RecordQuality on BtkRecord {
       dryVsWet(g.phytomassDryValue, g.phytomassWetValue, (l10n) => l10n.gmPhytDry, i);
     }
 
+    if (depthUnit.isEmpty && geomasses.any((g) => _has(g.depth))) {
+      note(geo, (l10n) => l10n.qualityDepthUnitMissing);
+    }
+
     measure(geo, Measures.plotSize, experimentPlotSize, (l10n) => l10n.experimentPlotSize);
 
     for (var i = 0; i < treePhytomass.length; i++) {

@@ -1653,6 +1653,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unitTHa => 't/ha';
 
   @override
+  String get unitCm => 'cm';
+
+  @override
+  String get depthUnit => 'Depth unit';
+
+  @override
+  String get depthUnitNotChosen => 'Depth unit not chosen';
+
+  @override
+  String get qualityDepthUnitMissing => 'Choose the depth unit: cm or m';
+
+  @override
+  String get hydromassInfoTitle => 'Hydromass explained';
+
+  @override
+  String get hydromassWetInfo =>
+      'Wet (Hyd.wet): the mass of the sample as collected in the field, including its water.';
+
+  @override
+  String get hydromassDryInfo =>
+      'Dry (Hyd.dry): the mass of the same sample after drying, without water.';
+
+  @override
   String get unitTM3 => 't/m³';
 
   @override

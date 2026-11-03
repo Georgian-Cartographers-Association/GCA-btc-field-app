@@ -3128,6 +3128,48 @@ abstract class AppLocalizations {
   /// **'ტ/ჰა'**
   String get unitTHa;
 
+  /// No description provided for @unitCm.
+  ///
+  /// In ka, this message translates to:
+  /// **'სმ'**
+  String get unitCm;
+
+  /// No description provided for @depthUnit.
+  ///
+  /// In ka, this message translates to:
+  /// **'სიღრმის ერთეული'**
+  String get depthUnit;
+
+  /// No description provided for @depthUnitNotChosen.
+  ///
+  /// In ka, this message translates to:
+  /// **'სიღრმის ერთეული არ არის არჩეული'**
+  String get depthUnitNotChosen;
+
+  /// No description provided for @qualityDepthUnitMissing.
+  ///
+  /// In ka, this message translates to:
+  /// **'აირჩიეთ სიღრმის ერთეული: სმ ან მ'**
+  String get qualityDepthUnitMissing;
+
+  /// No description provided for @hydromassInfoTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჰიდრომასის განმარტება'**
+  String get hydromassInfoTitle;
+
+  /// No description provided for @hydromassWetInfo.
+  ///
+  /// In ka, this message translates to:
+  /// **'სველი (ჰიდ.სვ.): ნიმუშის მასა ველზე აღებისას, მასში არსებული წყლის ჩათვლით.'**
+  String get hydromassWetInfo;
+
+  /// No description provided for @hydromassDryInfo.
+  ///
+  /// In ka, this message translates to:
+  /// **'მშრალი (ჰიდ.მშ.): იმავე ნიმუშის მასა გამოშრობის შემდეგ, წყლის გარეშე.'**
+  String get hydromassDryInfo;
+
   /// No description provided for @unitTM3.
   ///
   /// In ka, this message translates to:

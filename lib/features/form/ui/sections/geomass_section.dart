@@ -128,6 +128,57 @@ class _GeomassSectionState extends State<GeomassSection> {
         widget.onChanged(widget.record);
       };
 
+  String? _depthUnitLabel(AppLocalizations l10n) {
+    switch (widget.record.depthUnit) {
+      case depthUnitCm:
+        return l10n.unitCm;
+      case depthUnitM:
+        return l10n.unitM;
+      default:
+        return null;
+    }
+  }
+
+  // Choosing a unit says what the typed depths mean. It doesn't convert them.
+  Widget _depthUnitPicker(AppLocalizations l10n) {
+    final unit = widget.record.depthUnit;
+    return Wrap(
+      spacing: 12,
+      runSpacing: 4,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        Text(unit.isEmpty ? l10n.depthUnitNotChosen : l10n.depthUnit),
+        SegmentedButton<String>(
+          emptySelectionAllowed: true,
+          showSelectedIcon: false,
+          segments: [
+            ButtonSegment(value: depthUnitCm, label: Text(l10n.unitCm)),
+            ButtonSegment(value: depthUnitM, label: Text(l10n.unitM)),
+          ],
+          selected: {if (unit.isNotEmpty) unit},
+          onSelectionChanged: (chosen) {
+            setState(() => widget.record.depthUnit = chosen.isEmpty ? '' : chosen.first);
+            widget.onChanged(widget.record);
+          },
+        ),
+      ],
+    );
+  }
+
+  void _showHydromassInfo() {
+    final l10n = AppLocalizations.of(context)!;
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.hydromassInfoTitle),
+        content: Text('${l10n.hydromassWetInfo}\n\n${l10n.hydromassDryInfo}'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l10n.close)),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -137,6 +188,8 @@ class _GeomassSectionState extends State<GeomassSection> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _header(context, l10n.geomassHeader),
+          const SizedBox(height: 12),
+          _depthUnitPicker(l10n),
           const SizedBox(height: 12),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -149,7 +202,11 @@ class _GeomassSectionState extends State<GeomassSection> {
               columnSpacing: 8,
               columns: [
                 DataColumn(label: Text(l10n.gmSection, style: TextStyle(fontSize: 11))),
-                DataColumn(label: Text(l10n.gmDepth, style: TextStyle(fontSize: 11))),
+                DataColumn(
+                  label: _depthUnitLabel(l10n) == null
+                      ? Text(l10n.gmDepth, style: TextStyle(fontSize: 11))
+                      : _withUnit(l10n.gmDepth, _depthUnitLabel(l10n)!),
+                ),
                 DataColumn(label: _withUnit(l10n.gmPedBulk, l10n.unitGCm3)),
                 DataColumn(label: _withUnit(l10n.gmPedQty, l10n.unitTHa)),
                 DataColumn(label: _withUnit(l10n.gmLithQty, l10n.unitTHa)),
@@ -186,10 +243,19 @@ class _GeomassSectionState extends State<GeomassSection> {
             ),
           ),
           const MeasureLegend(),
-          TextButton.icon(
-              onPressed: _addRow,
-              icon: const Icon(Icons.add),
-              label: Text(l10n.rowShort)),
+          Wrap(
+            spacing: 8,
+            children: [
+              TextButton.icon(
+                  onPressed: _addRow,
+                  icon: const Icon(Icons.add),
+                  label: Text(l10n.rowShort)),
+              TextButton.icon(
+                  onPressed: _showHydromassInfo,
+                  icon: const Icon(Icons.info_outline),
+                  label: Text(l10n.hydromassInfoTitle)),
+            ],
+          ),
           const SizedBox(height: 20),
           _header(context, l10n.treePhytomassHeader),
           const SizedBox(height: 8),
