@@ -3889,6 +3889,54 @@ abstract class AppLocalizations {
   /// In ka, this message translates to:
   /// **'ადგილი ემთხვევა მხოლოდ ერთნაირად დაწერილი ადგილმდებარეობით. ცხრილი აჩვენებს, რა არის შეყვანილი, და ცვლილებას არ ადასტურებს: წლებს შორის შეიძლება სხვადასხვა ადგილი იყოს აღწერილი. დააჭირე ადგილს შესადარებლად.'**
   String get statsTimeNote;
+
+  /// No description provided for @statsChart.
+  ///
+  /// In ka, this message translates to:
+  /// **'გრაფიკი: თითო წერტილი ერთი ჩანაწერის ჯამია'**
+  String get statsChart;
+
+  /// No description provided for @statsChartAltitude.
+  ///
+  /// In ka, this message translates to:
+  /// **'სიმაღლე'**
+  String get statsChartAltitude;
+
+  /// No description provided for @statsChartMetres.
+  ///
+  /// In ka, this message translates to:
+  /// **'მ'**
+  String get statsChartMetres;
+
+  /// No description provided for @statsChartTap.
+  ///
+  /// In ka, this message translates to:
+  /// **'დააჭირე წერტილს, რომ ნახო რომელი ჩანაწერია.'**
+  String get statsChartTap;
+
+  /// No description provided for @statsChartTooFew.
+  ///
+  /// In ka, this message translates to:
+  /// **'გრაფიკს სულ მცირე 2 წერტილი სჭირდება. ახლა არის {count}.'**
+  String statsChartTooFew(Object count);
+
+  /// No description provided for @statsChartNoAltitude.
+  ///
+  /// In ka, this message translates to:
+  /// **'არ ჩანს {count} ჩანაწერი: სიმაღლე არ აქვს.'**
+  String statsChartNoAltitude(Object count);
+
+  /// No description provided for @statsChartUnreadable.
+  ///
+  /// In ka, this message translates to:
+  /// **'არ ჩანს {count} ჩანაწერი: ჯამი ვერ წაიკითხა.'**
+  String statsChartUnreadable(Object count);
+
+  /// No description provided for @statsChartNote.
+  ///
+  /// In ka, this message translates to:
+  /// **'წერტილების განლაგება კავშირს არ ამტკიცებს, ამიტომ ტენდენციის ხაზი განზრახ არ არის.'**
+  String get statsChartNote;
 }
 
 class _AppLocalizationsDelegate

@@ -11,6 +11,7 @@ import '../domain/record_analytics.dart';
 import '../domain/record_comparison.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import 'compare_screen.dart';
+import 'mass_chart.dart';
 
 class StatsScreen extends ConsumerWidget {
   const StatsScreen({super.key});
@@ -162,6 +163,12 @@ class _StatsBody extends StatelessWidget {
           ],
           Text(l10n.statsGeomassNote,
               style: TextStyle(fontSize: 12, color: cs.onSurfaceVariant)),
+          const SizedBox(height: 20),
+        ],
+
+        // ── Mass chart ──────────────────────────────────────────────────────
+        if (geomass.components.isNotEmpty) ...[
+          MassChart(records: records),
           const SizedBox(height: 20),
         ],
 

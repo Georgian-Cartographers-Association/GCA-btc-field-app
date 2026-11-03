@@ -2037,4 +2037,35 @@ class AppLocalizationsKa extends AppLocalizations {
   @override
   String get statsTimeNote =>
       'ადგილი ემთხვევა მხოლოდ ერთნაირად დაწერილი ადგილმდებარეობით. ცხრილი აჩვენებს, რა არის შეყვანილი, და ცვლილებას არ ადასტურებს: წლებს შორის შეიძლება სხვადასხვა ადგილი იყოს აღწერილი. დააჭირე ადგილს შესადარებლად.';
+
+  @override
+  String get statsChart => 'გრაფიკი: თითო წერტილი ერთი ჩანაწერის ჯამია';
+
+  @override
+  String get statsChartAltitude => 'სიმაღლე';
+
+  @override
+  String get statsChartMetres => 'მ';
+
+  @override
+  String get statsChartTap => 'დააჭირე წერტილს, რომ ნახო რომელი ჩანაწერია.';
+
+  @override
+  String statsChartTooFew(Object count) {
+    return 'გრაფიკს სულ მცირე 2 წერტილი სჭირდება. ახლა არის $count.';
+  }
+
+  @override
+  String statsChartNoAltitude(Object count) {
+    return 'არ ჩანს $count ჩანაწერი: სიმაღლე არ აქვს.';
+  }
+
+  @override
+  String statsChartUnreadable(Object count) {
+    return 'არ ჩანს $count ჩანაწერი: ჯამი ვერ წაიკითხა.';
+  }
+
+  @override
+  String get statsChartNote =>
+      'წერტილების განლაგება კავშირს არ ამტკიცებს, ამიტომ ტენდენციის ხაზი განზრახ არ არის.';
 }

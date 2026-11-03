@@ -2080,4 +2080,35 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get statsTimeNote =>
       'Places match only when the location is written the same way. The table shows what was entered and doesn\'t establish change: different years may cover different places. Tap a place to compare.';
+
+  @override
+  String get statsChart => 'Chart: each dot is one record\'s total';
+
+  @override
+  String get statsChartAltitude => 'Altitude';
+
+  @override
+  String get statsChartMetres => 'm';
+
+  @override
+  String get statsChartTap => 'Tap a dot to see which record it is.';
+
+  @override
+  String statsChartTooFew(Object count) {
+    return 'The chart needs at least 2 points. There are $count now.';
+  }
+
+  @override
+  String statsChartNoAltitude(Object count) {
+    return '$count records not shown: no altitude.';
+  }
+
+  @override
+  String statsChartUnreadable(Object count) {
+    return '$count records not shown: total can\'t be read.';
+  }
+
+  @override
+  String get statsChartNote =>
+      'The pattern of dots doesn\'t prove a relationship, so there is deliberately no trend line.';
 }

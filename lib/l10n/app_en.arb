@@ -639,5 +639,13 @@
   "statsYear": "Year",
   "statsRepeatedPlaces": "Places described more than once",
   "statsRepeatedCount": "{count} records, {first} – {last}",
-  "statsTimeNote": "Places match only when the location is written the same way. The table shows what was entered and doesn't establish change: different years may cover different places. Tap a place to compare."
+  "statsTimeNote": "Places match only when the location is written the same way. The table shows what was entered and doesn't establish change: different years may cover different places. Tap a place to compare.",
+  "statsChart": "Chart: each dot is one record's total",
+  "statsChartAltitude": "Altitude",
+  "statsChartMetres": "m",
+  "statsChartTap": "Tap a dot to see which record it is.",
+  "statsChartTooFew": "The chart needs at least 2 points. There are {count} now.",
+  "statsChartNoAltitude": "{count} records not shown: no altitude.",
+  "statsChartUnreadable": "{count} records not shown: total can't be read.",
+  "statsChartNote": "The pattern of dots doesn't prove a relationship, so there is deliberately no trend line."
 }
