@@ -1,6 +1,7 @@
 import '../../../l10n/localized_text.dart';
 import '../../../models/btk_record.dart';
 import '../../../models/record_quality.dart';
+import 'geomass_analytics.dart';
 import 'record_analytics.dart';
 
 /// Shown for a value that was typed but can't be used, such as "ბევრი" in a
@@ -26,21 +27,25 @@ String shownNumber(double v) {
   return s.endsWith('.0') ? s.substring(0, s.length - 2) : s;
 }
 
+/// A low to high range with unreadable values noted, as "5–8, ?×1". Null when
+/// there's nothing to show.
+String? rangeText(double? min, double? max, int unreadable) {
+  final range = min == null || max == null
+      ? null
+      : min == max
+          ? shownNumber(min)
+          : '${shownNumber(min)}–${shownNumber(max)}';
+  if (unreadable == 0) return range;
+  final note = '$compareUnreadable×$unreadable';
+  return range == null ? note : '$range, $note';
+}
+
 String? _text(String s) => s.trim().isEmpty ? null : s.trim();
 
-/// The sum over [rows], unreadable if any filled value isn't a number, because
-/// a sum that silently skipped one would look complete.
-String? _sumRows<T>(
-    List<T> rows, String Function(T) text, double? Function(T) value) {
-  final filled = rows.where((r) => text(r).trim().isNotEmpty).toList();
-  if (filled.isEmpty) return null;
-  var total = 0.0;
-  for (final r in filled) {
-    final v = value(r);
-    if (v == null) return compareUnreadable;
-    total += v;
-  }
-  return shownNumber(total);
+String? _totalText(RowTotal? t) {
+  if (t == null) return null;
+  final v = t.value;
+  return v == null ? compareUnreadable : shownNumber(v);
 }
 
 String? _deepestCm(BtkRecord r) {
@@ -103,20 +108,7 @@ List<CompareRow> compareRecords(List<BtkRecord> records) {
         (r) => _count(r.soilHorizons.where((h) => !isBlankRow(h.toJson())).length)),
     row(soil, (l) => l.compareHorizonOrder, (r) => _text(horizonOrder(horizonLabels(r)))),
     row(geo, (l) => l.compareDeepest, _deepestCm),
-    row(geo, (l) => l.comparePedomass,
-        (r) => _sumRows(r.geomasses, (g) => g.pedomassQty, (g) => g.pedomassQtyValue)),
-    row(geo, (l) => l.compareLithomass,
-        (r) => _sumRows(r.geomasses, (g) => g.lithomassQty, (g) => g.lithomassQtyValue)),
-    row(geo, (l) => l.compareHydromass,
-        (r) => _sumRows(r.geomasses, (g) => g.hydromassQty, (g) => g.hydromassQtyValue)),
-    row(geo, (l) => l.comparePhytomassWet,
-        (r) => _sumRows(r.geomasses, (g) => g.phytomassWet, (g) => g.phytomassWetValue)),
-    row(geo, (l) => l.comparePhytomassDry,
-        (r) => _sumRows(r.geomasses, (g) => g.phytomassDry, (g) => g.phytomassDryValue)),
-    row(geo, (l) => l.compareTreeWet,
-        (r) => _sumRows(r.treePhytomass, (t) => t.wetTotal, (t) => t.wetTotalValue)),
-    row(geo, (l) => l.compareTreeDry,
-        (r) => _sumRows(r.treePhytomass, (t) => t.dryTotal, (t) => t.dryTotalValue)),
+    for (final c in geomassComponents) row(geo, c.label, (r) => _totalText(c.total(r))),
     row(vert, (l) => l.vertStructTypeName, (r) => _text(r.vertStructTypeName)),
     row(vert, (l) => l.vertStructIndex, (r) => _text(r.vertStructIndex)),
     row(vert, (l) => l.vegHeightM, (r) => _text(r.vertStructHeight)),

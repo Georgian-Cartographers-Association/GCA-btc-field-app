@@ -620,5 +620,15 @@
   "statsHorizonFrequency": "Horizons (records holding each)",
   "statsHorizonOrders": "Horizon order (records with each)",
   "statsMoreItems": "and {count} more",
-  "statsAnalysisNote": "These are counts of the values entered, not conclusions. A name written differently counts separately. \"?\" means a value was filled in but can't be used."
+  "statsAnalysisNote": "These are counts of the values entered, not conclusions. A name written differently counts separately. \"?\" means a value was filled in but can't be used.",
+  "statsGeomass": "Geomass",
+  "statsGeomassTotals": "Totals per record: lowest and highest",
+  "statsGeomassComponent": "Mass",
+  "statsGeomassRange": "Range",
+  "statsDepthLayers": "Depth layers (cm, masses t/ha)",
+  "statsDepthLayer": "Layer",
+  "statsDepthUnknown": "Unknown",
+  "statsPhytomassWet": "Phytomass wet",
+  "statsPhytomassDry": "Phytomass dry",
+  "statsGeomassNote": "Layers group by the exact depth entered. A depth is unknown when it is blank, can't be read or has no unit chosen. One unreadable value turns a whole total into \"?\"."
 }

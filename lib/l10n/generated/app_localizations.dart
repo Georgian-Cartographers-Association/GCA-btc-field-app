@@ -3775,6 +3775,66 @@ abstract class AppLocalizations {
   /// In ka, this message translates to:
   /// **'ეს შეყვანილი მონაცემების დათვლაა და არა დასკვნა. სხვანაირად დაწერილი სახელი ცალკე ითვლება. „?“ ნიშნავს, რომ მნიშვნელობა შევსებულია, მაგრამ ვერ გამოიყენება.'**
   String get statsAnalysisNote;
+
+  /// No description provided for @statsGeomass.
+  ///
+  /// In ka, this message translates to:
+  /// **'გეომასა'**
+  String get statsGeomass;
+
+  /// No description provided for @statsGeomassTotals.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჯამები ჩანაწერების მიხედვით: უმცირესი და უდიდესი'**
+  String get statsGeomassTotals;
+
+  /// No description provided for @statsGeomassComponent.
+  ///
+  /// In ka, this message translates to:
+  /// **'მასა'**
+  String get statsGeomassComponent;
+
+  /// No description provided for @statsGeomassRange.
+  ///
+  /// In ka, this message translates to:
+  /// **'დიაპაზონი'**
+  String get statsGeomassRange;
+
+  /// No description provided for @statsDepthLayers.
+  ///
+  /// In ka, this message translates to:
+  /// **'სიღრმის ფენები (სმ, მასები ტ/ჰა)'**
+  String get statsDepthLayers;
+
+  /// No description provided for @statsDepthLayer.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფენა'**
+  String get statsDepthLayer;
+
+  /// No description provided for @statsDepthUnknown.
+  ///
+  /// In ka, this message translates to:
+  /// **'უცნობი'**
+  String get statsDepthUnknown;
+
+  /// No description provided for @statsPhytomassWet.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფიტომასა სველი'**
+  String get statsPhytomassWet;
+
+  /// No description provided for @statsPhytomassDry.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფიტომასა მშრალი'**
+  String get statsPhytomassDry;
+
+  /// No description provided for @statsGeomassNote.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფენები ზუსტად შეყვანილი სიღრმით ჯგუფდება. სიღრმე უცნობია, თუ არ არის შევსებული, ვერ წაიკითხა ან ერთეული არ არის არჩეული. ჯამში ერთი წაუკითხავი მნიშვნელობა მთელ ჯამს „?“-ად აქცევს.'**
+  String get statsGeomassNote;
 }
 
 class _AppLocalizationsDelegate

@@ -5,6 +5,7 @@ import 'package:latlong2/latlong.dart';
 import '../../../models/btk_record.dart';
 import '../../records/domain/record_filter.dart';
 import '../../records/domain/btk_provider.dart';
+import '../domain/geomass_analytics.dart';
 import '../domain/record_analytics.dart';
 import '../domain/record_comparison.dart';
 import '../../../l10n/generated/app_localizations.dart';
@@ -64,6 +65,7 @@ class _StatsBody extends StatelessWidget {
     };
     final maxM = monthly.values.fold(0, (a, b) => a > b ? a : b);
     final analytics = RecordAnalytics.of(records);
+    final geomass = GeomassAnalytics.of(records);
 
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -138,6 +140,26 @@ class _StatsBody extends StatelessWidget {
           const SizedBox(height: 12),
           _SubTitle(l10n.statsHorizonOrders),
           _LongFreqBars(entries: analytics.horizonOrders, color: Colors.brown),
+          const SizedBox(height: 20),
+        ],
+
+        // ── Geomass ─────────────────────────────────────────────────────────
+        if (geomass.hasData) ...[
+          _SectionTitle(l10n.statsGeomass),
+          _DataShare(count: geomass.recordsWithData, total: records.length),
+          const SizedBox(height: 8),
+          if (geomass.components.isNotEmpty) ...[
+            _SubTitle(l10n.statsGeomassTotals),
+            _ComponentTable(components: geomass.components),
+            const SizedBox(height: 12),
+          ],
+          if (geomass.layers.isNotEmpty) ...[
+            _SubTitle(l10n.statsDepthLayers),
+            _LayerTable(layers: geomass.layers),
+            const SizedBox(height: 8),
+          ],
+          Text(l10n.statsGeomassNote,
+              style: TextStyle(fontSize: 12, color: cs.onSurfaceVariant)),
           const SizedBox(height: 20),
         ],
 
@@ -367,33 +389,91 @@ class _LongFreqBars extends StatelessWidget {
   }
 }
 
+Widget _cell(String? text, {bool bold = false}) => Padding(
+      padding: const EdgeInsets.all(6),
+      child: Text(
+        text ?? '—',
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+    );
+
+class _ComponentTable extends StatelessWidget {
+  final List<ComponentSummary> components;
+  const _ComponentTable({required this.components});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(6),
+        child: Table(
+          columnWidths: const {
+            0: FlexColumnWidth(5),
+            1: FlexColumnWidth(2),
+            2: FlexColumnWidth(4),
+          },
+          children: [
+            TableRow(children: [
+              _cell(l10n.statsGeomassComponent, bold: true),
+              _cell(l10n.statsTierRecords, bold: true),
+              _cell(l10n.statsGeomassRange, bold: true),
+            ]),
+            for (final c in components)
+              TableRow(children: [
+                _cell(c.component.label(l10n)),
+                _cell('${c.records}'),
+                _cell(c.totals.text),
+              ]),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LayerTable extends StatelessWidget {
+  final List<DepthLayer> layers;
+  const _LayerTable({required this.layers});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Card(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.all(6),
+        child: Table(
+          defaultColumnWidth: const FixedColumnWidth(84),
+          columnWidths: const {
+            0: FixedColumnWidth(64),
+            1: FixedColumnWidth(54),
+          },
+          children: [
+            TableRow(children: [
+              _cell(l10n.statsDepthLayer, bold: true),
+              _cell(l10n.statsTierRecords, bold: true),
+              for (final c in layerColumns) _cell(c.label(l10n), bold: true),
+            ]),
+            for (final layer in layers)
+              TableRow(children: [
+                _cell(layer.text ?? l10n.statsDepthUnknown),
+                _cell('${layer.records}'),
+                for (final v in layer.values) _cell(v.text),
+              ]),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _TierTable extends StatelessWidget {
   final List<TierSummary> tiers;
   const _TierTable({required this.tiers});
-
-  static String? _heights(TierSummary t) {
-    final min = t.minHeight;
-    final max = t.maxHeight;
-    final range = min == null || max == null
-        ? null
-        : min == max
-            ? shownNumber(min)
-            : '${shownNumber(min)}–${shownNumber(max)}';
-    if (t.unreadableHeights == 0) return range;
-    final unreadable = '$compareUnreadable×${t.unreadableHeights}';
-    return range == null ? unreadable : '$range, $unreadable';
-  }
-
-  Widget _cell(String? text, {bool bold = false}) => Padding(
-        padding: const EdgeInsets.all(6),
-        child: Text(
-          text ?? '—',
-          style: TextStyle(
-            fontSize: 11,
-            fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
-      );
 
   @override
   Widget build(BuildContext context) {
@@ -420,7 +500,7 @@ class _TierTable extends StatelessWidget {
                 _cell(t.tier.isEmpty ? l10n.statsNoTier : t.tier),
                 _cell('${t.records}'),
                 _cell('${t.species}'),
-                _cell(_heights(t)),
+                _cell(rangeText(t.minHeight, t.maxHeight, t.unreadableHeights)),
               ]),
           ],
         ),

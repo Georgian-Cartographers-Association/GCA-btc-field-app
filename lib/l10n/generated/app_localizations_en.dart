@@ -2018,4 +2018,35 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get statsAnalysisNote =>
       'These are counts of the values entered, not conclusions. A name written differently counts separately. \"?\" means a value was filled in but can\'t be used.';
+
+  @override
+  String get statsGeomass => 'Geomass';
+
+  @override
+  String get statsGeomassTotals => 'Totals per record: lowest and highest';
+
+  @override
+  String get statsGeomassComponent => 'Mass';
+
+  @override
+  String get statsGeomassRange => 'Range';
+
+  @override
+  String get statsDepthLayers => 'Depth layers (cm, masses t/ha)';
+
+  @override
+  String get statsDepthLayer => 'Layer';
+
+  @override
+  String get statsDepthUnknown => 'Unknown';
+
+  @override
+  String get statsPhytomassWet => 'Phytomass wet';
+
+  @override
+  String get statsPhytomassDry => 'Phytomass dry';
+
+  @override
+  String get statsGeomassNote =>
+      'Layers group by the exact depth entered. A depth is unknown when it is blank, can\'t be read or has no unit chosen. One unreadable value turns a whole total into \"?\".';
 }

@@ -1974,4 +1974,36 @@ class AppLocalizationsKa extends AppLocalizations {
   @override
   String get statsAnalysisNote =>
       'ეს შეყვანილი მონაცემების დათვლაა და არა დასკვნა. სხვანაირად დაწერილი სახელი ცალკე ითვლება. „?“ ნიშნავს, რომ მნიშვნელობა შევსებულია, მაგრამ ვერ გამოიყენება.';
+
+  @override
+  String get statsGeomass => 'გეომასა';
+
+  @override
+  String get statsGeomassTotals =>
+      'ჯამები ჩანაწერების მიხედვით: უმცირესი და უდიდესი';
+
+  @override
+  String get statsGeomassComponent => 'მასა';
+
+  @override
+  String get statsGeomassRange => 'დიაპაზონი';
+
+  @override
+  String get statsDepthLayers => 'სიღრმის ფენები (სმ, მასები ტ/ჰა)';
+
+  @override
+  String get statsDepthLayer => 'ფენა';
+
+  @override
+  String get statsDepthUnknown => 'უცნობი';
+
+  @override
+  String get statsPhytomassWet => 'ფიტომასა სველი';
+
+  @override
+  String get statsPhytomassDry => 'ფიტომასა მშრალი';
+
+  @override
+  String get statsGeomassNote =>
+      'ფენები ზუსტად შეყვანილი სიღრმით ჯგუფდება. სიღრმე უცნობია, თუ არ არის შევსებული, ვერ წაიკითხა ან ერთეული არ არის არჩეული. ჯამში ერთი წაუკითხავი მნიშვნელობა მთელ ჯამს „?“-ად აქცევს.';
 }
