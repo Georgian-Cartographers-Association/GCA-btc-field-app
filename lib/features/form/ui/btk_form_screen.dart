@@ -66,8 +66,10 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
     _tabController = TabController(length: kIsWeb ? 6 : 7, vsync: this);
   }
 
-  // Everything the user can edit, leaving out the save time.
-  String _snapshot(BtkRecord r) => jsonEncode(r.toJson()..remove('updatedAt'));
+  // Everything the user can edit, leaving out what saving sets.
+  String _snapshot(BtkRecord r) => jsonEncode(r.toJson()
+    ..remove('updatedAt')
+    ..remove('versions'));
 
   // Android may end the app at any time once it's in the background, for
   // example while the camera is open, so a pending save can't wait.
@@ -106,7 +108,8 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
     _autoSaveTimer = Timer(const Duration(milliseconds: 800), _autoSave);
   }
 
-  // Silent background save — conflict ignored (auto-save is non-intrusive)
+  // Silent background save. A conflict's other version is kept, and the records
+  // list offers it, so saving needn't interrupt.
   // A failure is shown once per failing streak, and the unsaved dot stays on.
   Future<void> _autoSave() async {
     try {
@@ -122,7 +125,7 @@ class _BtkFormScreenState extends ConsumerState<BtkFormScreen>
     if (mounted) setState(() => _dirty = false);
   }
 
-  // Explicit save — shows conflict warning in expedition mode
+  // Explicit save — says so if another version was kept
   Future<void> _save() async {
     final l10n = AppLocalizations.of(context)!;
     _autoSaveTimer?.cancel();

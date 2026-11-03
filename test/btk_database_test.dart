@@ -81,7 +81,7 @@ void main() {
     final ids = (await BtkDatabase.getAllRecords()).map((r) => r.id);
     expect(ids, unorderedEquals(['OLD00001', 'NEW00001']));
     expect(await BtkDatabase.getAllTracks(), isEmpty);
-    expect(await (await BtkDatabase.database).getVersion(), 5);
+    expect(await (await BtkDatabase.database).getVersion(), 6);
   }
 
   test('new database saves and reads a record', () async {
@@ -145,7 +145,24 @@ void main() {
     await BtkDatabase.openAt(dbPath);
     await expectOldKeptAndSaveWorks();
     final db = await BtkDatabase.database;
-    expect(await db.getVersion(), 5);
+    expect(await db.getVersion(), 6);
     expect(await db.query('gps_track_points'), isEmpty);
+  });
+
+  test('version 5 database gains the sync tables and keeps its data', () async {
+    await createOld(5, [
+      _recordsV1,
+      _photosV1,
+      _tracksV2,
+      "ALTER TABLE btk_records ADD COLUMN name TEXT DEFAULT ''",
+      'CREATE TABLE gps_track_points (id INTEGER PRIMARY KEY AUTOINCREMENT, '
+          'track_id TEXT NOT NULL, point_json TEXT NOT NULL)',
+    ]);
+    await BtkDatabase.openAt(dbPath);
+    await expectOldKeptAndSaveWorks();
+    final db = await BtkDatabase.database;
+    expect(await db.getVersion(), 6);
+    expect(await db.query('sync_last_writes'), isEmpty);
+    expect(await db.query('sync_kept_versions'), isEmpty);
   });
 }

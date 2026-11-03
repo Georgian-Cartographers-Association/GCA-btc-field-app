@@ -38,18 +38,20 @@ class BtkDatabase {
   static Future<Database> _open(String dbPath) {
     return openDatabase(
       dbPath,
-      version: 5,
+      version: 6,
       onCreate: (db, _) async {
         await _createV1(db);
         await _createV2(db);
         await _createV3(db);
         await _createV5(db);
+        await _createV6(db);
       },
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < 2) await _createV2(db);
         if (oldVersion < 3) await _createV3(db);
         if (oldVersion < 4) await _repairV4(db);
         if (oldVersion < 5) await _createV5(db);
+        if (oldVersion < 6) await _createV6(db);
       },
     );
   }
@@ -66,6 +68,27 @@ class BtkDatabase {
     ''');
     await db.execute(
         'CREATE INDEX idx_track_points_track ON gps_track_points(track_id)');
+  }
+
+  // What sync safety keeps on the device. See ConflictStore.
+  static Future<void> _createV6(Database db) async {
+    await db.execute('''
+      CREATE TABLE sync_last_writes (
+        scope     TEXT NOT NULL,
+        record_id TEXT NOT NULL,
+        json      TEXT NOT NULL,
+        PRIMARY KEY (scope, record_id)
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE sync_kept_versions (
+        id        TEXT PRIMARY KEY,
+        scope     TEXT NOT NULL,
+        record_id TEXT NOT NULL,
+        json      TEXT NOT NULL,
+        kept_at   TEXT NOT NULL
+      )
+    ''');
   }
 
   static Future<void> _createV1(Database db) async {
