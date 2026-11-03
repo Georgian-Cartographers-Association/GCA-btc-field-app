@@ -4099,6 +4099,54 @@ abstract class AppLocalizations {
   /// In ka, this message translates to:
   /// **'სინქრონიზაციის შემოწმება ვერ მოხერხდა'**
   String get syncCheckFailed;
+
+  /// No description provided for @syncStateSynced.
+  ///
+  /// In ka, this message translates to:
+  /// **'სინქრონიზებულია'**
+  String get syncStateSynced;
+
+  /// No description provided for @syncStateSending.
+  ///
+  /// In ka, this message translates to:
+  /// **'იგზავნება'**
+  String get syncStateSending;
+
+  /// No description provided for @syncStateOffline.
+  ///
+  /// In ka, this message translates to:
+  /// **'ოფლაინი: ცვლილებები ტელეფონზეა'**
+  String get syncStateOffline;
+
+  /// No description provided for @syncOfflineNote.
+  ///
+  /// In ka, this message translates to:
+  /// **'მუშაობა შეგიძლიათ გააგრძელოთ. ცვლილებები გაიგზავნება, როცა კავშირი აღდგება. აპის დახურვა მათ არ კარგავს.'**
+  String get syncOfflineNote;
+
+  /// No description provided for @syncLastSynced.
+  ///
+  /// In ka, this message translates to:
+  /// **'ბოლო სინქრონიზაცია: {time}'**
+  String syncLastSynced(Object time);
+
+  /// No description provided for @syncNeverSynced.
+  ///
+  /// In ka, this message translates to:
+  /// **'ამ მოწყობილობაზე ჯერ არ სინქრონიზებულა'**
+  String get syncNeverSynced;
+
+  /// No description provided for @syncWaitingRecords.
+  ///
+  /// In ka, this message translates to:
+  /// **'გაგზავნას ელოდება ჩანაწერები: {count}'**
+  String syncWaitingRecords(Object count);
+
+  /// No description provided for @syncStateChecking.
+  ///
+  /// In ka, this message translates to:
+  /// **'მოწმდება'**
+  String get syncStateChecking;
 }
 
 class _AppLocalizationsDelegate

@@ -70,6 +70,17 @@ class ConflictGuard {
     }
   }
 
+  /// The server refused [sent], and the record has gone back to what it was. Only
+  /// the latest save needs keeping, since autosave's earlier ones led up to it.
+  Future<void> keepRefused(BtkRecord sent) async {
+    final last = (await store.lastWrites(scope))[sent.id];
+    if (last == null || compareVersions(last.versions, sent.versions) != VersionOrder.same) {
+      return;
+    }
+    await store.addKept(scope, sent);
+    await store.forgetLastWrite(scope, sent.id);
+  }
+
   /// This device deleted the record, so its absence is expected.
   Future<void> beforeDelete(String id) => store.forgetLastWrite(scope, id);
 }

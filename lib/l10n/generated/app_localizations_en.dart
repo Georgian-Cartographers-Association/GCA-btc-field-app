@@ -2202,4 +2202,33 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get syncCheckFailed => 'The sync check failed';
+
+  @override
+  String get syncStateSynced => 'Synced';
+
+  @override
+  String get syncStateSending => 'Sending';
+
+  @override
+  String get syncStateOffline => 'Offline: changes are on this device';
+
+  @override
+  String get syncOfflineNote =>
+      'You can keep working. Changes are sent when the connection returns, and closing the app doesn\'t lose them.';
+
+  @override
+  String syncLastSynced(Object time) {
+    return 'Last synced: $time';
+  }
+
+  @override
+  String get syncNeverSynced => 'Not synced on this device yet';
+
+  @override
+  String syncWaitingRecords(Object count) {
+    return 'Records waiting to be sent: $count';
+  }
+
+  @override
+  String get syncStateChecking => 'Checking';
 }

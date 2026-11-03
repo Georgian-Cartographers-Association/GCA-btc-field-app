@@ -674,5 +674,13 @@
   "syncKeepCurrentConfirm": "The kept version will be deleted. Continue?",
   "syncKeepOtherConfirm": "The current version will be replaced by this one. Continue?",
   "syncActionFailed": "That didn't work. The kept version is still here.",
-  "syncCheckFailed": "The sync check failed"
+  "syncCheckFailed": "The sync check failed",
+  "syncStateSynced": "Synced",
+  "syncStateSending": "Sending",
+  "syncStateOffline": "Offline: changes are on this device",
+  "syncOfflineNote": "You can keep working. Changes are sent when the connection returns, and closing the app doesn't lose them.",
+  "syncLastSynced": "Last synced: {time}",
+  "syncNeverSynced": "Not synced on this device yet",
+  "syncWaitingRecords": "Records waiting to be sent: {count}",
+  "syncStateChecking": "Checking"
 }

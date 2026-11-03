@@ -2157,4 +2157,33 @@ class AppLocalizationsKa extends AppLocalizations {
 
   @override
   String get syncCheckFailed => 'სინქრონიზაციის შემოწმება ვერ მოხერხდა';
+
+  @override
+  String get syncStateSynced => 'სინქრონიზებულია';
+
+  @override
+  String get syncStateSending => 'იგზავნება';
+
+  @override
+  String get syncStateOffline => 'ოფლაინი: ცვლილებები ტელეფონზეა';
+
+  @override
+  String get syncOfflineNote =>
+      'მუშაობა შეგიძლიათ გააგრძელოთ. ცვლილებები გაიგზავნება, როცა კავშირი აღდგება. აპის დახურვა მათ არ კარგავს.';
+
+  @override
+  String syncLastSynced(Object time) {
+    return 'ბოლო სინქრონიზაცია: $time';
+  }
+
+  @override
+  String get syncNeverSynced => 'ამ მოწყობილობაზე ჯერ არ სინქრონიზებულა';
+
+  @override
+  String syncWaitingRecords(Object count) {
+    return 'გაგზავნას ელოდება ჩანაწერები: $count';
+  }
+
+  @override
+  String get syncStateChecking => 'მოწმდება';
 }

@@ -34,7 +34,8 @@ class CloudRepository implements DataRepository {
     final conflicted = await _guard.beforeWrite(record, await readCachedRecord(docRef),
         bulk: keepUpdatedAt);
     if (!keepUpdatedAt) record.updatedAt = DateTime.now();
-    sendToFirestore(docRef.set(record.toJson()));
+    final sent = BtkRecord.fromStored(record.id, record.toJson());
+    sendToFirestore(docRef.set(sent.toJson()), onRefused: () => _guard.keepRefused(sent));
     return conflicted;
   }
 

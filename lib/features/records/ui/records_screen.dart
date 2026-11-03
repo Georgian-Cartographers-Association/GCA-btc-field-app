@@ -15,6 +15,7 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../../pdf/ui/pdf_preview_screen.dart';
 import '../../settings/domain/settings_provider.dart';
 import '../../sync/ui/kept_versions_screen.dart';
+import '../../sync/ui/sync_status_button.dart';
 import '../../stats/ui/compare_screen.dart';
 
 class RecordsScreen extends ConsumerStatefulWidget {
@@ -392,6 +393,7 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
           : AppBar(
               title: Text(l10n.savedRecords),
               actions: [
+                const SyncStatusButton(),
                 IconButton(
                   icon: Icon(recordFilter.isActive
                       ? Icons.filter_alt

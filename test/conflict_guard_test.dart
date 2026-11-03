@@ -260,6 +260,16 @@ void main() {
       expect(await a.keptNames(), isEmpty);
     });
 
+    test('a refused save is kept, but not one already followed by another', () async {
+      final first = _copy(await a.edit('first'));
+      final second = _copy(await a.edit('second'));
+      await a.guard.keepRefused(first);
+      expect(await a.keptNames(), isEmpty);
+      await a.guard.keepRefused(second);
+      expect(await a.keptNames(), ['second']);
+      expect(await a.store.lastWrites('s'), isEmpty);
+    });
+
     test('a bulk copy sets versions without a conflict', () async {
       final record = _record('imported');
       final conflict = await a.guard
