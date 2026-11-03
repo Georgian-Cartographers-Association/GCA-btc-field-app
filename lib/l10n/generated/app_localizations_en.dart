@@ -796,7 +796,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appPurposeAndAuthor =>
-      'Created for students, for teaching and research practice in landscape geography field studies. Author: Giorgi Kapanadze, Associate Professor, Business and Technology University (BTU) LLC';
+      'Created for students, for teaching and research practice in landscape geography field studies.\n\nCreated and implemented by Giorgi Kapanadze, Associate Professor, Business and Technology University (BTU) LLC';
 
   @override
   String get shareFailed => 'Could not share';
