@@ -312,4 +312,17 @@ void main() {
       expect(repo.saved.last.location, 'original');
     });
   });
+
+  group('new records', () {
+    test('keep the track they were made on', () async {
+      final repo = _Repository();
+      final notifier = BtkNotifier(repo);
+      final linked = await notifier.add(lat: 41, lon: 44, trackId: 'T1');
+      final plain = await notifier.add(lat: 41, lon: 44);
+      expect(linked.trackId, 'T1');
+      expect(repo.saved.first.trackId, 'T1');
+      expect(plain.trackId, isEmpty);
+      notifier.dispose();
+    });
+  });
 }

@@ -3373,6 +3373,192 @@ abstract class AppLocalizations {
   /// In ka, this message translates to:
   /// **'ზოგადი'**
   String get photosGeneral;
+
+  /// No description provided for @gpsWaitingFix.
+  ///
+  /// In ka, this message translates to:
+  /// **'GPS სიგნალს ველოდები…'**
+  String get gpsWaitingFix;
+
+  /// No description provided for @gpsSignalLost.
+  ///
+  /// In ka, this message translates to:
+  /// **'GPS სიგნალი დაიკარგა. ჩაწერილი წერტილები შენახულია.'**
+  String get gpsSignalLost;
+
+  /// No description provided for @trackNotificationTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'BTC Field App'**
+  String get trackNotificationTitle;
+
+  /// No description provided for @trackNotificationText.
+  ///
+  /// In ka, this message translates to:
+  /// **'GPS ტრეკი იწერება'**
+  String get trackNotificationText;
+
+  /// No description provided for @trackSaveFailed.
+  ///
+  /// In ka, this message translates to:
+  /// **'ტრეკის წერტილები ვერ შეინახა'**
+  String get trackSaveFailed;
+
+  /// No description provided for @trackStartFailed.
+  ///
+  /// In ka, this message translates to:
+  /// **'ტრეკის ჩაწერა ვერ დაიწყო'**
+  String get trackStartFailed;
+
+  /// No description provided for @trackInterrupted.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩაწერა შეწყდა'**
+  String get trackInterrupted;
+
+  /// No description provided for @trackInterruptedTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'ტრეკის ჩაწერა შეწყდა'**
+  String get trackInterruptedTitle;
+
+  /// No description provided for @trackInterruptedMessage.
+  ///
+  /// In ka, this message translates to:
+  /// **'შენახულია წერტილები: {count}. გავაგრძელოთ ჩაწერა თუ დავასრულოთ ტრეკი?'**
+  String trackInterruptedMessage(int count);
+
+  /// No description provided for @continueAction.
+  ///
+  /// In ka, this message translates to:
+  /// **'გაგრძელება'**
+  String get continueAction;
+
+  /// No description provided for @finishAction.
+  ///
+  /// In ka, this message translates to:
+  /// **'დასრულება'**
+  String get finishAction;
+
+  /// No description provided for @tracksUnreadable.
+  ///
+  /// In ka, this message translates to:
+  /// **'ტრეკები ვერ წაიკითხა: {count}. მონაცემები არ წაშლილა.'**
+  String tracksUnreadable(int count);
+
+  /// No description provided for @trackPointsCount.
+  ///
+  /// In ka, this message translates to:
+  /// **'{count} წერტ.'**
+  String trackPointsCount(int count);
+
+  /// No description provided for @accuracyValue.
+  ///
+  /// In ka, this message translates to:
+  /// **'სიზუსტე ±{meters} მ'**
+  String accuracyValue(int meters);
+
+  /// No description provided for @linkTrack.
+  ///
+  /// In ka, this message translates to:
+  /// **'ტრეკთან დაკავშირება'**
+  String get linkTrack;
+
+  /// No description provided for @linkedTrack.
+  ///
+  /// In ka, this message translates to:
+  /// **'ტრეკი #{id}'**
+  String linkedTrack(String id);
+
+  /// No description provided for @unlinkTrack.
+  ///
+  /// In ka, this message translates to:
+  /// **'კავშირის მოხსნა'**
+  String get unlinkTrack;
+
+  /// No description provided for @qualityLowAccuracy.
+  ///
+  /// In ka, this message translates to:
+  /// **'კოორდინატების სიზუსტე დაბალია (±{meters} მ)'**
+  String qualityLowAccuracy(int meters);
+
+  /// No description provided for @recordGroup.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჯგუფი'**
+  String get recordGroup;
+
+  /// No description provided for @recordGroupHint.
+  ///
+  /// In ka, this message translates to:
+  /// **'მაგ. რაჭა 2026'**
+  String get recordGroupHint;
+
+  /// No description provided for @noGroup.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჯგუფის გარეშე'**
+  String get noGroup;
+
+  /// No description provided for @noGroupsYet.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჯგუფები ჯერ არ არის'**
+  String get noGroupsYet;
+
+  /// No description provided for @setGroup.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჯგუფის მინიჭება'**
+  String get setGroup;
+
+  /// No description provided for @setGroupHelp.
+  ///
+  /// In ka, this message translates to:
+  /// **'ცარიელი ველი ჯგუფს მოხსნის'**
+  String get setGroupHelp;
+
+  /// No description provided for @filterTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'ფილტრი'**
+  String get filterTitle;
+
+  /// No description provided for @filterClear.
+  ///
+  /// In ka, this message translates to:
+  /// **'გასუფთავება'**
+  String get filterClear;
+
+  /// No description provided for @filterShown.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩანს {shown} / {total}'**
+  String filterShown(int shown, int total);
+
+  /// No description provided for @filterUnfinished.
+  ///
+  /// In ka, this message translates to:
+  /// **'მხოლოდ დაუსრულებელი'**
+  String get filterUnfinished;
+
+  /// No description provided for @filterAnyDate.
+  ///
+  /// In ka, this message translates to:
+  /// **'ნებისმიერი თარიღი'**
+  String get filterAnyDate;
+
+  /// No description provided for @recordsInView.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩანაწერები ხილულ არეში'**
+  String get recordsInView;
+
+  /// No description provided for @showOnMap.
+  ///
+  /// In ka, this message translates to:
+  /// **'რუკაზე ჩვენება'**
+  String get showOnMap;
 }
 
 class _AppLocalizationsDelegate

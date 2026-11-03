@@ -43,12 +43,13 @@ class BtkNotifier extends StateNotifier<List<BtkRecord>> {
     super.dispose();
   }
 
-  Future<BtkRecord> add({double? lat, double? lon}) async {
+  Future<BtkRecord> add({double? lat, double? lon, String trackId = ''}) async {
     final record = BtkRecord(
       id: _newId(),
       date: DateTime.now(),
       latitude: lat,
       longitude: lon,
+      trackId: trackId,
     );
     await _insert(record);
     return record;

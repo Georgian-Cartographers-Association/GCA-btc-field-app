@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import '../../../models/btk_record.dart';
+import '../../records/domain/record_filter.dart';
 import '../../records/domain/btk_provider.dart';
 import '../../../l10n/generated/app_localizations.dart';
 
@@ -39,7 +40,7 @@ class _StatsBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final located = records.where((r) => r.latitude != null).toList();
+    final located = records.where((r) => r.mapPoint != null).toList();
     final cs = Theme.of(context).colorScheme;
 
     // Frequency maps
@@ -163,7 +164,7 @@ class _MiniMap extends StatelessWidget {
       children: [
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'ge.gca.btk_field_app',
+          userAgentPackageName: 'ge.btc.field_app',
         ),
         MarkerLayer(
           markers: records

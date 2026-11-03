@@ -99,6 +99,10 @@ extension RecordQuality on BtkRecord {
     } else if (latitude!.abs() > 90 || longitude!.abs() > 180) {
       note(basic, (l10n) => l10n.qualityBadCoords);
     }
+    final accuracy = coordAccuracy;
+    if (accuracy != null && accuracy > 50) {
+      note(basic, (l10n) => l10n.qualityLowAccuracy(accuracy.round()));
+    }
     if (date.isAfter((now ?? DateTime.now()).add(const Duration(days: 1)))) {
       note(basic, (l10n) => l10n.qualityFutureDate);
     }

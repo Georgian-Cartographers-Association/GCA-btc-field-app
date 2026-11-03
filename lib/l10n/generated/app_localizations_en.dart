@@ -1793,4 +1793,111 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get photosGeneral => 'General';
+
+  @override
+  String get gpsWaitingFix => 'Waiting for a GPS signal…';
+
+  @override
+  String get gpsSignalLost => 'GPS signal lost. Recorded points are saved.';
+
+  @override
+  String get trackNotificationTitle => 'BTC Field App';
+
+  @override
+  String get trackNotificationText => 'Recording a GPS track';
+
+  @override
+  String get trackSaveFailed => 'Couldn\'t save the track points';
+
+  @override
+  String get trackStartFailed => 'Couldn\'t start recording the track';
+
+  @override
+  String get trackInterrupted => 'Recording was interrupted';
+
+  @override
+  String get trackInterruptedTitle => 'Track recording was interrupted';
+
+  @override
+  String trackInterruptedMessage(int count) {
+    return 'Saved points: $count. Continue recording or finish the track?';
+  }
+
+  @override
+  String get continueAction => 'Continue';
+
+  @override
+  String get finishAction => 'Finish';
+
+  @override
+  String tracksUnreadable(int count) {
+    return 'Couldn\'t read tracks: $count. Their data wasn\'t deleted.';
+  }
+
+  @override
+  String trackPointsCount(int count) {
+    return '$count pts';
+  }
+
+  @override
+  String accuracyValue(int meters) {
+    return 'Accuracy ±$meters m';
+  }
+
+  @override
+  String get linkTrack => 'Link to a track';
+
+  @override
+  String linkedTrack(String id) {
+    return 'Track #$id';
+  }
+
+  @override
+  String get unlinkTrack => 'Remove link';
+
+  @override
+  String qualityLowAccuracy(int meters) {
+    return 'Low coordinate accuracy (±$meters m)';
+  }
+
+  @override
+  String get recordGroup => 'Group';
+
+  @override
+  String get recordGroupHint => 'e.g. Racha 2026';
+
+  @override
+  String get noGroup => 'No group';
+
+  @override
+  String get noGroupsYet => 'No groups yet';
+
+  @override
+  String get setGroup => 'Set group';
+
+  @override
+  String get setGroupHelp => 'Leave empty to remove the group';
+
+  @override
+  String get filterTitle => 'Filter';
+
+  @override
+  String get filterClear => 'Clear';
+
+  @override
+  String filterShown(int shown, int total) {
+    return 'Showing $shown of $total';
+  }
+
+  @override
+  String get filterUnfinished => 'Unfinished only';
+
+  @override
+  String get filterAnyDate => 'Any date';
+
+  @override
+  String get recordsInView => 'Records in view';
+
+  @override
+  String get showOnMap => 'Show on map';
 }

@@ -1748,4 +1748,112 @@ class AppLocalizationsKa extends AppLocalizations {
 
   @override
   String get photosGeneral => 'ზოგადი';
+
+  @override
+  String get gpsWaitingFix => 'GPS სიგნალს ველოდები…';
+
+  @override
+  String get gpsSignalLost =>
+      'GPS სიგნალი დაიკარგა. ჩაწერილი წერტილები შენახულია.';
+
+  @override
+  String get trackNotificationTitle => 'BTC Field App';
+
+  @override
+  String get trackNotificationText => 'GPS ტრეკი იწერება';
+
+  @override
+  String get trackSaveFailed => 'ტრეკის წერტილები ვერ შეინახა';
+
+  @override
+  String get trackStartFailed => 'ტრეკის ჩაწერა ვერ დაიწყო';
+
+  @override
+  String get trackInterrupted => 'ჩაწერა შეწყდა';
+
+  @override
+  String get trackInterruptedTitle => 'ტრეკის ჩაწერა შეწყდა';
+
+  @override
+  String trackInterruptedMessage(int count) {
+    return 'შენახულია წერტილები: $count. გავაგრძელოთ ჩაწერა თუ დავასრულოთ ტრეკი?';
+  }
+
+  @override
+  String get continueAction => 'გაგრძელება';
+
+  @override
+  String get finishAction => 'დასრულება';
+
+  @override
+  String tracksUnreadable(int count) {
+    return 'ტრეკები ვერ წაიკითხა: $count. მონაცემები არ წაშლილა.';
+  }
+
+  @override
+  String trackPointsCount(int count) {
+    return '$count წერტ.';
+  }
+
+  @override
+  String accuracyValue(int meters) {
+    return 'სიზუსტე ±$meters მ';
+  }
+
+  @override
+  String get linkTrack => 'ტრეკთან დაკავშირება';
+
+  @override
+  String linkedTrack(String id) {
+    return 'ტრეკი #$id';
+  }
+
+  @override
+  String get unlinkTrack => 'კავშირის მოხსნა';
+
+  @override
+  String qualityLowAccuracy(int meters) {
+    return 'კოორდინატების სიზუსტე დაბალია (±$meters მ)';
+  }
+
+  @override
+  String get recordGroup => 'ჯგუფი';
+
+  @override
+  String get recordGroupHint => 'მაგ. რაჭა 2026';
+
+  @override
+  String get noGroup => 'ჯგუფის გარეშე';
+
+  @override
+  String get noGroupsYet => 'ჯგუფები ჯერ არ არის';
+
+  @override
+  String get setGroup => 'ჯგუფის მინიჭება';
+
+  @override
+  String get setGroupHelp => 'ცარიელი ველი ჯგუფს მოხსნის';
+
+  @override
+  String get filterTitle => 'ფილტრი';
+
+  @override
+  String get filterClear => 'გასუფთავება';
+
+  @override
+  String filterShown(int shown, int total) {
+    return 'ჩანს $shown / $total';
+  }
+
+  @override
+  String get filterUnfinished => 'მხოლოდ დაუსრულებელი';
+
+  @override
+  String get filterAnyDate => 'ნებისმიერი თარიღი';
+
+  @override
+  String get recordsInView => 'ჩანაწერები ხილულ არეში';
+
+  @override
+  String get showOnMap => 'რუკაზე ჩვენება';
 }

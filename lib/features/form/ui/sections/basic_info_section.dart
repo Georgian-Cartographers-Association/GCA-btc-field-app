@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import '../../../../models/btk_record.dart';
 import '../../../../utils/coord_converter.dart';
+import '../../../gps/ui/track_status_bar.dart' show accuracyColor;
 import '../widgets/coord_converter_widget.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
@@ -8,12 +9,16 @@ class BasicInfoSection extends StatefulWidget {
   final BtkRecord record;
   final ValueChanged<BtkRecord> onChanged;
   final VoidCallback onDetectGps;
+  final VoidCallback? onLinkTrack;
+  final List<String> groupSuggestions;
 
   const BasicInfoSection({
     super.key,
     required this.record,
     required this.onChanged,
     required this.onDetectGps,
+    this.onLinkTrack,
+    this.groupSuggestions = const [],
   });
 
   @override
@@ -162,6 +167,31 @@ class _BasicInfoSectionState extends State<BasicInfoSection> {
           ),
           const SizedBox(height: 12),
 
+          // Group
+          Autocomplete<String>(
+            initialValue: TextEditingValue(text: r.group),
+            optionsBuilder: (value) {
+              final q = value.text.trim().toLowerCase();
+              return widget.groupSuggestions
+                  .where((g) => g.toLowerCase().contains(q));
+            },
+            onSelected: (g) => widget.onChanged(r..group = g),
+            fieldViewBuilder: (context, ctrl, focus, _) => TextField(
+              controller: ctrl,
+              focusNode: focus,
+              onChanged: (v) => widget.onChanged(r..group = v),
+              decoration: InputDecoration(
+                labelText: l10n.recordGroup,
+                hintText: l10n.recordGroupHint,
+                border: const OutlineInputBorder(),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                isDense: true,
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+
           // Location
           TextField(
             controller: _locationCtrl,
@@ -191,7 +221,9 @@ class _BasicInfoSectionState extends State<BasicInfoSection> {
                     final err = _validateLat(v);
                     setState(() => _latError = err);
                     if (err == null) {
-                      widget.onChanged(r..latitude = CoordConverter.parseCoord(v));
+                      widget.onChanged(r
+                        ..latitude = CoordConverter.parseCoord(v)
+                        ..coordAccuracy = null);
                     }
                   },
                   decoration: InputDecoration(
@@ -214,7 +246,9 @@ class _BasicInfoSectionState extends State<BasicInfoSection> {
                     final err = _validateLon(v);
                     setState(() => _lonError = err);
                     if (err == null) {
-                      widget.onChanged(r..longitude = CoordConverter.parseCoord(v));
+                      widget.onChanged(r
+                        ..longitude = CoordConverter.parseCoord(v)
+                        ..coordAccuracy = null);
                     }
                   },
                   decoration: InputDecoration(
@@ -289,6 +323,36 @@ class _BasicInfoSectionState extends State<BasicInfoSection> {
             icon: const Icon(Icons.gps_fixed, size: 18),
             label: Text(l10n.useGps),
           ),
+          if (r.coordAccuracy != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(
+                l10n.accuracyValue(r.coordAccuracy!.round()),
+                style: TextStyle(
+                    fontSize: 12, color: accuracyColor(r.coordAccuracy!)),
+              ),
+            ),
+          if (widget.onLinkTrack != null)
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton.icon(
+                    style: TextButton.styleFrom(alignment: Alignment.centerLeft),
+                    onPressed: widget.onLinkTrack,
+                    icon: const Icon(Icons.route, size: 18),
+                    label: Text(r.trackId.isEmpty
+                        ? l10n.linkTrack
+                        : l10n.linkedTrack(r.trackId)),
+                  ),
+                ),
+                if (r.trackId.isNotEmpty)
+                  IconButton(
+                    icon: const Icon(Icons.link_off, size: 18),
+                    tooltip: l10n.unlinkTrack,
+                    onPressed: () => widget.onChanged(r..trackId = ''),
+                  ),
+              ],
+            ),
           const SizedBox(height: 8),
           CoordConverterWidget(
             latitude: r.latitude,
@@ -298,7 +362,8 @@ class _BasicInfoSectionState extends State<BasicInfoSection> {
               _lonCtrl.text = lon.toStringAsFixed(6);
               widget.onChanged(r
                 ..latitude = lat
-                ..longitude = lon);
+                ..longitude = lon
+                ..coordAccuracy = null);
             },
           ),
         ],
