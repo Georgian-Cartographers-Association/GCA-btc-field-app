@@ -3559,6 +3559,12 @@ abstract class AppLocalizations {
   /// In ka, this message translates to:
   /// **'რუკაზე ჩვენება'**
   String get showOnMap;
+
+  /// No description provided for @onlyLocalStorageHere.
+  ///
+  /// In ka, this message translates to:
+  /// **'ამ მოწყობილობაზე ანგარიში და ღრუბელი მიუწვდომელია. ჩანაწერები მხოლოდ აქ ინახება, ამიტომ დროდადრო გააკეთე სარეზერვო ასლი.'**
+  String get onlyLocalStorageHere;
 }
 
 class _AppLocalizationsDelegate

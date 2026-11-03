@@ -1900,4 +1900,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get showOnMap => 'Show on map';
+
+  @override
+  String get onlyLocalStorageHere =>
+      'Accounts and cloud storage aren\'t available on this device. Records are kept only here, so back them up from time to time.';
 }

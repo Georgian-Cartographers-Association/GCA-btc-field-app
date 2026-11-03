@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
+import '../../../core/app_paths.dart';
 import '../../../models/raster_layer.dart';
 
 const _prefDeviceRasters = 'device_rasters';
@@ -37,8 +38,12 @@ class RasterNotifier extends StateNotifier<List<RasterLayer>> {
       if (deviceRaw != null) {
         final list =
             (jsonDecode(deviceRaw) as List).cast<Map<String, dynamic>>();
+        final docs = await documentsDirToRebase();
         for (final j in list) {
-          final r = RasterLayer.fromJson(j);
+          final path = j['filePath'] as String?;
+          final r = RasterLayer.fromJson(docs == null || path == null
+              ? j
+              : {...j, 'filePath': rebaseToDocuments(path, docs)});
           final v = prefs.getBool('$_prefRasterVis${r.id}');
           final o = prefs.getDouble('$_prefRasterOpa${r.id}');
           if (v != null) r.visible = v;

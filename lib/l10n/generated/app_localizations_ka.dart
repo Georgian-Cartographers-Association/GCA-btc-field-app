@@ -1856,4 +1856,8 @@ class AppLocalizationsKa extends AppLocalizations {
 
   @override
   String get showOnMap => 'რუკაზე ჩვენება';
+
+  @override
+  String get onlyLocalStorageHere =>
+      'ამ მოწყობილობაზე ანგარიში და ღრუბელი მიუწვდომელია. ჩანაწერები მხოლოდ აქ ინახება, ამიტომ დროდადრო გააკეთე სარეზერვო ასლი.';
 }

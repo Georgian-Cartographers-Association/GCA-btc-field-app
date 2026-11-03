@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
+import '../../../core/firebase_state.dart';
 import '../../../core/locale.dart';
 import '../../auth/domain/firebase_auth_provider.dart';
 import '../domain/settings_provider.dart';
@@ -429,11 +430,13 @@ class _StorageSectionState extends ConsumerState<_StorageSection> {
               ),
               ButtonSegment(
                 value: StorageMode.cloud,
+                enabled: firebaseReady,
                 icon: const Icon(Icons.cloud_outlined),
                 label: Text(l10n.storageCloud),
               ),
               ButtonSegment(
                 value: StorageMode.expedition,
+                enabled: firebaseReady,
                 icon: const Icon(Icons.group_outlined),
                 label: Text(l10n.storageExpedition),
               ),
@@ -451,6 +454,13 @@ class _StorageSectionState extends ConsumerState<_StorageSection> {
             },
           ),
         ),
+
+        if (!firebaseReady)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(l10n.onlyLocalStorageHere,
+                style: Theme.of(context).textTheme.bodySmall),
+          ),
 
         // ── Cloud mode ─────────────────────────────────────────────────
         if (mode == StorageMode.cloud && user != null) ...[

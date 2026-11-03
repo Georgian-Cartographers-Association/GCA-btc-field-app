@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart' show kIsWeb, visibleForTesting;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import '../core/app_paths.dart';
 import '../models/btk_record.dart';
 import '../models/gps_track.dart';
 import '../models/photo.dart';
@@ -191,7 +192,16 @@ class BtkDatabase {
       whereArgs: keys,
       orderBy: 'sort_order ASC, created_at ASC',
     );
-    return rows.map(Photo.fromMap).toList();
+    return _photosFrom(rows);
+  }
+
+  static Future<List<Photo>> _photosFrom(List<Map<String, Object?>> rows) async {
+    final docs = await documentsDirToRebase();
+    if (docs == null) return rows.map(Photo.fromMap).toList();
+    return rows
+        .map((r) => Photo.fromMap(
+            {...r, 'file_path': rebaseToDocuments(r['file_path'] as String, docs)}))
+        .toList();
   }
 
   static Future<List<Photo>> getPhotos(String recordId) async {
@@ -202,7 +212,7 @@ class BtkDatabase {
       whereArgs: [recordId],
       orderBy: 'sort_order ASC, created_at ASC',
     );
-    return rows.map(Photo.fromMap).toList();
+    return _photosFrom(rows);
   }
 
   static Future<void> insertPhoto(Photo p) async {

@@ -584,5 +584,6 @@
   "filterUnfinished": "Unfinished only",
   "filterAnyDate": "Any date",
   "recordsInView": "Records in view",
-  "showOnMap": "Show on map"
+  "showOnMap": "Show on map",
+  "onlyLocalStorageHere": "Accounts and cloud storage aren't available on this device. Records are kept only here, so back them up from time to time."
 }
