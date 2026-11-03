@@ -2098,4 +2098,13 @@ class AppLocalizationsKa extends AppLocalizations {
 
   @override
   String get exportExcelAll => 'Excel (ყველა ცხრილით)';
+
+  @override
+  String get statsExportPdf => 'შედეგების PDF, გრაფიკებით';
+
+  @override
+  String get statsFirstDate => 'პირველი თარიღი';
+
+  @override
+  String get statsLastDate => 'ბოლო თარიღი';
 }

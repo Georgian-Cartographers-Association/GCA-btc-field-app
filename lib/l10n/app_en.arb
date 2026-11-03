@@ -656,5 +656,8 @@
   "exportDepthFromCm": "Depth, from (cm)",
   "exportDepthToCm": "Depth, to (cm)",
   "shareRecordsXlsx": "BTC records — Excel",
-  "exportExcelAll": "Excel (all tables)"
+  "exportExcelAll": "Excel (all tables)",
+  "statsExportPdf": "Results PDF with charts",
+  "statsFirstDate": "First date",
+  "statsLastDate": "Last date"
 }

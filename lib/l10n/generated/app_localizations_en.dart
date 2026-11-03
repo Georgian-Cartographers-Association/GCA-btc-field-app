@@ -2141,4 +2141,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get exportExcelAll => 'Excel (all tables)';
+
+  @override
+  String get statsExportPdf => 'Results PDF with charts';
+
+  @override
+  String get statsFirstDate => 'First date';
+
+  @override
+  String get statsLastDate => 'Last date';
 }

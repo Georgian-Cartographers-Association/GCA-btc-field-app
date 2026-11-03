@@ -698,5 +698,8 @@
   "exportDepthFromCm": "სიღრმე, დან (სმ)",
   "exportDepthToCm": "სიღრმე, მდე (სმ)",
   "shareRecordsXlsx": "ბტკ ჩანაწერები — Excel",
-  "exportExcelAll": "Excel (ყველა ცხრილით)"
+  "exportExcelAll": "Excel (ყველა ცხრილით)",
+  "statsExportPdf": "შედეგების PDF, გრაფიკებით",
+  "statsFirstDate": "პირველი თარიღი",
+  "statsLastDate": "ბოლო თარიღი"
 }

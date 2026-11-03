@@ -3991,6 +3991,24 @@ abstract class AppLocalizations {
   /// In ka, this message translates to:
   /// **'Excel (ყველა ცხრილით)'**
   String get exportExcelAll;
+
+  /// No description provided for @statsExportPdf.
+  ///
+  /// In ka, this message translates to:
+  /// **'შედეგების PDF, გრაფიკებით'**
+  String get statsExportPdf;
+
+  /// No description provided for @statsFirstDate.
+  ///
+  /// In ka, this message translates to:
+  /// **'პირველი თარიღი'**
+  String get statsFirstDate;
+
+  /// No description provided for @statsLastDate.
+  ///
+  /// In ka, this message translates to:
+  /// **'ბოლო თარიღი'**
+  String get statsLastDate;
 }
 
 class _AppLocalizationsDelegate
