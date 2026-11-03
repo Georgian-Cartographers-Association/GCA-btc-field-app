@@ -1,6 +1,7 @@
 import '../../../l10n/localized_text.dart';
 import '../../../models/btk_record.dart';
 import '../../../models/record_quality.dart';
+import 'record_analytics.dart';
 
 /// Shown for a value that was typed but can't be used, such as "ბევრი" in a
 /// number field or a depth with no unit.
@@ -20,7 +21,7 @@ class CompareRow {
 }
 
 // Web prints a whole double as "50" and native as "50.0", so both drop the ".0".
-String _shown(double v) {
+String shownNumber(double v) {
   final s = double.parse(v.toStringAsFixed(2)).toString();
   return s.endsWith('.0') ? s.substring(0, s.length - 2) : s;
 }
@@ -39,7 +40,7 @@ String? _sumRows<T>(
     if (v == null) return compareUnreadable;
     total += v;
   }
-  return _shown(total);
+  return shownNumber(total);
 }
 
 String? _deepestCm(BtkRecord r) {
@@ -51,7 +52,7 @@ String? _deepestCm(BtkRecord r) {
     if (range == null) return compareUnreadable;
     if (range.to > deepest) deepest = range.to;
   }
-  return _shown(deepest);
+  return shownNumber(deepest);
 }
 
 String? _tallest(BtkRecord r) {
@@ -63,7 +64,7 @@ String? _tallest(BtkRecord r) {
     if (height == null) return compareUnreadable;
     if (height > tallest) tallest = height;
   }
-  return _shown(tallest);
+  return shownNumber(tallest);
 }
 
 String? _count(int n) => n == 0 ? null : '$n';
@@ -84,7 +85,7 @@ List<CompareRow> compareRecords(List<BtkRecord> records) {
     row(basic, (l) => l.date, (r) => r.date.toIso8601String().substring(0, 10)),
     row(basic, (l) => l.location, (r) => _text(r.location)),
     row(basic, (l) => l.recordGroup, (r) => _text(r.group)),
-    row(basic, (l) => l.altitudeM, (r) => r.altitude == null ? null : _shown(r.altitude!)),
+    row(basic, (l) => l.altitudeM, (r) => r.altitude == null ? null : shownNumber(r.altitude!)),
     row(phys, (l) => l.geologicalFormation, (r) => _text(r.geologicalFormation)),
     row(phys, (l) => l.reliefType, (r) => _text(r.reliefType)),
     row(phys, (l) => l.geomorphProcesses, (r) => _text(r.geomorphProcesses)),
@@ -92,6 +93,7 @@ List<CompareRow> compareRecords(List<BtkRecord> records) {
     row(phys, (l) => l.moistureDegree, (r) => _text(r.moistureDegree)),
     row(veg, (l) => l.compareVegRows,
         (r) => _count(r.vegetation.where((v) => !isBlankRow(v.toJson())).length)),
+    row(veg, (l) => l.compareTiers, (r) => _text(tierLabels(r).join(', '))),
     row(veg, (l) => l.compareMaxHeight, _tallest),
     row(veg, (l) => l.species,
         (r) => _text(r.vegetation.map((v) => v.species.trim()).where((s) => s.isNotEmpty).join(', '))),
@@ -99,6 +101,7 @@ List<CompareRow> compareRecords(List<BtkRecord> records) {
     row(soil, (l) => l.geohorizonIndex, (r) => _text(r.geohorizonIndex)),
     row(soil, (l) => l.compareHorizons,
         (r) => _count(r.soilHorizons.where((h) => !isBlankRow(h.toJson())).length)),
+    row(soil, (l) => l.compareHorizonOrder, (r) => _text(horizonOrder(horizonLabels(r)))),
     row(geo, (l) => l.compareDeepest, _deepestCm),
     row(geo, (l) => l.comparePedomass,
         (r) => _sumRows(r.geomasses, (g) => g.pedomassQty, (g) => g.pedomassQtyValue)),

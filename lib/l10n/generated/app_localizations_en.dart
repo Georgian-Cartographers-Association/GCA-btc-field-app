@@ -1974,4 +1974,48 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get onlyLocalStorageHere =>
       'Accounts and cloud storage aren\'t available on this device. Records are kept only here, so back them up from time to time.';
+
+  @override
+  String get compareTiers => 'Tiers';
+
+  @override
+  String get compareHorizonOrder => 'Horizon order';
+
+  @override
+  String get statsVegStructure => 'Vegetation structure';
+
+  @override
+  String get statsSoilHorizons => 'Soil horizons';
+
+  @override
+  String statsRecordsWithData(Object count, Object total) {
+    return '$count of $total records have data';
+  }
+
+  @override
+  String get statsTierRecords => 'Records';
+
+  @override
+  String get statsTierSpecies => 'Species';
+
+  @override
+  String get statsNoTier => 'No tier';
+
+  @override
+  String get statsSpeciesFrequency => 'Species (records naming each)';
+
+  @override
+  String get statsHorizonFrequency => 'Horizons (records holding each)';
+
+  @override
+  String get statsHorizonOrders => 'Horizon order (records with each)';
+
+  @override
+  String statsMoreItems(Object count) {
+    return 'and $count more';
+  }
+
+  @override
+  String get statsAnalysisNote =>
+      'These are counts of the values entered, not conclusions. A name written differently counts separately. \"?\" means a value was filled in but can\'t be used.';
 }

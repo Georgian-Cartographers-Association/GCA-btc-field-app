@@ -1930,4 +1930,48 @@ class AppLocalizationsKa extends AppLocalizations {
   @override
   String get onlyLocalStorageHere =>
       'ამ მოწყობილობაზე ანგარიში და ღრუბელი მიუწვდომელია. ჩანაწერები მხოლოდ აქ ინახება, ამიტომ დროდადრო გააკეთე სარეზერვო ასლი.';
+
+  @override
+  String get compareTiers => 'იარუსები';
+
+  @override
+  String get compareHorizonOrder => 'ჰორიზონტების რიგი';
+
+  @override
+  String get statsVegStructure => 'მცენარეულობის სტრუქტურა';
+
+  @override
+  String get statsSoilHorizons => 'ნიადაგის ჰორიზონტები';
+
+  @override
+  String statsRecordsWithData(Object count, Object total) {
+    return 'მონაცემი აქვს $count ჩანაწერს $total-დან';
+  }
+
+  @override
+  String get statsTierRecords => 'ჩანაწ.';
+
+  @override
+  String get statsTierSpecies => 'სახეობა';
+
+  @override
+  String get statsNoTier => 'იარუსის გარეშე';
+
+  @override
+  String get statsSpeciesFrequency => 'სახეობები (რამდენ ჩანაწერშია)';
+
+  @override
+  String get statsHorizonFrequency => 'ჰორიზონტები (რამდენ ჩანაწერშია)';
+
+  @override
+  String get statsHorizonOrders => 'ჰორიზონტების რიგი (რამდენ ჩანაწერშია)';
+
+  @override
+  String statsMoreItems(Object count) {
+    return 'და კიდევ $count';
+  }
+
+  @override
+  String get statsAnalysisNote =>
+      'ეს შეყვანილი მონაცემების დათვლაა და არა დასკვნა. სხვანაირად დაწერილი სახელი ცალკე ითვლება. „?“ ნიშნავს, რომ მნიშვნელობა შევსებულია, მაგრამ ვერ გამოიყენება.';
 }

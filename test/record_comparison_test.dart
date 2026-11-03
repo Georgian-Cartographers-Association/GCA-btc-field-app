@@ -80,6 +80,20 @@ void main() {
     expect(valuesOf(records, l10n.species), ['Fagus orientalis, Abies nordmanniana', null]);
   });
 
+  test('horizons compare by their order, and tiers by their names', () {
+    final a = _record('A')
+      ..vegetation = [VegetationRow(tier: 'I'), VegetationRow(tier: ' i '), VegetationRow(tier: 'II')]
+      ..soilHorizons = [
+        SoilHorizonRow(horizon: 'A'),
+        SoilHorizonRow(description: 'stony'),
+        SoilHorizonRow(horizon: 'C'),
+        SoilHorizonRow(),
+      ];
+    final records = [a, _record('B')];
+    expect(valuesOf(records, l10n.compareTiers), ['I, II', null]);
+    expect(valuesOf(records, l10n.compareHorizonOrder), ['A → ? → C', null]);
+  });
+
   testWidgets('the differences switch hides equal lines', (tester) async {
     final a = _record('A')
       ..name = 'First'

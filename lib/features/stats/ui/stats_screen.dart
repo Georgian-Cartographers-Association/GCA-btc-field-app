@@ -5,6 +5,8 @@ import 'package:latlong2/latlong.dart';
 import '../../../models/btk_record.dart';
 import '../../records/domain/record_filter.dart';
 import '../../records/domain/btk_provider.dart';
+import '../domain/record_analytics.dart';
+import '../domain/record_comparison.dart';
 import '../../../l10n/generated/app_localizations.dart';
 
 class StatsScreen extends ConsumerWidget {
@@ -61,6 +63,7 @@ class _StatsBody extends StatelessWidget {
             .length,
     };
     final maxM = monthly.values.fold(0, (a, b) => a > b ? a : b);
+    final analytics = RecordAnalytics.of(records);
 
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -108,6 +111,39 @@ class _StatsBody extends StatelessWidget {
           _SectionTitle(l10n.statsSoilTypes),
           const SizedBox(height: 8),
           _FreqBars(entries: soilFreq.take(5).toList(), color: Colors.brown),
+          const SizedBox(height: 20),
+        ],
+
+        // ── Vegetation structure ────────────────────────────────────────────
+        if (analytics.hasVegetation) ...[
+          _SectionTitle(l10n.statsVegStructure),
+          _DataShare(count: analytics.recordsWithVegetation, total: records.length),
+          const SizedBox(height: 8),
+          _TierTable(tiers: analytics.tiers),
+          if (analytics.species.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            _SubTitle(l10n.statsSpeciesFrequency),
+            _LongFreqBars(entries: analytics.species, color: Colors.green),
+          ],
+          const SizedBox(height: 20),
+        ],
+
+        // ── Soil horizons ───────────────────────────────────────────────────
+        if (analytics.hasHorizons) ...[
+          _SectionTitle(l10n.statsSoilHorizons),
+          _DataShare(count: analytics.recordsWithHorizons, total: records.length),
+          const SizedBox(height: 8),
+          _SubTitle(l10n.statsHorizonFrequency),
+          _LongFreqBars(entries: analytics.horizons, color: Colors.brown),
+          const SizedBox(height: 12),
+          _SubTitle(l10n.statsHorizonOrders),
+          _LongFreqBars(entries: analytics.horizonOrders, color: Colors.brown),
+          const SizedBox(height: 20),
+        ],
+
+        if (analytics.hasVegetation || analytics.hasHorizons) ...[
+          Text(l10n.statsAnalysisNote,
+              style: TextStyle(fontSize: 12, color: cs.onSurfaceVariant)),
           const SizedBox(height: 20),
         ],
 
@@ -304,7 +340,119 @@ class _FreqBars extends StatelessWidget {
   }
 }
 
+/// [_FreqBars] for lists that can run long, saying how many were left out.
+class _LongFreqBars extends StatelessWidget {
+  static const _shown = 10;
+
+  final List<MapEntry<String, int>> entries;
+  final Color color;
+  const _LongFreqBars({required this.entries, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final hidden = entries.length - _shown;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _FreqBars(entries: entries.take(_shown).toList(), color: color),
+        if (hidden > 0)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
+            child: Text(l10n.statsMoreItems(hidden),
+                style: const TextStyle(fontSize: 11, color: Colors.grey)),
+          ),
+      ],
+    );
+  }
+}
+
+class _TierTable extends StatelessWidget {
+  final List<TierSummary> tiers;
+  const _TierTable({required this.tiers});
+
+  static String? _heights(TierSummary t) {
+    final min = t.minHeight;
+    final max = t.maxHeight;
+    final range = min == null || max == null
+        ? null
+        : min == max
+            ? shownNumber(min)
+            : '${shownNumber(min)}–${shownNumber(max)}';
+    if (t.unreadableHeights == 0) return range;
+    final unreadable = '$compareUnreadable×${t.unreadableHeights}';
+    return range == null ? unreadable : '$range, $unreadable';
+  }
+
+  Widget _cell(String? text, {bool bold = false}) => Padding(
+        padding: const EdgeInsets.all(6),
+        child: Text(
+          text ?? '—',
+          style: TextStyle(
+            fontSize: 11,
+            fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(6),
+        child: Table(
+          columnWidths: const {
+            0: FlexColumnWidth(3),
+            1: FlexColumnWidth(2),
+            2: FlexColumnWidth(2),
+            3: FlexColumnWidth(3),
+          },
+          children: [
+            TableRow(children: [
+              _cell(l10n.vegTier, bold: true),
+              _cell(l10n.statsTierRecords, bold: true),
+              _cell(l10n.statsTierSpecies, bold: true),
+              _cell(l10n.vegHeightM, bold: true),
+            ]),
+            for (final t in tiers)
+              TableRow(children: [
+                _cell(t.tier.isEmpty ? l10n.statsNoTier : t.tier),
+                _cell('${t.records}'),
+                _cell('${t.species}'),
+                _cell(_heights(t)),
+              ]),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
+
+class _DataShare extends StatelessWidget {
+  final int count;
+  final int total;
+  const _DataShare({required this.count, required this.total});
+
+  @override
+  Widget build(BuildContext context) => Text(
+        AppLocalizations.of(context)!.statsRecordsWithData(count, total),
+        style: const TextStyle(fontSize: 11, color: Colors.grey),
+      );
+}
+
+class _SubTitle extends StatelessWidget {
+  final String text;
+  const _SubTitle(this.text);
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(bottom: 4),
+        child: Text(text, style: const TextStyle(fontSize: 12)),
+      );
+}
 
 class _Card extends StatelessWidget {
   final String label;

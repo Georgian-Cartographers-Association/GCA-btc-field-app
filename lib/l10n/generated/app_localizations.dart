@@ -3697,6 +3697,84 @@ abstract class AppLocalizations {
   /// In ka, this message translates to:
   /// **'ამ მოწყობილობაზე ანგარიში და ღრუბელი მიუწვდომელია. ჩანაწერები მხოლოდ აქ ინახება, ამიტომ დროდადრო გააკეთე სარეზერვო ასლი.'**
   String get onlyLocalStorageHere;
+
+  /// No description provided for @compareTiers.
+  ///
+  /// In ka, this message translates to:
+  /// **'იარუსები'**
+  String get compareTiers;
+
+  /// No description provided for @compareHorizonOrder.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჰორიზონტების რიგი'**
+  String get compareHorizonOrder;
+
+  /// No description provided for @statsVegStructure.
+  ///
+  /// In ka, this message translates to:
+  /// **'მცენარეულობის სტრუქტურა'**
+  String get statsVegStructure;
+
+  /// No description provided for @statsSoilHorizons.
+  ///
+  /// In ka, this message translates to:
+  /// **'ნიადაგის ჰორიზონტები'**
+  String get statsSoilHorizons;
+
+  /// No description provided for @statsRecordsWithData.
+  ///
+  /// In ka, this message translates to:
+  /// **'მონაცემი აქვს {count} ჩანაწერს {total}-დან'**
+  String statsRecordsWithData(Object count, Object total);
+
+  /// No description provided for @statsTierRecords.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩანაწ.'**
+  String get statsTierRecords;
+
+  /// No description provided for @statsTierSpecies.
+  ///
+  /// In ka, this message translates to:
+  /// **'სახეობა'**
+  String get statsTierSpecies;
+
+  /// No description provided for @statsNoTier.
+  ///
+  /// In ka, this message translates to:
+  /// **'იარუსის გარეშე'**
+  String get statsNoTier;
+
+  /// No description provided for @statsSpeciesFrequency.
+  ///
+  /// In ka, this message translates to:
+  /// **'სახეობები (რამდენ ჩანაწერშია)'**
+  String get statsSpeciesFrequency;
+
+  /// No description provided for @statsHorizonFrequency.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჰორიზონტები (რამდენ ჩანაწერშია)'**
+  String get statsHorizonFrequency;
+
+  /// No description provided for @statsHorizonOrders.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჰორიზონტების რიგი (რამდენ ჩანაწერშია)'**
+  String get statsHorizonOrders;
+
+  /// No description provided for @statsMoreItems.
+  ///
+  /// In ka, this message translates to:
+  /// **'და კიდევ {count}'**
+  String statsMoreItems(Object count);
+
+  /// No description provided for @statsAnalysisNote.
+  ///
+  /// In ka, this message translates to:
+  /// **'ეს შეყვანილი მონაცემების დათვლაა და არა დასკვნა. სხვანაირად დაწერილი სახელი ცალკე ითვლება. „?“ ნიშნავს, რომ მნიშვნელობა შევსებულია, მაგრამ ვერ გამოიყენება.'**
+  String get statsAnalysisNote;
 }
 
 class _AppLocalizationsDelegate

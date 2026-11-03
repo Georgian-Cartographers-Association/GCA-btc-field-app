@@ -6,7 +6,9 @@ import '../../form/ui/widgets/record_tools.dart' show sectionLabel;
 import '../domain/record_comparison.dart';
 
 const _labelWidth = 135.0;
-const _valueWidth = 120.0;
+// Narrow enough that on a phone a third column shows at the edge, which says the
+// table scrolls sideways.
+const _valueWidth = 112.0;
 
 /// Puts [records] side by side, one column each.
 class CompareScreen extends StatefulWidget {
