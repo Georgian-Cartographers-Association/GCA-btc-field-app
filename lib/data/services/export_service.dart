@@ -454,8 +454,9 @@ class ExportService {
   static String _safeName(String s) =>
       s.replaceAll(RegExp(r'[/\\:*?"<>|]'), '').trim();
 
-  static String _label(BtkRecord r) =>
-      r.name.isNotEmpty ? _safeName(r.name) : r.id.substring(0, 8);
+  static String _label(BtkRecord r) => r.name.isNotEmpty
+      ? _safeName(r.name)
+      : r.id.substring(0, r.id.length < 8 ? r.id.length : 8);
 
   static String _pdfFilename(List<BtkRecord> records) {
     if (records.length == 1) {
@@ -614,7 +615,59 @@ class ExportService {
 
   static Future<void> exportBtkz(
       List<BtkRecord> records, BuildContext context) async {
-        final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context)!;
+    final built = await buildBtkz(records);
+    final zipBytes = built.bytes;
+    final photoCount = built.photoCount;
+    final trackCount = built.trackCount;
+    final filename = records.length == 1
+        ? 'btk_${_label(records.first)}_${_fmtDate(records.first.date)}.btkz'
+        : 'btk_export_${_fmtDate(DateTime.now())}.btkz';
+
+    if (kIsWeb) {
+      await Share.shareXFiles(
+          [XFile.fromData(zipBytes, name: filename)],
+          subject: filename);
+      return;
+    }
+
+    try {
+      final isDesktop =
+          Platform.isWindows || Platform.isLinux || Platform.isMacOS;
+      final path = await FilePicker.platform.saveFile(
+        dialogTitle: l10n.exportBtkzTitle,
+        fileName: filename,
+        type: isDesktop ? FileType.custom : FileType.any,
+        allowedExtensions: isDesktop ? ['btkz'] : null,
+        bytes: isDesktop ? null : zipBytes,
+      );
+      if (path == null) return;
+      if (isDesktop) await File(path).writeAsBytes(zipBytes);
+      if (context.mounted) {
+        final suffix = [
+          if (photoCount > 0) l10n.photosCount(photoCount),
+          if (trackCount > 0) l10n.tracksCount(trackCount),
+        ].join(', ');
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(isDesktop
+              ? l10n.savedAtPath(path)
+              : suffix.isNotEmpty
+                  ? l10n.exportedWith(suffix)
+                  : l10n.exported),
+          duration: const Duration(seconds: 4),
+        ));
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(l10n.errorWithDetail('$e'))));
+      }
+    }
+  }
+
+  @visibleForTesting
+  static Future<({Uint8List bytes, int photoCount, int trackCount})> buildBtkz(
+      List<BtkRecord> records) async {
     final archive = Archive();
 
     // records.json
@@ -630,7 +683,7 @@ class ExportService {
     final List<Map<String, dynamic>> photosMeta = [];
     if (!kIsWeb) {
       for (final r in records) {
-        final photos = await BtkDatabase.getPhotos(r.id);
+        final photos = await BtkDatabase.getRecordPhotos(r.id);
         for (final p in photos) {
           final f = File(p.filePath);
           if (!await f.exists()) continue;
@@ -665,50 +718,11 @@ class ExportService {
     final tJson = utf8.encode(jsonEncode(tracksMeta));
     archive.addFile(ArchiveFile('tracks.json', tJson.length, tJson));
 
-    final zipBytes = Uint8List.fromList(ZipEncoder().encode(archive));
-    final filename = records.length == 1
-        ? 'btk_${_label(records.first)}_${_fmtDate(records.first.date)}.btkz'
-        : 'btk_export_${_fmtDate(DateTime.now())}.btkz';
-
-    if (kIsWeb) {
-      await Share.shareXFiles(
-          [XFile.fromData(zipBytes, name: filename)],
-          subject: filename);
-      return;
-    }
-
-    try {
-      final isDesktop =
-          Platform.isWindows || Platform.isLinux || Platform.isMacOS;
-      final path = await FilePicker.platform.saveFile(
-        dialogTitle: l10n.exportBtkzTitle,
-        fileName: filename,
-        type: isDesktop ? FileType.custom : FileType.any,
-        allowedExtensions: isDesktop ? ['btkz'] : null,
-        bytes: isDesktop ? null : zipBytes,
-      );
-      if (path == null) return;
-      if (isDesktop) await File(path).writeAsBytes(zipBytes);
-      if (context.mounted) {
-        final suffix = [
-          if (photosMeta.isNotEmpty) l10n.photosCount(photosMeta.length),
-          if (tracksMeta.isNotEmpty) l10n.tracksCount(tracksMeta.length),
-        ].join(', ');
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(isDesktop
-              ? l10n.savedAtPath(path)
-              : suffix.isNotEmpty
-                  ? l10n.exportedWith(suffix)
-                  : l10n.exported),
-          duration: const Duration(seconds: 4),
-        ));
-      }
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(l10n.errorWithDetail('$e'))));
-      }
-    }
+    return (
+      bytes: Uint8List.fromList(ZipEncoder().encode(archive)),
+      photoCount: photosMeta.length,
+      trackCount: tracksMeta.length,
+    );
   }
 
   /// Returns null if user cancels.
@@ -733,6 +747,12 @@ class ExportService {
       throw Exception(l10n.fileReadFailed);
     }
 
+    return readBtkz(bytes, l10n);
+  }
+
+  @visibleForTesting
+  static Future<({List<BtkRecord> records, int photoCount, int trackCount})>
+      readBtkz(List<int> bytes, AppLocalizations l10n) async {
     final archive = ZipDecoder().decodeBytes(bytes);
 
     final rFile = archive.findFile('records.json');

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../core/app_messenger.dart';
 import '../../core/constants.dart';
 import '../../database/btk_database.dart';
 import '../../models/btk_record.dart';
@@ -16,23 +17,33 @@ class LocalRepository implements DataRepository {
 
   @override
   Future<List<BtkRecord>> getAll() async {
-    if (kIsWeb) return _loadWeb();
+    final (records, skipped) =
+        kIsWeb ? await _loadWeb() : await _loadDatabase();
+    if (skipped > 0) {
+      AppMessenger.showError((l10n) => l10n.recordsUnreadable(skipped));
+    }
+    return records;
+  }
+
+  static Future<(List<BtkRecord>, int)> _loadDatabase() async {
     await MigrationService.migrateIfNeeded();
-    return BtkDatabase.getAllRecords();
+    return BtkDatabase.readAllRecords();
   }
 
   @override
-  Future<bool> upsert(BtkRecord record) async {
-    record.updatedAt = DateTime.now();
+  Future<bool> upsert(BtkRecord record, {bool keepUpdatedAt = false}) async {
+    if (!keepUpdatedAt) record.updatedAt = DateTime.now();
     if (kIsWeb) {
-      final all = await _loadWeb();
-      final idx = all.indexWhere((r) => r.id == record.id);
-      if (idx >= 0) {
-        all[idx] = record;
-      } else {
-        all.add(record);
-      }
-      await _saveWeb(all);
+      await _serialWeb(() async {
+        final (all, _) = await _loadWeb();
+        final idx = all.indexWhere((r) => r.id == record.id);
+        if (idx >= 0) {
+          all[idx] = record;
+        } else {
+          all.add(record);
+        }
+        await _saveWeb(all);
+      });
     } else {
       await BtkDatabase.upsertRecord(record);
     }
@@ -42,32 +53,45 @@ class LocalRepository implements DataRepository {
   @override
   Future<void> delete(String id) async {
     if (kIsWeb) {
-      final all = await _loadWeb();
-      await _saveWeb(all.where((r) => r.id != id).toList());
+      await _serialWeb(() async {
+        final (all, _) = await _loadWeb();
+        await _saveWeb(all.where((r) => r.id != id).toList());
+      });
     } else {
-      await _deletePhotoFiles(id);
+      // Files go last, so a failed database delete leaves the photos intact.
+      final photos = await BtkDatabase.getRecordPhotos(id);
       await BtkDatabase.deleteRecord(id);
-    }
-  }
-
-  // Delete all photo files on disk for a record before removing from DB.
-  static Future<void> _deletePhotoFiles(String id) async {
-    final photos = await BtkDatabase.getPhotos(id);
-    for (final photo in photos) {
-      try {
-        await File(photo.filePath).delete();
-      } catch (_) {}
+      for (final photo in photos) {
+        try {
+          await File(photo.filePath).delete();
+        } catch (_) {}
+      }
     }
   }
 
   // ── Web helpers ─────────────────────────────────────────────────────────────
 
-  static Future<List<BtkRecord>> _loadWeb() async {
+  // Each web save rewrites all records, so saves must not overlap.
+  static Future<void> _webQueue = Future.value();
+
+  static Future<void> _serialWeb(Future<void> Function() action) {
+    final result = _webQueue.then((_) => action());
+    _webQueue = result.catchError((Object _) {});
+    return result;
+  }
+
+  static Future<(List<BtkRecord>, int)> _loadWeb() async {
     final prefs = await SharedPreferences.getInstance();
     final raw = prefs.getString(AppConstants.prefRecords);
-    if (raw == null) return [];
+    if (raw == null) return (<BtkRecord>[], 0);
     final list = jsonDecode(raw) as List<dynamic>;
-    return list.map((e) => BtkRecord.fromJson(e as Map<String, dynamic>)).toList();
+    final records = <BtkRecord>[];
+    for (final item in list) {
+      if (item is Map) {
+        records.add(BtkRecord.fromJson(Map<String, dynamic>.from(item)));
+      }
+    }
+    return (records, list.length - records.length);
   }
 
   static Future<void> _saveWeb(List<BtkRecord> records) async {

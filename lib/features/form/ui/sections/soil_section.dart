@@ -82,6 +82,13 @@ class _SoilSectionState extends ConsumerState<SoilSection> {
     widget.onChanged(r);
   }
 
+  // A table cell edits its row in place, so it must report the change itself or
+  // the edit gets no autosave and no unsaved-changes warning.
+  ValueChanged<String> _edit(void Function(String) set) => (v) {
+        set(v);
+        widget.onChanged(widget.record);
+      };
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -166,7 +173,7 @@ class _SoilSectionState extends ConsumerState<SoilSection> {
                     width: 80,
                     child: TextField(
                       controller: cs[0],
-                      onChanged: (v) => h.horizon = v,
+                      onChanged: _edit((v) => h.horizon = v),
                       decoration: InputDecoration(
                         labelText: l10n.horizonShort,
                         border: OutlineInputBorder(),
@@ -180,7 +187,7 @@ class _SoilSectionState extends ConsumerState<SoilSection> {
                   Expanded(
                     child: TextField(
                       controller: cs[1],
-                      onChanged: (v) => h.description = v,
+                      onChanged: _edit((v) => h.description = v),
                       maxLines: 2,
                       decoration: InputDecoration(
                         labelText: l10n.description,

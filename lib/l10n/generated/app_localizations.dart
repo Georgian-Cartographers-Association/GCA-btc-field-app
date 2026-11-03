@@ -3074,6 +3074,66 @@ abstract class AppLocalizations {
   /// **'ბტკ — {filename}'**
   String shareBtkFile(String filename);
 
+  /// No description provided for @saveFailed.
+  ///
+  /// In ka, this message translates to:
+  /// **'ვერ შეინახა. ცვლილებები ჯერ მხოლოდ ეკრანზეა.'**
+  String get saveFailed;
+
+  /// No description provided for @cloudSaveFailed.
+  ///
+  /// In ka, this message translates to:
+  /// **'სერვერმა ცვლილება არ მიიღო და ის არ შეინახა.'**
+  String get cloudSaveFailed;
+
+  /// No description provided for @recordsLoadFailed.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩანაწერების ჩატვირთვა ვერ მოხერხდა.'**
+  String get recordsLoadFailed;
+
+  /// No description provided for @deleteFailed.
+  ///
+  /// In ka, this message translates to:
+  /// **'წაშლა ვერ მოხერხდა.'**
+  String get deleteFailed;
+
+  /// No description provided for @replaceCoordsTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'შევცვალო კოორდინატები?'**
+  String get replaceCoordsTitle;
+
+  /// No description provided for @replaceCoordsMessage.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩანაწერს უკვე აქვს კოორდინატები. GPS-ის მონაცემები მათ შეცვლის.'**
+  String get replaceCoordsMessage;
+
+  /// No description provided for @replaceAction.
+  ///
+  /// In ka, this message translates to:
+  /// **'შეცვლა'**
+  String get replaceAction;
+
+  /// No description provided for @locationFailed.
+  ///
+  /// In ka, this message translates to:
+  /// **'მდებარეობა ვერ დადგინდა. სცადე ღია ადგილას.'**
+  String get locationFailed;
+
+  /// No description provided for @recordsUnreadable.
+  ///
+  /// In ka, this message translates to:
+  /// **'{count} ჩანაწერი ვერ წაიკითხა. ისინი არ წაშლილა.'**
+  String recordsUnreadable(int count);
+
+  /// No description provided for @importSkippedOlder.
+  ///
+  /// In ka, this message translates to:
+  /// **'{count} გამოტოვებულია, რადგან უკვე არის იგივე ან უფრო ახალი ვერსია'**
+  String importSkippedOlder(int count);
+
   /// No description provided for @photoLabel.
   ///
   /// In ka, this message translates to:

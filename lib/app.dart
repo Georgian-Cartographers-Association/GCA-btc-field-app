@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'core/app_messenger.dart';
 import 'features/settings/domain/settings_provider.dart';
 import 'l10n/generated/app_localizations.dart';
 import 'router.dart';
@@ -20,6 +21,7 @@ class BtkApp extends ConsumerWidget {
       title: 'BTC Field App',
       debugShowCheckedModeBanner: false,
       routerConfig: appRouter,
+      scaffoldMessengerKey: AppMessenger.key,
       themeMode: settings.themeMode,
       locale: settings.locale,
       supportedLocales: const [Locale('ka'), Locale('en')],

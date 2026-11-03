@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../models/btk_record.dart';
 import 'data_repository.dart';
+import 'firestore_write.dart';
 
 /// Firestore-backed repository for a shared expedition.
 /// Path: expeditions/{expeditionId}/btk_records/{recordId}
@@ -19,42 +20,42 @@ class ExpeditionRepository implements DataRepository {
   Stream<List<BtkRecord>> get stream =>
       _col.orderBy('date', descending: true).snapshots().map(
             (snap) => snap.docs
-                .map((d) => BtkRecord.fromJson(d.data()))
+                .map((d) => BtkRecord.fromStored(d.id, d.data()))
                 .toList(),
           );
 
   @override
   Future<List<BtkRecord>> getAll() async {
     final snap = await _col.orderBy('date', descending: true).get();
-    return snap.docs.map((d) => BtkRecord.fromJson(d.data())).toList();
+    return snap.docs.map((d) => BtkRecord.fromStored(d.id, d.data())).toList();
   }
 
   @override
-  Future<bool> upsert(BtkRecord record) async {
-    bool conflicted = false;
-    // Capture the local updatedAt before the transaction (it may retry).
-    final localUpdatedAt = record.updatedAt;
+  Future<bool> upsert(BtkRecord record, {bool keepUpdatedAt = false}) async {
     final docRef = _col.doc(record.id);
-
-    await FirebaseFirestore.instance.runTransaction((tx) async {
-      final snap = await tx.get(docRef);
-      if (snap.exists) {
-        final raw = snap.data()!['updatedAt'];
-        final serverTs =
-            raw != null ? DateTime.tryParse(raw as String) : null;
-        // If server version is newer than what we last read, it's a conflict.
-        if (serverTs != null && serverTs.isAfter(localUpdatedAt)) {
-          conflicted = true;
-        }
-      }
-      // Always write — last-write-wins, but caller is informed of the conflict.
-      record.updatedAt = DateTime.now();
-      tx.set(docRef, record.toJson());
-    });
-
+    final conflicted = await _newerInCache(docRef, record.updatedAt);
+    // Always write — last-write-wins, but caller is informed of the conflict.
+    if (!keepUpdatedAt) record.updatedAt = DateTime.now();
+    sendToFirestore(docRef.set(record.toJson()));
     return conflicted;
   }
 
+  /// Compares with the local cache, which the live stream keeps current. A
+  /// transaction would give a stricter check but cannot run offline.
+  Future<bool> _newerInCache(
+      DocumentReference<Map<String, dynamic>> docRef, DateTime localTs) async {
+    try {
+      final snap = await docRef.get(const GetOptions(source: Source.cache));
+      final raw = snap.data()?['updatedAt'];
+      final serverTs = raw is String ? DateTime.tryParse(raw) : null;
+      return serverTs != null && serverTs.isAfter(localTs);
+    } on FirebaseException {
+      return false; // not in the cache yet
+    }
+  }
+
   @override
-  Future<void> delete(String id) => _col.doc(id).delete();
+  Future<void> delete(String id) async {
+    sendToFirestore(_col.doc(id).delete());
+  }
 }

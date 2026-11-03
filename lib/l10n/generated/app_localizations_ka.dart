@@ -1575,5 +1575,40 @@ class AppLocalizationsKa extends AppLocalizations {
   }
 
   @override
+  String get saveFailed => 'ვერ შეინახა. ცვლილებები ჯერ მხოლოდ ეკრანზეა.';
+
+  @override
+  String get cloudSaveFailed => 'სერვერმა ცვლილება არ მიიღო და ის არ შეინახა.';
+
+  @override
+  String get recordsLoadFailed => 'ჩანაწერების ჩატვირთვა ვერ მოხერხდა.';
+
+  @override
+  String get deleteFailed => 'წაშლა ვერ მოხერხდა.';
+
+  @override
+  String get replaceCoordsTitle => 'შევცვალო კოორდინატები?';
+
+  @override
+  String get replaceCoordsMessage =>
+      'ჩანაწერს უკვე აქვს კოორდინატები. GPS-ის მონაცემები მათ შეცვლის.';
+
+  @override
+  String get replaceAction => 'შეცვლა';
+
+  @override
+  String get locationFailed => 'მდებარეობა ვერ დადგინდა. სცადე ღია ადგილას.';
+
+  @override
+  String recordsUnreadable(int count) {
+    return '$count ჩანაწერი ვერ წაიკითხა. ისინი არ წაშლილა.';
+  }
+
+  @override
+  String importSkippedOlder(int count) {
+    return '$count გამოტოვებულია, რადგან უკვე არის იგივე ან უფრო ახალი ვერსია';
+  }
+
+  @override
   String get photoLabel => 'ფოტო';
 }

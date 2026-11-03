@@ -8,6 +8,7 @@ import 'package:dio_cache_interceptor_file_store/dio_cache_interceptor_file_stor
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
+import '../../../core/app_messenger.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -232,6 +233,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
       AnalyticsService.logRecordCreated();
       if (!mounted) return;
       context.push('/form', extra: record);
+    }, onError: (Object _) {
+      AppMessenger.showError((l10n) => l10n.saveFailed);
     });
   }
 

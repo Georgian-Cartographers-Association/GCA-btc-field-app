@@ -105,19 +105,28 @@ class BtkDatabase {
 
   // ── BtkRecord ───────────────────────────────────────────────────────────────
 
-  static Future<List<BtkRecord>> getAllRecords() async {
+  static Future<List<BtkRecord>> getAllRecords() async =>
+      (await readAllRecords()).$1;
+
+  /// Returns the records plus how many rows couldn't be read. Unreadable rows
+  /// stay in the database, and don't stop the others from loading.
+  static Future<(List<BtkRecord>, int)> readAllRecords() async {
     final db = await database;
     final rows = await db.query('btk_records', orderBy: 'date DESC');
-    return rows
-        .map((r) => BtkRecord.fromJson(jsonDecode(r['json'] as String)))
-        .toList();
+    final records = <BtkRecord>[];
+    var skipped = 0;
+    for (final r in rows) {
+      try {
+        records.add(BtkRecord.fromStored(r['id'] as String,
+            jsonDecode(r['json'] as String) as Map<String, dynamic>));
+      } catch (_) {
+        skipped++;
+      }
+    }
+    return (records, skipped);
   }
 
-  static Future<void> upsertRecord(BtkRecord r) async {
-    final db = await database;
-    await db.insert(
-      'btk_records',
-      {
+  static Map<String, Object?> _recordRow(BtkRecord r) => {
         'id': r.id,
         'json': jsonEncode(r.toJson()),
         'date': r.date.toIso8601String(),
@@ -126,17 +135,48 @@ class BtkDatabase {
         'latitude': r.latitude,
         'longitude': r.longitude,
         'updated_at': DateTime.now().toIso8601String(),
-      },
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+      };
+
+  static Future<void> upsertRecord(BtkRecord r) async {
+    final db = await database;
+    await db.insert('btk_records', _recordRow(r),
+        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
+  static Future<void> insertRecordIfAbsent(BtkRecord r) async {
+    final db = await database;
+    await db.insert('btk_records', _recordRow(r),
+        conflictAlgorithm: ConflictAlgorithm.ignore);
+  }
+
+  /// Deletes the record and the photo rows of all its sections.
   static Future<void> deleteRecord(String id) async {
     final db = await database;
-    await db.delete('btk_records', where: 'id = ?', whereArgs: [id]);
+    final keys = Photo.keysFor(id);
+    await db.transaction((txn) async {
+      await txn.delete('photos',
+          where: 'record_id IN (${_marks(keys)})', whereArgs: keys);
+      await txn.delete('btk_records', where: 'id = ?', whereArgs: [id]);
+    });
   }
 
+  static String _marks(List<String> values) =>
+      List.filled(values.length, '?').join(',');
+
   // ── Photos ──────────────────────────────────────────────────────────────────
+
+  /// All photos of a record, including the soil and vertical structure ones.
+  static Future<List<Photo>> getRecordPhotos(String recordId) async {
+    final db = await database;
+    final keys = Photo.keysFor(recordId);
+    final rows = await db.query(
+      'photos',
+      where: 'record_id IN (${_marks(keys)})',
+      whereArgs: keys,
+      orderBy: 'sort_order ASC, created_at ASC',
+    );
+    return rows.map(Photo.fromMap).toList();
+  }
 
   static Future<List<Photo>> getPhotos(String recordId) async {
     final db = await database;

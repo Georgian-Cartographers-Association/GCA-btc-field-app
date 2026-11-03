@@ -1612,5 +1612,49 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get saveFailed =>
+      'Could not save. Your changes are only on screen so far.';
+
+  @override
+  String get cloudSaveFailed =>
+      'The server rejected a change, so it was not stored.';
+
+  @override
+  String get recordsLoadFailed => 'Could not load the records.';
+
+  @override
+  String get deleteFailed => 'Could not delete.';
+
+  @override
+  String get replaceCoordsTitle => 'Replace the coordinates?';
+
+  @override
+  String get replaceCoordsMessage =>
+      'This record already has coordinates. The GPS reading will replace them.';
+
+  @override
+  String get replaceAction => 'Replace';
+
+  @override
+  String get locationFailed =>
+      'Could not get your location. Try somewhere with a clear view of the sky.';
+
+  @override
+  String recordsUnreadable(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count records',
+      one: '1 record',
+    );
+    return '$_temp0 could not be read. Nothing was deleted.';
+  }
+
+  @override
+  String importSkippedOlder(int count) {
+    return '$count skipped, because the same or a newer version already exists';
+  }
+
+  @override
   String get photoLabel => 'Photo';
 }

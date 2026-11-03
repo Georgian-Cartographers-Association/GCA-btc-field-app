@@ -1,4 +1,19 @@
-﻿class VegetationRow {
+﻿// Stored data may come from old versions or edited files, so reading never
+// fails on an unexpected type.
+String _str(dynamic v) => v == null ? '' : v.toString();
+
+double? _num(dynamic v) =>
+    v is num ? v.toDouble() : (v is String ? double.tryParse(v) : null);
+
+List<T>? _rows<T>(dynamic v, T Function(Map<String, dynamic>) fromJson) =>
+    v is List
+        ? v
+            .whereType<Map>()
+            .map((e) => fromJson(Map<String, dynamic>.from(e)))
+            .toList()
+        : null;
+
+class VegetationRow {
   String tier;
   String height;
   String density;
@@ -22,11 +37,11 @@
       };
 
   factory VegetationRow.fromJson(Map<String, dynamic> j) => VegetationRow(
-        tier: j['tier'] ?? '',
-        height: j['height'] ?? '',
-        density: j['density'] ?? '',
-        phenophase: j['phenophase'] ?? '',
-        species: j['species'] ?? '',
+        tier: _str(j['tier']),
+        height: _str(j['height']),
+        density: _str(j['density']),
+        phenophase: _str(j['phenophase']),
+        species: _str(j['species']),
       );
 }
 
@@ -38,7 +53,7 @@ class SoilHorizonRow {
 
   Map<String, dynamic> toJson() => {'horizon': horizon, 'description': description};
   factory SoilHorizonRow.fromJson(Map<String, dynamic> j) =>
-      SoilHorizonRow(horizon: j['horizon'] ?? '', description: j['description'] ?? '');
+      SoilHorizonRow(horizon: _str(j['horizon']), description: _str(j['description']));
 }
 
 class GeomassRow {
@@ -83,17 +98,17 @@ class GeomassRow {
       };
 
   factory GeomassRow.fromJson(Map<String, dynamic> j) => GeomassRow(
-        section: j['section'] ?? '',
-        depth: j['depth'] ?? '',
-        pedomassBulk: j['pedomassBulk'] ?? '',
-        pedomassQty: j['pedomassQty'] ?? '',
-        lithomassQty: j['lithomassQty'] ?? '',
-        lithomassDensity: j['lithomassDensity'] ?? '',
-        hydromassQty: j['hydromassQty'] ?? '',
-        hydromassWet: j['hydromassWet'] ?? '',
-        hydromassDry: j['hydromassDry'] ?? '',
-        phytomassWet: j['phytomassWet'] ?? '',
-        phytomassDry: j['phytomassDry'] ?? '',
+        section: _str(j['section']),
+        depth: _str(j['depth']),
+        pedomassBulk: _str(j['pedomassBulk']),
+        pedomassQty: _str(j['pedomassQty']),
+        lithomassQty: _str(j['lithomassQty']),
+        lithomassDensity: _str(j['lithomassDensity']),
+        hydromassQty: _str(j['hydromassQty']),
+        hydromassWet: _str(j['hydromassWet']),
+        hydromassDry: _str(j['hydromassDry']),
+        phytomassWet: _str(j['phytomassWet']),
+        phytomassDry: _str(j['phytomassDry']),
       );
 }
 
@@ -142,18 +157,18 @@ class TreePhytomassRow {
       };
 
   factory TreePhytomassRow.fromJson(Map<String, dynamic> j) => TreePhytomassRow(
-        species: j['species'] ?? '',
-        bulkDensity: j['bulkDensity'] ?? '',
-        wetWood: j['wetWood'] ?? '',
-        wetLeaves: j['wetLeaves'] ?? '',
-        wetBranches: j['wetBranches'] ?? '',
-        wetRoots: j['wetRoots'] ?? '',
-        wetTotal: j['wetTotal'] ?? '',
-        dryWood: j['dryWood'] ?? '',
-        dryLeaves: j['dryLeaves'] ?? '',
-        dryBranches: j['dryBranches'] ?? '',
-        dryRoots: j['dryRoots'] ?? '',
-        dryTotal: j['dryTotal'] ?? '',
+        species: _str(j['species']),
+        bulkDensity: _str(j['bulkDensity']),
+        wetWood: _str(j['wetWood']),
+        wetLeaves: _str(j['wetLeaves']),
+        wetBranches: _str(j['wetBranches']),
+        wetRoots: _str(j['wetRoots']),
+        wetTotal: _str(j['wetTotal']),
+        dryWood: _str(j['dryWood']),
+        dryLeaves: _str(j['dryLeaves']),
+        dryBranches: _str(j['dryBranches']),
+        dryRoots: _str(j['dryRoots']),
+        dryTotal: _str(j['dryTotal']),
       );
 }
 
@@ -267,50 +282,45 @@ class BtkRecord {
         'updatedAt': updatedAt.toIso8601String(),
       };
 
-  factory BtkRecord.fromJson(Map<String, dynamic> j) => BtkRecord(
-        id: j['id'] ?? '',
-        name: j['name'] ?? '',
-        date: DateTime.tryParse(j['date'] ?? '') ?? DateTime.now(),
-        latitude: (j['latitude'] as num?)?.toDouble(),
-        longitude: (j['longitude'] as num?)?.toDouble(),
-        altitude: (j['altitude'] as num?)?.toDouble(),
-        aspect: (j['aspect'] as num?)?.toDouble(),
-        location: j['location'] ?? '',
-        geologicalFormation: j['geologicalFormation'] ?? '',
-        reliefType: j['reliefType'] ?? '',
-        morphologicalDesc: j['morphologicalDesc'] ?? '',
-        geomorphProcesses: j['geomorphProcesses'] ?? '',
-        migrationRegime: j['migrationRegime'] ?? '',
-        moistureDegree: j['moistureDegree'] ?? '',
-        vegetation: (j['vegetation'] as List<dynamic>?)
-                ?.map((e) => VegetationRow.fromJson(e))
-                .toList() ??
-            [VegetationRow()],
-        soilTypeName: j['soilTypeName'] ?? '',
-        soilProfileDesc: j['soilProfileDesc'] ?? '',
-        soilHorizons: (j['soilHorizons'] as List<dynamic>?)
-                ?.map((e) => SoilHorizonRow.fromJson(e))
-                .toList() ??
-            [SoilHorizonRow()],
-        geohorizonIndex: j['geohorizonIndex'] ?? '',
-        soilSurfaceFormation: j['soilSurfaceFormation'] ?? '',
-        geomasses: (j['geomasses'] as List<dynamic>?)
-                ?.map((e) => GeomassRow.fromJson(e))
-                .toList() ??
-            [GeomassRow()],
-        experimentPlotSize: j['experimentPlotSize'] ?? '',
-        treePhytomass: (j['treePhytomass'] as List<dynamic>?)
-                ?.map((e) => TreePhytomassRow.fromJson(e))
-                .toList() ??
-            [TreePhytomassRow()],
-        vertStructTypeName: j['vertStructTypeName'] ?? '',
-        vertStructIndex: j['vertStructIndex'] ?? '',
-        vertStructHeight: j['vertStructHeight'] ?? '',
-        vertStructDesc: j['vertStructDesc'] ?? '',
-        updatedAt: j['updatedAt'] != null
-            ? DateTime.tryParse(j['updatedAt'] as String) ?? DateTime.now()
-            : DateTime.now(),
-      );
+  factory BtkRecord.fromJson(Map<String, dynamic> j) {
+    final date = DateTime.tryParse(_str(j['date'])) ?? DateTime.now();
+    return BtkRecord(
+      id: _str(j['id']),
+      name: _str(j['name']),
+      date: date,
+      latitude: _num(j['latitude']),
+      longitude: _num(j['longitude']),
+      altitude: _num(j['altitude']),
+      aspect: _num(j['aspect']),
+      location: _str(j['location']),
+      geologicalFormation: _str(j['geologicalFormation']),
+      reliefType: _str(j['reliefType']),
+      morphologicalDesc: _str(j['morphologicalDesc']),
+      geomorphProcesses: _str(j['geomorphProcesses']),
+      migrationRegime: _str(j['migrationRegime']),
+      moistureDegree: _str(j['moistureDegree']),
+      vegetation: _rows(j['vegetation'], VegetationRow.fromJson),
+      soilTypeName: _str(j['soilTypeName']),
+      soilProfileDesc: _str(j['soilProfileDesc']),
+      soilHorizons: _rows(j['soilHorizons'], SoilHorizonRow.fromJson),
+      geohorizonIndex: _str(j['geohorizonIndex']),
+      soilSurfaceFormation: _str(j['soilSurfaceFormation']),
+      geomasses: _rows(j['geomasses'], GeomassRow.fromJson),
+      experimentPlotSize: _str(j['experimentPlotSize']),
+      treePhytomass: _rows(j['treePhytomass'], TreePhytomassRow.fromJson),
+      vertStructTypeName: _str(j['vertStructTypeName']),
+      vertStructIndex: _str(j['vertStructIndex']),
+      vertStructHeight: _str(j['vertStructHeight']),
+      vertStructDesc: _str(j['vertStructDesc']),
+      // Without a timestamp, the record's own date is the safest age: "now"
+      // would let an old record look newer than everything else.
+      updatedAt: DateTime.tryParse(_str(j['updatedAt'])) ?? date,
+    );
+  }
+
+  /// Reads a record kept under [storedId], which fills in a missing `id`.
+  factory BtkRecord.fromStored(String storedId, Map<String, dynamic> j) =>
+      BtkRecord.fromJson(_str(j['id']).isEmpty ? {...j, 'id': storedId} : j);
 
   String toEmailText({bool georgian = true}) {
     final buf = StringBuffer();

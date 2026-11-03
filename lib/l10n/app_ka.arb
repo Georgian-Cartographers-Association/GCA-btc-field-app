@@ -529,5 +529,17 @@
   "@shareGpsTrack": { "placeholders": { "date": { "type": "String" } } },
   "shareBtkFile": "ბტკ — {filename}",
   "@shareBtkFile": { "placeholders": { "filename": { "type": "String" } } },
+  "saveFailed": "ვერ შეინახა. ცვლილებები ჯერ მხოლოდ ეკრანზეა.",
+  "cloudSaveFailed": "სერვერმა ცვლილება არ მიიღო და ის არ შეინახა.",
+  "recordsLoadFailed": "ჩანაწერების ჩატვირთვა ვერ მოხერხდა.",
+  "deleteFailed": "წაშლა ვერ მოხერხდა.",
+  "replaceCoordsTitle": "შევცვალო კოორდინატები?",
+  "replaceCoordsMessage": "ჩანაწერს უკვე აქვს კოორდინატები. GPS-ის მონაცემები მათ შეცვლის.",
+  "replaceAction": "შეცვლა",
+  "locationFailed": "მდებარეობა ვერ დადგინდა. სცადე ღია ადგილას.",
+  "recordsUnreadable": "{count} ჩანაწერი ვერ წაიკითხა. ისინი არ წაშლილა.",
+  "@recordsUnreadable": { "placeholders": { "count": { "type": "int" } } },
+  "importSkippedOlder": "{count} გამოტოვებულია, რადგან უკვე არის იგივე ან უფრო ახალი ვერსია",
+  "@importSkippedOlder": { "placeholders": { "count": { "type": "int" } } },
   "photoLabel": "ფოტო"
 }

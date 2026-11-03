@@ -504,5 +504,15 @@
   "exportedWith": "Exported ({details})",
   "shareGpsTrack": "GPS track — {date}",
   "shareBtkFile": "BTC — {filename}",
+  "saveFailed": "Could not save. Your changes are only on screen so far.",
+  "cloudSaveFailed": "The server rejected a change, so it was not stored.",
+  "recordsLoadFailed": "Could not load the records.",
+  "deleteFailed": "Could not delete.",
+  "replaceCoordsTitle": "Replace the coordinates?",
+  "replaceCoordsMessage": "This record already has coordinates. The GPS reading will replace them.",
+  "replaceAction": "Replace",
+  "locationFailed": "Could not get your location. Try somewhere with a clear view of the sky.",
+  "recordsUnreadable": "{count, plural, =1{1 record} other{{count} records}} could not be read. Nothing was deleted.",
+  "importSkippedOlder": "{count} skipped, because the same or a newer version already exists",
   "photoLabel": "Photo"
 }

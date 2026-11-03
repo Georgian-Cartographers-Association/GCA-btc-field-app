@@ -60,6 +60,13 @@ class _VegetationSectionState extends State<VegetationSection> {
     widget.onChanged(widget.record);
   }
 
+  // A table cell edits its row in place, so it must report the change itself or
+  // the edit gets no autosave and no unsaved-changes warning.
+  ValueChanged<String> _edit(void Function(String) set) => (v) {
+        set(v);
+        widget.onChanged(widget.record);
+      };
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -89,11 +96,11 @@ class _VegetationSectionState extends State<VegetationSection> {
                 final r = rows[i];
                 final cs = _ctrls[i];
                 return DataRow(cells: [
-                  DataCell(_tcell(cs[0], (v) => r.tier = v)),
-                  DataCell(_tcell(cs[1], (v) => r.height = v)),
-                  DataCell(_tcell(cs[2], (v) => r.density = v)),
-                  DataCell(_tcell(cs[3], (v) => r.phenophase = v)),
-                  DataCell(_tcell(cs[4], (v) => r.species = v, wide: true)),
+                  DataCell(_tcell(cs[0], _edit((v) => r.tier = v))),
+                  DataCell(_tcell(cs[1], _edit((v) => r.height = v))),
+                  DataCell(_tcell(cs[2], _edit((v) => r.density = v))),
+                  DataCell(_tcell(cs[3], _edit((v) => r.phenophase = v))),
+                  DataCell(_tcell(cs[4], _edit((v) => r.species = v), wide: true)),
                   DataCell(IconButton(
                     icon: const Icon(Icons.remove_circle_outline, size: 18, color: Colors.red),
                     onPressed: () => _removeRow(i),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/app_messenger.dart';
 import '../../../models/btk_record.dart';
 import '../domain/btk_provider.dart';
 import '../../../data/services/analytics_service.dart';
@@ -121,8 +122,12 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
       ),
     );
     if (confirm != true || !mounted) return;
-    for (final id in _selected.toList()) {
-      await ref.read(btkProvider.notifier).remove(id);
+    try {
+      for (final id in _selected.toList()) {
+        await ref.read(btkProvider.notifier).remove(id);
+      }
+    } catch (_) {
+      AppMessenger.showError((l10n) => l10n.deleteFailed);
     }
     _clearSelection();
   }
@@ -131,7 +136,12 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
 
   Future<void> _duplicate(BtkRecord r) async {
     final l10n = AppLocalizations.of(context)!;
-    await ref.read(btkProvider.notifier).duplicate(r, l10n.copySuffix);
+    try {
+      await ref.read(btkProvider.notifier).duplicate(r, l10n.copySuffix);
+    } catch (_) {
+      AppMessenger.showError((l10n) => l10n.saveFailed);
+      return;
+    }
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(l10n.recordDuplicated),
@@ -212,6 +222,7 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
             l10n.recordsCount(imported.added + imported.updated),
             if (r.photoCount > 0) l10n.photosCount(r.photoCount),
             if (r.trackCount > 0) l10n.tracksCount(r.trackCount),
+            if (imported.skipped > 0) l10n.importSkippedOlder(imported.skipped),
           ].join(', ');
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(l10n.importedParts(parts)),
@@ -225,9 +236,12 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
             await ref.read(btkProvider.notifier).importRecords(records);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(
-                l10n.importedSummary(imported.added + imported.updated,
-                    imported.added, imported.updated)),
+            content: Text([
+              l10n.importedSummary(imported.added + imported.updated,
+                  imported.added, imported.updated),
+              if (imported.skipped > 0)
+                l10n.importSkippedOlder(imported.skipped),
+            ].join(', ')),
             duration: const Duration(seconds: 4),
           ));
         }
@@ -256,7 +270,9 @@ class _RecordsScreenState extends ConsumerState<RecordsScreen> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             onPressed: () {
-              ref.read(btkProvider.notifier).remove(id);
+              ref.read(btkProvider.notifier).remove(id).catchError((Object _) {
+                AppMessenger.showError((l10n) => l10n.deleteFailed);
+              });
               AnalyticsService.logRecordDeleted();
               Navigator.pop(ctx);
             },
@@ -522,7 +538,7 @@ class _RecordTile extends ConsumerWidget {
                 backgroundColor:
                     Theme.of(context).colorScheme.primaryContainer,
                 child: Text(
-                  r.id.substring(0, 2),
+                  r.id.substring(0, r.id.length < 2 ? r.id.length : 2),
                   style: TextStyle(
                     color:
                         Theme.of(context).colorScheme.onPrimaryContainer,
