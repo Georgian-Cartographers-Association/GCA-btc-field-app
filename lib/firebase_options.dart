@@ -39,7 +39,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDyuQPzRoqSL9RnDT6r1b5jaq18EmH1eW0',
-    appId: '1:699141416460:android:484d87c41586c31c90f029',
+    appId: '1:699141416460:android:27d1fd597f130b4d90f029',
     messagingSenderId: '699141416460',
     projectId: 'gca-btk-field-app',
     storageBucket: 'gca-btk-field-app.firebasestorage.app',
