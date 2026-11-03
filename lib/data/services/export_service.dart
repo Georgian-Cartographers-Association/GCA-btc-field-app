@@ -18,6 +18,8 @@ import '../../models/gps_track.dart';
 import '../../database/btk_database.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../models/record_quality.dart';
+import '../../features/records/domain/record_filter.dart';
+import 'pdf_map.dart';
 import 'records_workbook.dart';
 
 class ExportService {
@@ -222,7 +224,7 @@ class ExportService {
 
   // ─── PDF ─────────────────────────────────────────────────────────────────────
 
-  static Future<Uint8List> buildPdf(List<BtkRecord> records) async {
+  static Future<Uint8List> buildPdf(List<BtkRecord> records, {TileFetcher? fetchTile}) async {
     // Bundled, so Georgian text prints without a network connection.
     final geoFont = pw.Font.ttf(
         await rootBundle.load('assets/fonts/NotoSansGeorgian-Regular.ttf'));
@@ -241,7 +243,14 @@ class ExportService {
     final generalImgMap = <String, List<pw.MemoryImage>>{};
     final soilImgMap = <String, List<pw.MemoryImage>>{};
     final vertImgMap = <String, List<pw.MemoryImage>>{};
+    final maps = <String, List<PlacedTile>>{};
+    final mapLoader = PdfMapLoader(fetch: fetchTile);
     for (final r in records) {
+      final point = r.mapPoint;
+      if (point != null) {
+        final map = await mapLoader.load(point.latitude, point.longitude);
+        if (map != null) maps[r.id] = map;
+      }
       generalImgMap[r.id] = await _loadPdfImages(r.id);
       soilImgMap[r.id] = await _loadPdfImages('${r.id}_soil');
       vertImgMap[r.id] = await _loadPdfImages('${r.id}_vertStruct');
@@ -285,6 +294,10 @@ class ExportService {
               _pdfRow('სიმაღლე', '${_plain(r.altitude!)} მ', style),
             if (r.aspect != null) _pdfRow('ასპექტი', '${_plain(r.aspect!)}°', style),
             _pdfRow('ადგილმდ.', r.location, style),
+            if (maps[r.id] != null) ...[
+              pw.SizedBox(height: 4),
+              _pdfMap(maps[r.id]!, style),
+            ],
             _pdfSep,
             // Physical geo
             _pdfHeader('ფიზიკურ-გეოგრაფიული დახასიათება', style),
@@ -366,6 +379,51 @@ class ExportService {
     }
 
     return doc.save();
+  }
+
+  static pw.Widget _pdfMap(List<PlacedTile> tiles,
+      pw.TextStyle Function({double size, bool bold, pw.Font? font}) style) {
+    const pageWidth = 531.0;
+    const scale = pageWidth / pdfMapWidth;
+    const marker = 10.0;
+    return pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.end,
+      children: [
+        pw.ClipRect(
+          child: pw.SizedBox(
+            width: pageWidth,
+            height: pdfMapHeight * scale,
+            child: pw.Stack(
+              overflow: pw.Overflow.clip,
+              children: [
+                for (final t in tiles)
+                  pw.Positioned(
+                    left: t.left * scale,
+                    top: t.top * scale,
+                    child: pw.Image(pw.MemoryImage(t.bytes),
+                        width: 256 * scale, height: 256 * scale),
+                  ),
+                pw.Positioned(
+                  left: pageWidth / 2 - marker / 2,
+                  top: pdfMapHeight * scale / 2 - marker / 2,
+                  child: pw.Container(
+                    width: marker,
+                    height: marker,
+                    decoration: pw.BoxDecoration(
+                      color: PdfColors.red,
+                      shape: pw.BoxShape.circle,
+                      border: pw.Border.all(color: PdfColors.white, width: 1.5),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        // OpenStreetMap's licence requires this credit wherever the map shows.
+        pw.Text('© OpenStreetMap contributors', style: style(size: 7)),
+      ],
+    );
   }
 
   static List<pw.Widget> _pdfGeomass(BtkRecord r,
