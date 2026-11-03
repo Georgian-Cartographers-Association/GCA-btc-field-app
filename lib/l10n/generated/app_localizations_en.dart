@@ -2049,4 +2049,35 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get statsGeomassNote =>
       'Layers group by the exact depth entered. A depth is unknown when it is blank, can\'t be read or has no unit chosen. One unreadable value turns a whole total into \"?\".';
+
+  @override
+  String get statsAltitudeBands => 'Altitude bands (m)';
+
+  @override
+  String get statsAltitudeBand => 'Band';
+
+  @override
+  String get statsNoAltitude => 'No altitude';
+
+  @override
+  String get statsBandNote =>
+      'These are equal bands, not altitude belts. Masses are the lowest and highest record totals (t/ha).';
+
+  @override
+  String get statsByYear => 'By year';
+
+  @override
+  String get statsYear => 'Year';
+
+  @override
+  String get statsRepeatedPlaces => 'Places described more than once';
+
+  @override
+  String statsRepeatedCount(Object count, Object first, Object last) {
+    return '$count records, $first – $last';
+  }
+
+  @override
+  String get statsTimeNote =>
+      'Places match only when the location is written the same way. The table shows what was entered and doesn\'t establish change: different years may cover different places. Tap a place to compare.';
 }

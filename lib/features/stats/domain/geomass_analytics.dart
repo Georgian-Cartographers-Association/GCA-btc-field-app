@@ -81,6 +81,8 @@ class ValueSpan {
     max = max == null || v > max! ? v : max;
   }
 
+  void addAll(Iterable<double?> values) => values.forEach(add);
+
   String? get text => rangeText(min, max, unreadable);
 }
 
@@ -137,11 +139,8 @@ List<ComponentSummary> _components(Iterable<BtkRecord> records) {
   for (final c in geomassComponents) {
     final totals = records.map(c.total).whereType<RowTotal>().toList();
     if (totals.isEmpty) continue;
-    final span = ValueSpan();
-    for (final t in totals) {
-      span.add(t.value);
-    }
-    result.add(ComponentSummary(c, totals.length, span));
+    result.add(ComponentSummary(
+        c, totals.length, ValueSpan()..addAll(totals.map((t) => t.value))));
   }
   return result;
 }

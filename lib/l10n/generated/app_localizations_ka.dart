@@ -2006,4 +2006,35 @@ class AppLocalizationsKa extends AppLocalizations {
   @override
   String get statsGeomassNote =>
       'ფენები ზუსტად შეყვანილი სიღრმით ჯგუფდება. სიღრმე უცნობია, თუ არ არის შევსებული, ვერ წაიკითხა ან ერთეული არ არის არჩეული. ჯამში ერთი წაუკითხავი მნიშვნელობა მთელ ჯამს „?“-ად აქცევს.';
+
+  @override
+  String get statsAltitudeBands => 'სიმაღლის ზოლები (მ)';
+
+  @override
+  String get statsAltitudeBand => 'ზოლი';
+
+  @override
+  String get statsNoAltitude => 'სიმაღლის გარეშე';
+
+  @override
+  String get statsBandNote =>
+      'ეს თანაბარი ზოლებია და არა სიმაღლებრივი სარტყლები. მასები ჩანაწერების ჯამების უმცირესი და უდიდესი მნიშვნელობაა (ტ/ჰა).';
+
+  @override
+  String get statsByYear => 'წლების მიხედვით';
+
+  @override
+  String get statsYear => 'წელი';
+
+  @override
+  String get statsRepeatedPlaces => 'რამდენჯერმე აღწერილი ადგილები';
+
+  @override
+  String statsRepeatedCount(Object count, Object first, Object last) {
+    return '$count ჩანაწერი, $first – $last';
+  }
+
+  @override
+  String get statsTimeNote =>
+      'ადგილი ემთხვევა მხოლოდ ერთნაირად დაწერილი ადგილმდებარეობით. ცხრილი აჩვენებს, რა არის შეყვანილი, და ცვლილებას არ ადასტურებს: წლებს შორის შეიძლება სხვადასხვა ადგილი იყოს აღწერილი. დააჭირე ადგილს შესადარებლად.';
 }

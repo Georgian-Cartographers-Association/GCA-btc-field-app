@@ -630,5 +630,14 @@
   "statsDepthUnknown": "Unknown",
   "statsPhytomassWet": "Phytomass wet",
   "statsPhytomassDry": "Phytomass dry",
-  "statsGeomassNote": "Layers group by the exact depth entered. A depth is unknown when it is blank, can't be read or has no unit chosen. One unreadable value turns a whole total into \"?\"."
+  "statsGeomassNote": "Layers group by the exact depth entered. A depth is unknown when it is blank, can't be read or has no unit chosen. One unreadable value turns a whole total into \"?\".",
+  "statsAltitudeBands": "Altitude bands (m)",
+  "statsAltitudeBand": "Band",
+  "statsNoAltitude": "No altitude",
+  "statsBandNote": "These are equal bands, not altitude belts. Masses are the lowest and highest record totals (t/ha).",
+  "statsByYear": "By year",
+  "statsYear": "Year",
+  "statsRepeatedPlaces": "Places described more than once",
+  "statsRepeatedCount": "{count} records, {first} – {last}",
+  "statsTimeNote": "Places match only when the location is written the same way. The table shows what was entered and doesn't establish change: different years may cover different places. Tap a place to compare."
 }

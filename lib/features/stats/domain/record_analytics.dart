@@ -61,7 +61,7 @@ class RecordAnalytics {
       recordsWithVegetation: vegetated.length,
       tiers: _tiers(vegetated),
       species: _countPerRecord(
-          vegetated.map((rows) => rows.expand((v) => _speciesNames(v.species)))),
+          vegetated.map((rows) => rows.expand((v) => speciesNames(v.species)))),
       recordsWithHorizons: orders.length,
       horizons: _sorted(_tally(orders.expand((l) => l.toSet()))),
       horizonOrders: _sorted(_tally(orders.map(horizonOrder))),
@@ -77,31 +77,31 @@ class RecordAnalytics {
 List<String> horizonLabels(BtkRecord r) => [
       for (final h in r.soilHorizons)
         if (!isBlankRow(h.toJson()))
-          h.horizon.trim().isEmpty ? compareUnreadable : _tidy(h.horizon),
+          h.horizon.trim().isEmpty ? compareUnreadable : tidyText(h.horizon),
     ];
 
 String horizonOrder(List<String> labels) => labels.join(' → ');
 
 /// The tiers named in [r], in the order they were entered.
 List<String> tierLabels(BtkRecord r) => _firstSpellings(
-    r.vegetation.map((v) => _tidy(v.tier)).where((t) => t.isNotEmpty)).toList();
+    r.vegetation.map((v) => tidyText(v.tier)).where((t) => t.isNotEmpty)).toList();
 
-String _tidy(String s) => s.trim().replaceAll(RegExp(r'\s+'), ' ');
+String tidyText(String s) => s.trim().replaceAll(RegExp(r'\s+'), ' ');
 
 // Latin names may differ in case only, as "fagus" and "Fagus". Horizons are not
 // folded, because case carries meaning there: "Ah" isn't "AH".
-String _key(String s) => s.toLowerCase();
+String nameKey(String s) => s.toLowerCase();
 
 Iterable<String> _firstSpellings(Iterable<String> names) {
   final seen = <String, String>{};
   for (final n in names) {
-    seen.putIfAbsent(_key(n), () => n);
+    seen.putIfAbsent(nameKey(n), () => n);
   }
   return seen.values;
 }
 
-Iterable<String> _speciesNames(String cell) =>
-    cell.split(RegExp(r'[,;\n]')).map(_tidy).where((s) => s.isNotEmpty);
+Iterable<String> speciesNames(String cell) =>
+    cell.split(RegExp(r'[,;\n]')).map(tidyText).where((s) => s.isNotEmpty);
 
 Map<String, int> _tally(Iterable<String> values) {
   final counts = <String, int>{};
@@ -123,11 +123,11 @@ List<MapEntry<String, int>> _countPerRecord(Iterable<Iterable<String>> perRecord
   final shown = <String, String>{};
   final counts = <String, int>{};
   for (final names in perRecord) {
-    for (final key in names.map(_key).toSet()) {
+    for (final key in names.map(nameKey).toSet()) {
       counts[key] = (counts[key] ?? 0) + 1;
     }
     for (final n in names) {
-      shown.putIfAbsent(_key(n), () => n);
+      shown.putIfAbsent(nameKey(n), () => n);
     }
   }
   return _sorted({for (final e in counts.entries) shown[e.key]!: e.value});
@@ -140,8 +140,8 @@ List<TierSummary> _tiers(List<List<VegetationRow>> vegetated) {
   for (final rows in vegetated) {
     final inThisRecord = <String>{};
     for (final v in rows) {
-      final tier = _tidy(v.tier);
-      final key = _key(tier);
+      final tier = tidyText(v.tier);
+      final key = nameKey(tier);
       shown.putIfAbsent(key, () => tier);
       rowsByTier.putIfAbsent(key, () => []).add(v);
       inThisRecord.add(key);
@@ -169,7 +169,7 @@ TierSummary _tierSummary(String tier, int records, List<VegetationRow> rows) {
   return TierSummary(
     tier: tier,
     records: records,
-    species: rows.expand((v) => _speciesNames(v.species)).map(_key).toSet().length,
+    species: rows.expand((v) => speciesNames(v.species)).map(nameKey).toSet().length,
     minHeight: heights.isEmpty ? null : heights.reduce((a, b) => a < b ? a : b),
     maxHeight: heights.isEmpty ? null : heights.reduce((a, b) => a > b ? a : b),
     unreadableHeights: filled.length - heights.length,

@@ -6,9 +6,11 @@ import '../../../models/btk_record.dart';
 import '../../records/domain/record_filter.dart';
 import '../../records/domain/btk_provider.dart';
 import '../domain/geomass_analytics.dart';
+import '../domain/group_analytics.dart';
 import '../domain/record_analytics.dart';
 import '../domain/record_comparison.dart';
 import '../../../l10n/generated/app_localizations.dart';
+import 'compare_screen.dart';
 
 class StatsScreen extends ConsumerWidget {
   const StatsScreen({super.key});
@@ -162,6 +164,15 @@ class _StatsBody extends StatelessWidget {
               style: TextStyle(fontSize: 12, color: cs.onSurfaceVariant)),
           const SizedBox(height: 20),
         ],
+
+        // ── Altitude bands ──────────────────────────────────────────────────
+        if (records.any((r) => r.altitude != null)) ...[
+          _AltitudeBands(records: records),
+          const SizedBox(height: 20),
+        ],
+
+        // ── Change over time ────────────────────────────────────────────────
+        _TimeSection(records: records),
 
         if (analytics.hasVegetation || analytics.hasHorizons) ...[
           Text(l10n.statsAnalysisNote,
@@ -399,6 +410,144 @@ Widget _cell(String? text, {bool bold = false}) => Padding(
         ),
       ),
     );
+
+class _AltitudeBands extends StatefulWidget {
+  final List<BtkRecord> records;
+  const _AltitudeBands({required this.records});
+
+  @override
+  State<_AltitudeBands> createState() => _AltitudeBandsState();
+}
+
+class _AltitudeBandsState extends State<_AltitudeBands> {
+  int _step = altitudeBandSteps.last;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _SectionTitle(l10n.statsAltitudeBands),
+        const SizedBox(height: 8),
+        SegmentedButton<int>(
+          segments: [
+            for (final s in altitudeBandSteps)
+              ButtonSegment(value: s, label: Text('$s')),
+          ],
+          selected: {_step},
+          showSelectedIcon: false,
+          onSelectionChanged: (v) => setState(() => _step = v.first),
+        ),
+        const SizedBox(height: 8),
+        _GroupTable(
+          firstColumn: l10n.statsAltitudeBand,
+          unlabelled: l10n.statsNoAltitude,
+          groups: altitudeBands(widget.records, _step),
+        ),
+        const SizedBox(height: 8),
+        Text(l10n.statsBandNote,
+            style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).colorScheme.onSurfaceVariant)),
+      ],
+    );
+  }
+}
+
+class _TimeSection extends StatelessWidget {
+  final List<BtkRecord> records;
+  const _TimeSection({required this.records});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final places = repeatedPlaces(records);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _SectionTitle(l10n.statsByYear),
+        const SizedBox(height: 8),
+        _GroupTable(
+          firstColumn: l10n.statsYear,
+          unlabelled: '',
+          groups: yearGroups(records),
+        ),
+        if (places.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          _SubTitle(l10n.statsRepeatedPlaces),
+          Card(
+            child: Column(
+              children: [
+                for (final p in places)
+                  ListTile(
+                    dense: true,
+                    title: Text(p.place),
+                    subtitle: Text(l10n.statsRepeatedCount(
+                        p.records.length, shortDate(p.first), shortDate(p.last))),
+                    trailing: const Icon(Icons.compare_arrows),
+                    onTap: () => CompareScreen.open(context, p.records),
+                  ),
+              ],
+            ),
+          ),
+        ],
+        const SizedBox(height: 8),
+        Text(l10n.statsTimeNote,
+            style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).colorScheme.onSurfaceVariant)),
+        const SizedBox(height: 20),
+      ],
+    );
+  }
+}
+
+class _GroupTable extends StatelessWidget {
+  final String firstColumn;
+  final String unlabelled;
+  final List<RecordGroup> groups;
+  const _GroupTable({
+    required this.firstColumn,
+    required this.unlabelled,
+    required this.groups,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final masses = usedMassColumns(groups);
+    return Card(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.all(6),
+        child: Table(
+          defaultColumnWidth: const FixedColumnWidth(96),
+          columnWidths: const {
+            0: FixedColumnWidth(84),
+            1: FixedColumnWidth(54),
+            2: FixedColumnWidth(72),
+          },
+          children: [
+            TableRow(children: [
+              _cell(firstColumn, bold: true),
+              _cell(l10n.statsTierRecords, bold: true),
+              _cell(l10n.statsTierSpecies, bold: true),
+              for (final i in masses) _cell(geomassComponents[i].label(l10n), bold: true),
+            ]),
+            for (final g in groups)
+              TableRow(children: [
+                _cell(g.label ?? unlabelled),
+                _cell('${g.records}'),
+                _cell('${g.species}'),
+                for (final i in masses) _cell(g.masses[i].text),
+              ]),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class _ComponentTable extends StatelessWidget {
   final List<ComponentSummary> components;

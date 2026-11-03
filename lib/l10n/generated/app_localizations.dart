@@ -3835,6 +3835,60 @@ abstract class AppLocalizations {
   /// In ka, this message translates to:
   /// **'ფენები ზუსტად შეყვანილი სიღრმით ჯგუფდება. სიღრმე უცნობია, თუ არ არის შევსებული, ვერ წაიკითხა ან ერთეული არ არის არჩეული. ჯამში ერთი წაუკითხავი მნიშვნელობა მთელ ჯამს „?“-ად აქცევს.'**
   String get statsGeomassNote;
+
+  /// No description provided for @statsAltitudeBands.
+  ///
+  /// In ka, this message translates to:
+  /// **'სიმაღლის ზოლები (მ)'**
+  String get statsAltitudeBands;
+
+  /// No description provided for @statsAltitudeBand.
+  ///
+  /// In ka, this message translates to:
+  /// **'ზოლი'**
+  String get statsAltitudeBand;
+
+  /// No description provided for @statsNoAltitude.
+  ///
+  /// In ka, this message translates to:
+  /// **'სიმაღლის გარეშე'**
+  String get statsNoAltitude;
+
+  /// No description provided for @statsBandNote.
+  ///
+  /// In ka, this message translates to:
+  /// **'ეს თანაბარი ზოლებია და არა სიმაღლებრივი სარტყლები. მასები ჩანაწერების ჯამების უმცირესი და უდიდესი მნიშვნელობაა (ტ/ჰა).'**
+  String get statsBandNote;
+
+  /// No description provided for @statsByYear.
+  ///
+  /// In ka, this message translates to:
+  /// **'წლების მიხედვით'**
+  String get statsByYear;
+
+  /// No description provided for @statsYear.
+  ///
+  /// In ka, this message translates to:
+  /// **'წელი'**
+  String get statsYear;
+
+  /// No description provided for @statsRepeatedPlaces.
+  ///
+  /// In ka, this message translates to:
+  /// **'რამდენჯერმე აღწერილი ადგილები'**
+  String get statsRepeatedPlaces;
+
+  /// No description provided for @statsRepeatedCount.
+  ///
+  /// In ka, this message translates to:
+  /// **'{count} ჩანაწერი, {first} – {last}'**
+  String statsRepeatedCount(Object count, Object first, Object last);
+
+  /// No description provided for @statsTimeNote.
+  ///
+  /// In ka, this message translates to:
+  /// **'ადგილი ემთხვევა მხოლოდ ერთნაირად დაწერილი ადგილმდებარეობით. ცხრილი აჩვენებს, რა არის შეყვანილი, და ცვლილებას არ ადასტურებს: წლებს შორის შეიძლება სხვადასხვა ადგილი იყოს აღწერილი. დააჭირე ადგილს შესადარებლად.'**
+  String get statsTimeNote;
 }
 
 class _AppLocalizationsDelegate
