@@ -1,9 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../../core/constants.dart';
+import '../../../core/locale.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../settings/domain/settings_provider.dart';
 import '../../../l10n/generated/app_localizations.dart';
+
+/// The methodology for the app's language. English needs its PDF in the app,
+/// and falls back to the Georgian one without it.
+final methodologyAssetProvider = FutureProvider<String>((ref) async {
+  final english = ref.watch(settingsProvider.select((s) => s.appLocale)) == AppLocale.en;
+  if (!english) return AppConstants.pdfAssetPath;
+  try {
+    await rootBundle.load(AppConstants.pdfAssetPathEn);
+    return AppConstants.pdfAssetPathEn;
+  } catch (_) {
+    return AppConstants.pdfAssetPath;
+  }
+});
+
+// The two PDFs have different pages, so each remembers its own.
+const _prefEnglishPage = 'pdf_page_en';
 
 class PdfViewerScreen extends ConsumerStatefulWidget {
   final bool embedded;
@@ -28,7 +47,10 @@ class _PdfViewerScreenState extends ConsumerState<PdfViewerScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final saved = ref.read(settingsProvider).pdfPage;
-      if (saved > 0 && _loaded) _ctrl.jumpToPage(saved);
+      if (saved > 0 && _loaded && !_english) _ctrl.jumpToPage(saved);
+    });
+    SharedPreferences.getInstance().then((p) {
+      if (mounted) setState(() => _englishPage = p.getInt(_prefEnglishPage) ?? 0);
     });
   }
 
@@ -39,8 +61,18 @@ class _PdfViewerScreenState extends ConsumerState<PdfViewerScreen> {
     super.dispose();
   }
 
+  bool get _english => _asset == AppConstants.pdfAssetPathEn;
+  String? _asset;
+  int _englishPage = 0;
+
   void _onPageChanged(PdfPageChangedDetails d) {
-    ref.read(settingsProvider.notifier).savePdfPage(d.newPageNumber);
+    if (_english) {
+      _englishPage = d.newPageNumber;
+      SharedPreferences.getInstance()
+          .then((p) => p.setInt(_prefEnglishPage, d.newPageNumber));
+    } else {
+      ref.read(settingsProvider.notifier).savePdfPage(d.newPageNumber);
+    }
   }
 
   void _toggleSearch() {
@@ -94,10 +126,14 @@ class _PdfViewerScreenState extends ConsumerState<PdfViewerScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final saved = ref.read(settingsProvider).pdfPage;
+    final asset = ref.watch(methodologyAssetProvider).valueOrNull;
+    if (asset == null) return const Center(child: CircularProgressIndicator());
+    _asset = asset;
+    final saved = _english ? _englishPage : ref.read(settingsProvider).pdfPage;
 
     final viewer = SfPdfViewer.asset(
-      AppConstants.pdfAssetPath,
+      asset,
+      key: ValueKey(asset),
       controller: _ctrl,
       initialPageNumber: saved > 0 ? saved : 1,
       onPageChanged: _onPageChanged,

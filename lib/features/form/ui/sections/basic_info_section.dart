@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import '../../../../models/btk_record.dart';
+import '../widgets/english_field.dart';
 import '../../../../utils/coord_converter.dart';
 import '../../../gps/ui/track_status_bar.dart' show accuracyColor;
 import '../widgets/coord_converter_widget.dart';
@@ -142,6 +143,26 @@ class _BasicInfoSectionState extends State<BasicInfoSection> {
               style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
           const SizedBox(height: 16),
 
+          // Fill language
+          Text(l10n.fillLanguage, style: Theme.of(context).textTheme.labelLarge),
+          const SizedBox(height: 6),
+          SegmentedButton<String>(
+            segments: [
+              ButtonSegment(value: fillKa, label: Text(l10n.fillLanguageKa)),
+              ButtonSegment(value: fillEn, label: Text(l10n.fillLanguageEn)),
+              ButtonSegment(value: fillBoth, label: Text(l10n.fillLanguageBoth)),
+            ],
+            selected: {r.fillLang},
+            showSelectedIcon: false,
+            onSelectionChanged: (s) => widget.onChanged(r..fillLanguage = s.first),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            l10n.fillLanguageHint,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          const SizedBox(height: 16),
+
           // Date
           TextField(
             controller: _dateCtrl,
@@ -204,6 +225,13 @@ class _BasicInfoSectionState extends State<BasicInfoSection> {
               isDense: true,
             ),
           ),
+          if (r.isBilingual)
+            EnglishField(
+              values: r.english,
+              fieldKey: 'location',
+              label: l10n.location,
+              onChanged: () => widget.onChanged(r),
+            ),
           const SizedBox(height: 16),
 
           Text(l10n.coordinates, style: Theme.of(context).textTheme.labelLarge),

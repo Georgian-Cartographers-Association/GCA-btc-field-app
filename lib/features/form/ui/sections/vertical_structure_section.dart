@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../models/btk_record.dart';
+import '../widgets/english_field.dart';
 import '../../../../models/measure.dart';
 import '../../domain/photo_provider.dart';
 import '../widgets/measure_text_field.dart';
@@ -72,6 +73,13 @@ class _VerticalStructureSectionState
               isDense: true,
             ),
           ),
+          if (r.isBilingual)
+            EnglishField(
+              values: r.english,
+              fieldKey: 'vertStructTypeName',
+              label: l10n.vertStructTypeName,
+              onChanged: () => widget.onChanged(r),
+            ),
           const SizedBox(height: 12),
           Row(
             children: [
@@ -117,6 +125,14 @@ class _VerticalStructureSectionState
               isDense: true,
             ),
           ),
+          if (r.isBilingual)
+            EnglishField(
+              values: r.english,
+              fieldKey: 'vertStructDesc',
+              label: l10n.vertStructDescShort,
+              maxLines: 3,
+              onChanged: () => widget.onChanged(r),
+            ),
           const SizedBox(height: 10),
 
           // ── Vert-struct photos ──────────────────────────────────────

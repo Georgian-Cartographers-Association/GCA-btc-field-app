@@ -22,6 +22,256 @@ import '../../features/records/domain/record_filter.dart';
 import 'pdf_map.dart';
 import 'records_workbook.dart';
 
+/// The record PDF's words in one language, or in both side by side. The
+/// Georgian ones are the abbreviations the PDF has always used.
+class _PdfLabels {
+  final String title, name, group, date, coords, altitude, metre, aspect, location;
+  final String physGeo, geolFormation, relief, morph, geomorph, migration, moisture;
+  final String vegetation, soil, soilType, soilProfile, geohorizonIndex, soilSurface;
+  final String vertStruct, vsType, vsIndex, vsHeight, vsDesc, photos;
+  final String geomass, plotSize, trees, cm, m;
+  final List<String> vegHeaders, horizonHeaders, geomassHeaders, treeHeaders;
+
+  const _PdfLabels({
+    required this.title,
+    required this.name,
+    required this.group,
+    required this.date,
+    required this.coords,
+    required this.altitude,
+    required this.metre,
+    required this.aspect,
+    required this.location,
+    required this.physGeo,
+    required this.geolFormation,
+    required this.relief,
+    required this.morph,
+    required this.geomorph,
+    required this.migration,
+    required this.moisture,
+    required this.vegetation,
+    required this.soil,
+    required this.soilType,
+    required this.soilProfile,
+    required this.geohorizonIndex,
+    required this.soilSurface,
+    required this.vertStruct,
+    required this.vsType,
+    required this.vsIndex,
+    required this.vsHeight,
+    required this.vsDesc,
+    required this.photos,
+    required this.geomass,
+    required this.plotSize,
+    required this.trees,
+    required this.cm,
+    required this.m,
+    required this.vegHeaders,
+    required this.horizonHeaders,
+    required this.geomassHeaders,
+    required this.treeHeaders,
+  });
+
+  static const ka = _PdfLabels(
+    title: 'ბუნებრივ-ტერიტორიული კომპლექსის (ბტკ) აღწერა',
+    name: 'სახელი',
+    group: 'ჯგუფი',
+    date: 'თარიღი',
+    coords: 'კოორდ.',
+    altitude: 'სიმაღლე',
+    metre: 'მ',
+    aspect: 'ასპექტი',
+    location: 'ადგილმდ.',
+    physGeo: 'ფიზიკურ-გეოგრაფიული დახასიათება',
+    geolFormation: 'გეოლ. ფ.',
+    relief: 'რელიეფი',
+    morph: 'მორფ. დახ.',
+    geomorph: 'გეომ. პრ.',
+    migration: 'მიგ. რეჟ.',
+    moisture: 'დატ. ხ.',
+    vegetation: 'მცენარეულობა',
+    soil: 'ნიადაგი',
+    soilType: 'ტიპი',
+    soilProfile: 'პროფ. დახ.',
+    geohorizonIndex: 'გეოჰ. ინდ.',
+    soilSurface: 'ნ.ზ.ფ. ტ.',
+    vertStruct: 'ბტკ-ის ვერტიკალური სტრუქტურა',
+    vsType: 'ტიპი',
+    vsIndex: 'ინდ.',
+    vsHeight: 'სიმ.',
+    vsDesc: 'აღწ.',
+    photos: 'ფოტოები',
+    geomass: 'გეომასების კვლევა',
+    plotSize: 'ექსპ. ნაკვ. ზომა',
+    trees: 'ხე-მცენარეების ფიტომასა (ტ/ჰა)',
+    cm: 'სმ',
+    m: 'მ',
+    vegHeaders: ['იარ.', 'სიმ.', 'სიმძლ.', 'ფენოფ.', 'სახეობა'],
+    horizonHeaders: ['ჰ-ტი', 'დახასიათება'],
+    geomassHeaders: [
+      'სექ.',
+      'სიღ.',
+      'პედ.მოც. (გრ/სმ³)',
+      'პედ.რ. (ტ/ჰა)',
+      'ლით.რ. (ტ/ჰა)',
+      'ლით.სმ. (გრ/სმ³)',
+      'ჰიდ.რ. (ტ/ჰა)',
+      'ჰიდ.სვ.',
+      'ჰიდ.მშ.',
+      'ფიტ.სვ. (ტ/ჰა)',
+      'ფიტ.მშ. (ტ/ჰა)',
+    ],
+    treeHeaders: [
+      'სახ.',
+      'მ.წ. (ტ/მ³)',
+      'სვ.მ.',
+      'სვ.ფ.',
+      'სვ.ტ.',
+      'სვ.ფეს.',
+      'სვ.ჯ.',
+      'მშ.მ.',
+      'მშ.ფ.',
+      'მშ.ტ.',
+      'მშ.ფეს.',
+      'მშ.ჯ.',
+    ],
+  );
+
+  /// From the app's English strings, so the PDF uses the same words as the form.
+  static final en = () {
+    final e = lookupAppLocalizations(const Locale('en'));
+    String unit(String label, String unit) => '$label ($unit)';
+    return _PdfLabels(
+      title: e.btkFullTitle,
+      name: e.name,
+      group: e.recordGroup,
+      date: e.date,
+      coords: e.coordinates,
+      altitude: e.altitudeM.replaceAll(' (m)', ''),
+      metre: e.unitM,
+      aspect: e.aspectDeg.replaceAll(' (°)', ''),
+      location: e.location,
+      physGeo: e.physGeoDesc,
+      geolFormation: e.geologicalFormation,
+      relief: e.reliefType,
+      morph: e.morphologicalDesc,
+      geomorph: e.geomorphProcesses,
+      migration: e.migrationRegime,
+      moisture: e.moistureDegree,
+      vegetation: e.vegetation,
+      soil: e.soil,
+      soilType: e.soilTypeName,
+      soilProfile: e.soilProfileDescShort,
+      geohorizonIndex: e.geohorizonIndex,
+      soilSurface: e.soilSurfaceFormationShort,
+      vertStruct: e.verticalStructure,
+      vsType: e.vertStructTypeName,
+      vsIndex: e.vertStructIndex,
+      vsHeight: e.vertStructHeight,
+      vsDesc: e.vertStructDescShort,
+      photos: e.photos,
+      geomass: e.geomasses,
+      plotSize: e.experimentPlotSize,
+      trees: unit(e.treePhytomass, e.unitTHa),
+      cm: e.unitCm,
+      m: e.unitM,
+      vegHeaders: [e.vegTierShort, e.vegHeightM, e.vegDensity, e.vegPhenShort, e.vegSpecies],
+      horizonHeaders: [e.horizonShort, e.description],
+      geomassHeaders: [
+        e.gmSection,
+        e.gmDepth,
+        unit(e.gmPedBulk, e.unitGCm3),
+        unit(e.gmPedQty, e.unitTHa),
+        unit(e.gmLithQty, e.unitTHa),
+        unit(e.gmLithDens, e.unitGCm3),
+        unit(e.gmHydQty, e.unitTHa),
+        e.gmHydWet,
+        e.gmHydDry,
+        unit(e.gmPhytWet, e.unitTHa),
+        unit(e.gmPhytDry, e.unitTHa),
+      ],
+      treeHeaders: [
+        e.tpSpecies,
+        unit(e.tpVolume, e.unitTM3),
+        e.tpWetWood,
+        e.tpWetLeaves,
+        e.tpWetBranches,
+        e.tpWetRoots,
+        e.tpWetTotal,
+        e.tpDryWood,
+        e.tpDryLeaves,
+        e.tpDryBranches,
+        e.tpDryRoots,
+        e.tpDryTotal,
+      ],
+    );
+  }();
+
+  static final both = _PdfLabels.combine(ka, en);
+
+  static _PdfLabels of(BtkRecord r) => switch (r.fillLang) {
+        fillEn => en,
+        fillBoth => both,
+        _ => ka,
+      };
+
+  /// Each label as "Georgian / English". Units stay Georgian, since both name
+  /// the same unit and one is enough.
+  factory _PdfLabels.combine(_PdfLabels a, _PdfLabels b) {
+    String c(String x, String y) => '$x / $y';
+    List<String> l(List<String> x, List<String> y) =>
+        [for (var i = 0; i < x.length; i++) c(x[i], y[i])];
+    return _PdfLabels(
+      title: c(a.title, b.title),
+      name: c(a.name, b.name),
+      group: c(a.group, b.group),
+      date: c(a.date, b.date),
+      coords: c(a.coords, b.coords),
+      altitude: c(a.altitude, b.altitude),
+      metre: a.metre,
+      aspect: c(a.aspect, b.aspect),
+      location: c(a.location, b.location),
+      physGeo: c(a.physGeo, b.physGeo),
+      geolFormation: c(a.geolFormation, b.geolFormation),
+      relief: c(a.relief, b.relief),
+      morph: c(a.morph, b.morph),
+      geomorph: c(a.geomorph, b.geomorph),
+      migration: c(a.migration, b.migration),
+      moisture: c(a.moisture, b.moisture),
+      vegetation: c(a.vegetation, b.vegetation),
+      soil: c(a.soil, b.soil),
+      soilType: c(a.soilType, b.soilType),
+      soilProfile: c(a.soilProfile, b.soilProfile),
+      geohorizonIndex: c(a.geohorizonIndex, b.geohorizonIndex),
+      soilSurface: c(a.soilSurface, b.soilSurface),
+      vertStruct: c(a.vertStruct, b.vertStruct),
+      vsType: c(a.vsType, b.vsType),
+      vsIndex: c(a.vsIndex, b.vsIndex),
+      vsHeight: c(a.vsHeight, b.vsHeight),
+      vsDesc: c(a.vsDesc, b.vsDesc),
+      photos: c(a.photos, b.photos),
+      geomass: c(a.geomass, b.geomass),
+      plotSize: c(a.plotSize, b.plotSize),
+      trees: c(a.trees, b.trees),
+      cm: a.cm,
+      m: a.m,
+      vegHeaders: l(a.vegHeaders, b.vegHeaders),
+      horizonHeaders: l(a.horizonHeaders, b.horizonHeaders),
+      geomassHeaders: l(a.geomassHeaders, b.geomassHeaders),
+      treeHeaders: l(a.treeHeaders, b.treeHeaders),
+    );
+  }
+}
+
+/// A text value as the record's language wants it: in both, the English copy
+/// goes on the line under the Georgian.
+String _pdfText(BtkRecord r, String georgian, Map<String, String> english, String key) {
+  final en = english[key];
+  if (!r.isBilingual || en == null || en.trim().isEmpty) return georgian;
+  return georgian.trim().isEmpty ? en : '$georgian\n$en';
+}
+
+
 class ExportService {
 
   /// iPads show the share sheet as a popover, and refuse to open it with no
@@ -263,6 +513,9 @@ class ExportService {
       final soilImgs = soilImgMap[r.id] ?? [];
       final vertImgs = vertImgMap[r.id] ?? [];
 
+      final t = _PdfLabels.of(r);
+      String text(String value, String key) => _pdfText(r, value, r.english, key);
+
       doc.addPage(
         pw.MultiPage(
           pageFormat: PdfPageFormat.a4,
@@ -276,47 +529,52 @@ class ExportService {
                 borderRadius: pw.BorderRadius.circular(4),
               ),
               child: pw.Text(
-                'ბუნებრივ-ტერიტორიული კომპლექსის (ბტკ) აღწერა',
+                t.title,
                 style: style(size: 13, bold: true).copyWith(color: PdfColors.white),
               ),
             ),
             pw.SizedBox(height: 8),
             // Basic info
             _pdfRow('ID', r.id, style),
-            if (r.name.isNotEmpty) _pdfRow('სახელი', r.name, style),
-            if (r.group.isNotEmpty) _pdfRow('ჯგუფი', r.group, style),
-            _pdfRow('თარიღი', r.date.toString().split(' ')[0], style),
+            if (r.name.isNotEmpty) _pdfRow(t.name, r.name, style),
+            if (r.group.isNotEmpty) _pdfRow(t.group, r.group, style),
+            _pdfRow(t.date, r.date.toString().split(' ')[0], style),
             if (r.latitude != null && r.longitude != null)
-              _pdfRow('კოორდ.',
+              _pdfRow(t.coords,
                   '${r.latitude!.toStringAsFixed(6)}, ${r.longitude!.toStringAsFixed(6)}',
                   style),
             if (r.altitude != null)
-              _pdfRow('სიმაღლე', '${_plain(r.altitude!)} მ', style),
-            if (r.aspect != null) _pdfRow('ასპექტი', '${_plain(r.aspect!)}°', style),
-            _pdfRow('ადგილმდ.', r.location, style),
+              _pdfRow(t.altitude, '${_plain(r.altitude!)} ${t.metre}', style),
+            if (r.aspect != null) _pdfRow(t.aspect, '${_plain(r.aspect!)}°', style),
+            _pdfRow(t.location, text(r.location, 'location'), style),
             if (maps[r.id] != null) ...[
               pw.SizedBox(height: 4),
               _pdfMap(maps[r.id]!, style),
             ],
             _pdfSep,
             // Physical geo
-            _pdfHeader('ფიზიკურ-გეოგრაფიული დახასიათება', style),
-            _pdfRow('გეოლ. ფ.', r.geologicalFormation, style),
-            _pdfRow('რელიეფი', r.reliefType, style),
-            _pdfRow('მორფ. დახ.', r.morphologicalDesc, style),
-            _pdfRow('გეომ. პრ.', r.geomorphProcesses, style),
-            _pdfRow('მიგ. რეჟ.', r.migrationRegime, style),
-            _pdfRow('დატ. ხ.', r.moistureDegree, style),
+            _pdfHeader(t.physGeo, style),
+            _pdfRow(t.geolFormation, text(r.geologicalFormation, 'geologicalFormation'), style),
+            _pdfRow(t.relief, text(r.reliefType, 'reliefType'), style),
+            _pdfRow(t.morph, text(r.morphologicalDesc, 'morphologicalDesc'), style),
+            _pdfRow(t.geomorph, text(r.geomorphProcesses, 'geomorphProcesses'), style),
+            _pdfRow(t.migration, text(r.migrationRegime, 'migrationRegime'), style),
+            _pdfRow(t.moisture, text(r.moistureDegree, 'moistureDegree'), style),
             _pdfSep,
             // Vegetation table
             if (r.vegetation.any((v) => !isBlankRow(v.toJson()))) ...[
-              _pdfHeader('მცენარეულობა', style),
+              _pdfHeader(t.vegetation, style),
               pw.TableHelper.fromTextArray(
-                headers: ['იარ.', 'სიმ.', 'სიმძლ.', 'ფენოფ.', 'სახეობა'],
+                headers: t.vegHeaders,
                 data: r.vegetation
                     .where((v) => !isBlankRow(v.toJson()))
-                    .map((v) =>
-                        [v.tier, v.height, v.density, v.phenophase, v.species])
+                    .map((v) => [
+                          v.tier,
+                          v.height,
+                          _pdfText(r, v.density, v.english, 'density'),
+                          _pdfText(r, v.phenophase, v.english, 'phenophase'),
+                          v.species,
+                        ])
                     .toList(),
                 headerStyle: style(bold: true, size: 9),
                 cellStyle: style(size: 9),
@@ -326,15 +584,16 @@ class ExportService {
               _pdfSep,
             ],
             // Soil
-            _pdfHeader('ნიადაგი', style),
-            _pdfRow('ტიპი', r.soilTypeName, style),
-            _pdfRow('პროფ. დახ.', r.soilProfileDesc, style),
+            _pdfHeader(t.soil, style),
+            _pdfRow(t.soilType, text(r.soilTypeName, 'soilTypeName'), style),
+            _pdfRow(t.soilProfile, text(r.soilProfileDesc, 'soilProfileDesc'), style),
             if (r.soilHorizons.any((h) => !isBlankRow(h.toJson())))
               pw.TableHelper.fromTextArray(
-                headers: ['ჰ-ტი', 'დახასიათება'],
+                headers: t.horizonHeaders,
                 data: r.soilHorizons
                     .where((h) => !isBlankRow(h.toJson()))
-                    .map((h) => [h.horizon, h.description])
+                    .map((h) =>
+                        [h.horizon, _pdfText(r, h.description, h.english, 'description')])
                     .toList(),
                 columnWidths: {
                   0: const pw.FixedColumnWidth(60),
@@ -344,8 +603,8 @@ class ExportService {
                 cellStyle: style(size: 9),
                 border: pw.TableBorder.all(color: PdfColors.grey400, width: 0.5),
               ),
-            _pdfRow('გეოჰ. ინდ.', r.geohorizonIndex, style),
-            _pdfRow('ნ.ზ.ფ. ტ.', r.soilSurfaceFormation, style),
+            _pdfRow(t.geohorizonIndex, r.geohorizonIndex, style),
+            _pdfRow(t.soilSurface, text(r.soilSurfaceFormation, 'soilSurfaceFormation'), style),
             if (soilImgs.isNotEmpty) ...[
               pw.SizedBox(height: 4),
               ..._pdfPhotoRows(soilImgs),
@@ -355,22 +614,22 @@ class ExportService {
             if (r.geomasses.any((g) => !isBlankRow(g.toJson())) ||
                 r.treePhytomass.any((t) => !isBlankRow(t.toJson())) ||
                 r.experimentPlotSize.isNotEmpty) ...[
-              ..._pdfGeomass(r, style),
+              ..._pdfGeomass(r, t, style),
               _pdfSep,
             ],
             // Vertical structure
-            _pdfHeader('ბტკ-ის ვერტიკალური სტრუქტურა', style),
-            _pdfRow('ტიპი', r.vertStructTypeName, style),
-            _pdfRow('ინდ.', r.vertStructIndex, style),
-            _pdfRow('სიმ.', r.vertStructHeight, style),
-            _pdfRow('აღწ.', r.vertStructDesc, style),
+            _pdfHeader(t.vertStruct, style),
+            _pdfRow(t.vsType, text(r.vertStructTypeName, 'vertStructTypeName'), style),
+            _pdfRow(t.vsIndex, r.vertStructIndex, style),
+            _pdfRow(t.vsHeight, r.vertStructHeight, style),
+            _pdfRow(t.vsDesc, text(r.vertStructDesc, 'vertStructDesc'), style),
             if (vertImgs.isNotEmpty) ...[
               pw.SizedBox(height: 4),
               ..._pdfPhotoRows(vertImgs),
             ],
             if (generalImgs.isNotEmpty) ...[
               _pdfSep,
-              _pdfHeader('ფოტოები', style),
+              _pdfHeader(t.photos, style),
               ..._pdfPhotoRows(generalImgs),
             ],
           ],
@@ -426,11 +685,11 @@ class ExportService {
     );
   }
 
-  static List<pw.Widget> _pdfGeomass(BtkRecord r,
+  static List<pw.Widget> _pdfGeomass(BtkRecord r, _PdfLabels t,
       pw.TextStyle Function({double size, bool bold, pw.Font? font}) style) {
     final depthUnit = switch (r.depthUnit) {
-      depthUnitCm => ' (სმ)',
-      depthUnitM => ' (მ)',
+      depthUnitCm => ' (${t.cm})',
+      depthUnitM => ' (${t.m})',
       _ => '',
     };
     pw.Widget table(List<String> headers, List<List<String>> rows) =>
@@ -446,20 +705,12 @@ class ExportService {
     final geomasses = r.geomasses.where((g) => !isBlankRow(g.toJson())).toList();
     final trees = r.treePhytomass.where((t) => !isBlankRow(t.toJson())).toList();
     return [
-      _pdfHeader('გეომასების კვლევა', style),
+      _pdfHeader(t.geomass, style),
       if (geomasses.isNotEmpty)
         table([
-          'სექ.',
-          'სიღ.$depthUnit',
-          'პედ.მოც. (გრ/სმ³)',
-          'პედ.რ. (ტ/ჰა)',
-          'ლით.რ. (ტ/ჰა)',
-          'ლით.სმ. (გრ/სმ³)',
-          'ჰიდ.რ. (ტ/ჰა)',
-          'ჰიდ.სვ.',
-          'ჰიდ.მშ.',
-          'ფიტ.სვ. (ტ/ჰა)',
-          'ფიტ.მშ. (ტ/ჰა)',
+          t.geomassHeaders[0],
+          '${t.geomassHeaders[1]}$depthUnit',
+          ...t.geomassHeaders.skip(2),
         ], [
           for (final g in geomasses)
             [
@@ -478,39 +729,26 @@ class ExportService {
         ]),
       if (r.experimentPlotSize.isNotEmpty) ...[
         pw.SizedBox(height: 4),
-        _pdfRow('ექსპ. ნაკვ. ზომა', r.experimentPlotSize, style),
+        _pdfRow(t.plotSize, r.experimentPlotSize, style),
       ],
       if (trees.isNotEmpty) ...[
         pw.SizedBox(height: 4),
-        _pdfHeader('ხე-მცენარეების ფიტომასა (ტ/ჰა)', style),
-        table([
-          'სახ.',
-          'მ.წ. (ტ/მ³)',
-          'სვ.მ.',
-          'სვ.ფ.',
-          'სვ.ტ.',
-          'სვ.ფეს.',
-          'სვ.ჯ.',
-          'მშ.მ.',
-          'მშ.ფ.',
-          'მშ.ტ.',
-          'მშ.ფეს.',
-          'მშ.ჯ.',
-        ], [
-          for (final t in trees)
+        _pdfHeader(t.trees, style),
+        table(t.treeHeaders, [
+          for (final tree in trees)
             [
-              t.species,
-              t.bulkDensity,
-              t.wetWood,
-              t.wetLeaves,
-              t.wetBranches,
-              t.wetRoots,
-              t.wetTotal,
-              t.dryWood,
-              t.dryLeaves,
-              t.dryBranches,
-              t.dryRoots,
-              t.dryTotal,
+              tree.species,
+              tree.bulkDensity,
+              tree.wetWood,
+              tree.wetLeaves,
+              tree.wetBranches,
+              tree.wetRoots,
+              tree.wetTotal,
+              tree.dryWood,
+              tree.dryLeaves,
+              tree.dryBranches,
+              tree.dryRoots,
+              tree.dryTotal,
             ],
         ]),
       ],

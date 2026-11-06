@@ -4165,6 +4165,36 @@ abstract class AppLocalizations {
   /// In ka, this message translates to:
   /// **'ტექსტურ ველში დააჭირეთ კლავიატურის მიკროფონს და ილაპარაკეთ. ქართულისთვის Android-ზე და iPhone-ზე გამოიყენეთ Gboard კლავიატურა და მის პარამეტრებში დაამატეთ ქართული ენა. ხმის ამოცნობას შეიძლება ინტერნეტი დასჭირდეს. Windows-ზე ხმოვანი აკრეფა Win + H-ით იხსნება, და რომელ ენებს იცნობს, სისტემაზეა დამოკიდებული.'**
   String get tipVoiceBody;
+
+  /// No description provided for @fillLanguage.
+  ///
+  /// In ka, this message translates to:
+  /// **'შევსების ენა'**
+  String get fillLanguage;
+
+  /// No description provided for @fillLanguageKa.
+  ///
+  /// In ka, this message translates to:
+  /// **'ქართული'**
+  String get fillLanguageKa;
+
+  /// No description provided for @fillLanguageEn.
+  ///
+  /// In ka, this message translates to:
+  /// **'English'**
+  String get fillLanguageEn;
+
+  /// No description provided for @fillLanguageBoth.
+  ///
+  /// In ka, this message translates to:
+  /// **'ორივე'**
+  String get fillLanguageBoth;
+
+  /// No description provided for @fillLanguageHint.
+  ///
+  /// In ka, this message translates to:
+  /// **'„ორივეზე“ ტექსტურ ველებს ინგლისური ველიც გაუჩნდება. PDF ჩანაწერის ენით დაიბეჭდება.'**
+  String get fillLanguageHint;
 }
 
 class _AppLocalizationsDelegate

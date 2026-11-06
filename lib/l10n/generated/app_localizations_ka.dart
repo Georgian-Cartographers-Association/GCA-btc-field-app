@@ -2196,4 +2196,20 @@ class AppLocalizationsKa extends AppLocalizations {
   @override
   String get tipVoiceBody =>
       'ტექსტურ ველში დააჭირეთ კლავიატურის მიკროფონს და ილაპარაკეთ. ქართულისთვის Android-ზე და iPhone-ზე გამოიყენეთ Gboard კლავიატურა და მის პარამეტრებში დაამატეთ ქართული ენა. ხმის ამოცნობას შეიძლება ინტერნეტი დასჭირდეს. Windows-ზე ხმოვანი აკრეფა Win + H-ით იხსნება, და რომელ ენებს იცნობს, სისტემაზეა დამოკიდებული.';
+
+  @override
+  String get fillLanguage => 'შევსების ენა';
+
+  @override
+  String get fillLanguageKa => 'ქართული';
+
+  @override
+  String get fillLanguageEn => 'English';
+
+  @override
+  String get fillLanguageBoth => 'ორივე';
+
+  @override
+  String get fillLanguageHint =>
+      '„ორივეზე“ ტექსტურ ველებს ინგლისური ველიც გაუჩნდება. PDF ჩანაწერის ენით დაიბეჭდება.';
 }

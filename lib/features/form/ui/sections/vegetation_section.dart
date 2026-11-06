@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../models/btk_record.dart';
+import '../widgets/english_field.dart';
 import '../../../../models/measure.dart';
 import '../widgets/measure_text_field.dart';
 import '../../../../l10n/generated/app_localizations.dart';
@@ -69,6 +70,27 @@ class _VegetationSectionState extends State<VegetationSection> {
         widget.onChanged(widget.record);
       };
 
+  Widget _withEnglish(Widget cell, VegetationRow row, String key) {
+    if (!widget.record.isBilingual) return cell;
+    return SizedBox(
+      width: 70,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          cell,
+          EnglishField(
+            key: ObjectKey((row, key)),
+            values: row.english,
+            fieldKey: key,
+            label: '',
+            dense: true,
+            onChanged: () => widget.onChanged(widget.record),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -86,6 +108,8 @@ class _VegetationSectionState extends State<VegetationSection> {
               headingRowColor: WidgetStateProperty.all(
                   Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.5)),
               columnSpacing: 12,
+              // Room for the English line under a cell.
+              dataRowMaxHeight: widget.record.isBilingual ? 96 : null,
               columns: [
                 DataColumn(label: Text(l10n.vegTierShort, style: TextStyle(fontSize: 12))),
                 DataColumn(label: Text(l10n.vegHeightM, style: TextStyle(fontSize: 12))),
@@ -114,8 +138,8 @@ class _VegetationSectionState extends State<VegetationSection> {
                       ),
                     ),
                   )),
-                  DataCell(_tcell(cs[2], _edit((v) => r.density = v))),
-                  DataCell(_tcell(cs[3], _edit((v) => r.phenophase = v))),
+                  DataCell(_withEnglish(_tcell(cs[2], _edit((v) => r.density = v)), r, 'density')),
+                  DataCell(_withEnglish(_tcell(cs[3], _edit((v) => r.phenophase = v)), r, 'phenophase')),
                   DataCell(_tcell(cs[4], _edit((v) => r.species = v), wide: true)),
                   DataCell(IconButton(
                     icon: const Icon(Icons.remove_circle_outline, size: 18, color: Colors.red),

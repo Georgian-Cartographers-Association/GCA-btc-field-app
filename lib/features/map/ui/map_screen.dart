@@ -42,6 +42,7 @@ import '../../gps/ui/location_access.dart';
 import '../../gps/ui/track_status_bar.dart';
 import '../../../database/btk_database.dart';
 import '../../settings/domain/settings_provider.dart';
+import '../../../core/locale.dart';
 import '../../../data/services/analytics_service.dart';
 import '../../../data/services/export_service.dart';
 import '../../../l10n/localized_text.dart';
@@ -356,6 +357,9 @@ class _MapScreenState extends ConsumerState<MapScreen> {
           lat: latlng.latitude,
           lon: latlng.longitude,
           trackId: track != null && track.endedAt == null ? track.id : '',
+          // A new record starts in the app's language, and can be changed.
+          fillLanguage:
+              ref.read(settingsProvider).appLocale == AppLocale.en ? fillEn : fillKa,
         )
         .then((record) {
       AnalyticsService.logRecordCreated();
