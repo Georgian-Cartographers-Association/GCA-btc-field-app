@@ -2231,4 +2231,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get syncStateChecking => 'Checking';
+
+  @override
+  String get tipsTitle => 'Tips';
+
+  @override
+  String get tipVoiceTitle => 'Fill in by voice';
+
+  @override
+  String get tipVoiceBody =>
+      'In a text field, tap the keyboard\'s microphone and speak. For Georgian on Android and iPhone, use the Gboard keyboard and add Georgian in its settings. Recognition may need an internet connection. On Windows, voice typing opens with Win + H, and the languages it knows depend on the system.';
 }

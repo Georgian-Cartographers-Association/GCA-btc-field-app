@@ -4147,6 +4147,24 @@ abstract class AppLocalizations {
   /// In ka, this message translates to:
   /// **'მოწმდება'**
   String get syncStateChecking;
+
+  /// No description provided for @tipsTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'რჩევები'**
+  String get tipsTitle;
+
+  /// No description provided for @tipVoiceTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'ხმით შევსება'**
+  String get tipVoiceTitle;
+
+  /// No description provided for @tipVoiceBody.
+  ///
+  /// In ka, this message translates to:
+  /// **'ტექსტურ ველში დააჭირეთ კლავიატურის მიკროფონს და ილაპარაკეთ. ქართულისთვის Android-ზე და iPhone-ზე გამოიყენეთ Gboard კლავიატურა და მის პარამეტრებში დაამატეთ ქართული ენა. ხმის ამოცნობას შეიძლება ინტერნეტი დასჭირდეს. Windows-ზე ხმოვანი აკრეფა Win + H-ით იხსნება, და რომელ ენებს იცნობს, სისტემაზეა დამოკიდებული.'**
+  String get tipVoiceBody;
 }
 
 class _AppLocalizationsDelegate

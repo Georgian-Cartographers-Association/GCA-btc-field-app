@@ -682,5 +682,8 @@
   "syncLastSynced": "Last synced: {time}",
   "syncNeverSynced": "Not synced on this device yet",
   "syncWaitingRecords": "Records waiting to be sent: {count}",
-  "syncStateChecking": "Checking"
+  "syncStateChecking": "Checking",
+  "tipsTitle": "Tips",
+  "tipVoiceTitle": "Fill in by voice",
+  "tipVoiceBody": "In a text field, tap the keyboard's microphone and speak. For Georgian on Android and iPhone, use the Gboard keyboard and add Georgian in its settings. Recognition may need an internet connection. On Windows, voice typing opens with Win + H, and the languages it knows depend on the system."
 }
