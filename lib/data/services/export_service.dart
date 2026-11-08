@@ -780,6 +780,11 @@ class ExportService {
       throw Exception(l10n.fileReadFailed);
     }
 
+    return decodeBtk(content, l10n);
+  }
+
+  /// Reads the text of a .btk file. Files from every app version must load.
+  static List<BtkRecord> decodeBtk(String content, AppLocalizations l10n) {
     final map = jsonDecode(content) as Map<String, dynamic>;
     if (map['btk_export_version'] == null || map['records'] == null) {
       throw Exception(l10n.invalidBtkFile);
