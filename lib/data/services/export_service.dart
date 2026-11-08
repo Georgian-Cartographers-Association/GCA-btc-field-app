@@ -167,6 +167,13 @@ class ExportService {
     await _shareFiles([file], subject: l10n.shareRecordsCsv);
   }
 
+  /// Starts with a byte order mark, without which Excel misreads Georgian text.
+  static Future<void> shareResultsCsv(String csv, String filename, AppLocalizations l10n) async {
+    final bytes = Uint8List.fromList(utf8.encode('\uFEFF$csv'));
+    final file = XFile.fromData(bytes, name: filename, mimeType: 'text/csv');
+    await _shareFiles([file], subject: l10n.statsExportSubject);
+  }
+
   // ─── PDF ─────────────────────────────────────────────────────────────────────
 
   static Future<Uint8List> buildPdf(List<BtkRecord> records) async {

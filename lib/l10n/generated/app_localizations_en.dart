@@ -1653,6 +1653,78 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unitTHa => 't/ha';
 
   @override
+  String get compareAction => 'Compare';
+
+  @override
+  String get compareTitle => 'Compare BTCs';
+
+  @override
+  String get compareOnlyDifferences => 'Only differences';
+
+  @override
+  String get compareNoDifferences => 'No differences';
+
+  @override
+  String get compareLegend =>
+      '— not filled in. ? filled in but not usable: the number couldn\'t be read, or no depth unit is chosen. Totals only add the entered values and are not a conclusion.';
+
+  @override
+  String get compareVegRows => 'Vegetation rows';
+
+  @override
+  String get compareMaxHeight => 'Greatest height (m)';
+
+  @override
+  String get compareHorizons => 'Number of horizons';
+
+  @override
+  String get compareDeepest => 'Greatest depth (cm)';
+
+  @override
+  String get comparePedomass => 'Pedomass, total (t/ha)';
+
+  @override
+  String get compareLithomass => 'Lithomass, total (t/ha)';
+
+  @override
+  String get compareHydromass => 'Hydromass, total (t/ha)';
+
+  @override
+  String get comparePhytomassWet => 'Phytomass wet, total (t/ha)';
+
+  @override
+  String get comparePhytomassDry => 'Phytomass dry, total (t/ha)';
+
+  @override
+  String get compareTreeWet => 'Trees wet, total (t/ha)';
+
+  @override
+  String get compareTreeDry => 'Trees dry, total (t/ha)';
+
+  @override
+  String get unitCm => 'cm';
+
+  @override
+  String get depthUnit => 'Depth unit';
+
+  @override
+  String get depthUnitNotChosen => 'Depth unit not chosen';
+
+  @override
+  String get qualityDepthUnitMissing => 'Choose the depth unit: cm or m';
+
+  @override
+  String get hydromassInfoTitle => 'Hydromass explained';
+
+  @override
+  String get hydromassWetInfo =>
+      'Wet (Hyd.wet): the mass of the sample as collected in the field, including its water.';
+
+  @override
+  String get hydromassDryInfo =>
+      'Dry (Hyd.dry): the mass of the same sample after drying, without water.';
+
+  @override
   String get unitTM3 => 't/m³';
 
   @override
@@ -1902,4 +1974,159 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get onlyLocalStorageHere =>
       'Accounts and cloud storage aren\'t available on this device. Records are kept only here, so back them up from time to time.';
+
+  @override
+  String get compareTiers => 'Tiers';
+
+  @override
+  String get compareHorizonOrder => 'Horizon order';
+
+  @override
+  String get statsVegStructure => 'Vegetation structure';
+
+  @override
+  String get statsSoilHorizons => 'Soil horizons';
+
+  @override
+  String statsRecordsWithData(Object count, Object total) {
+    return '$count of $total records have data';
+  }
+
+  @override
+  String get statsTierRecords => 'Records';
+
+  @override
+  String get statsTierSpecies => 'Species';
+
+  @override
+  String get statsNoTier => 'No tier';
+
+  @override
+  String get statsSpeciesFrequency => 'Species (records naming each)';
+
+  @override
+  String get statsHorizonFrequency => 'Horizons (records holding each)';
+
+  @override
+  String get statsHorizonOrders => 'Horizon order (records with each)';
+
+  @override
+  String statsMoreItems(Object count) {
+    return 'and $count more';
+  }
+
+  @override
+  String get statsAnalysisNote =>
+      'These are counts of the values entered, not conclusions. A name written differently counts separately. \"?\" means a value was filled in but can\'t be used.';
+
+  @override
+  String get statsGeomass => 'Geomass';
+
+  @override
+  String get statsGeomassTotals => 'Totals per record: lowest and highest';
+
+  @override
+  String get statsGeomassComponent => 'Mass';
+
+  @override
+  String get statsGeomassRange => 'Range';
+
+  @override
+  String get statsDepthLayers => 'Depth layers (cm, masses t/ha)';
+
+  @override
+  String get statsDepthLayer => 'Layer';
+
+  @override
+  String get statsDepthUnknown => 'Unknown';
+
+  @override
+  String get statsPhytomassWet => 'Phytomass wet';
+
+  @override
+  String get statsPhytomassDry => 'Phytomass dry';
+
+  @override
+  String get statsGeomassNote =>
+      'Layers group by the exact depth entered. A depth is unknown when it is blank, can\'t be read or has no unit chosen. One unreadable value turns a whole total into \"?\".';
+
+  @override
+  String get statsAltitudeBands => 'Altitude bands (m)';
+
+  @override
+  String get statsAltitudeBand => 'Band';
+
+  @override
+  String get statsNoAltitude => 'No altitude';
+
+  @override
+  String get statsBandNote =>
+      'These are equal bands, not altitude belts. Masses are the lowest and highest record totals (t/ha).';
+
+  @override
+  String get statsByYear => 'By year';
+
+  @override
+  String get statsYear => 'Year';
+
+  @override
+  String get statsRepeatedPlaces => 'Places described more than once';
+
+  @override
+  String statsRepeatedCount(Object count, Object first, Object last) {
+    return '$count records, $first – $last';
+  }
+
+  @override
+  String get statsTimeNote =>
+      'Places match only when the location is written the same way. The table shows what was entered and doesn\'t establish change: different years may cover different places. Tap a place to compare.';
+
+  @override
+  String get statsChart => 'Chart: each dot is one record\'s total';
+
+  @override
+  String get statsChartAltitude => 'Altitude';
+
+  @override
+  String get statsChartMetres => 'm';
+
+  @override
+  String get statsChartTap => 'Tap a dot to see which record it is.';
+
+  @override
+  String statsChartTooFew(Object count) {
+    return 'The chart needs at least 2 points. There are $count now.';
+  }
+
+  @override
+  String statsChartNoAltitude(Object count) {
+    return '$count records not shown: no altitude.';
+  }
+
+  @override
+  String statsChartUnreadable(Object count) {
+    return '$count records not shown: total can\'t be read.';
+  }
+
+  @override
+  String get statsChartNote =>
+      'The pattern of dots doesn\'t prove a relationship, so there is deliberately no trend line.';
+
+  @override
+  String get statsExportAction => 'Export results (CSV)';
+
+  @override
+  String get statsExportSubject => 'BTC statistics — CSV';
+
+  @override
+  String statsExportCovers(Object count, Object total) {
+    return 'Covers $count of $total records';
+  }
+
+  @override
+  String get statsExportNote =>
+      'These are counts of the values entered, not conclusions.';
+
+  @override
+  String get statsExportRecords => 'Records';
 }

@@ -54,10 +54,13 @@ int fillEmptyParts(BtkRecord target, BtkRecord source, Set<FormSection> sections
           SoilHorizonRow.fromJson);
   }
   if (sections.contains(FormSection.geomass)) {
+    final ownRows = target.geomasses;
+    target.geomasses =
+        rows(ownRows, source.geomasses, (r) => r.toJson(), GeomassRow.fromJson);
+    // The unit says what the depths mean, so it only travels with them.
+    if (!identical(target.geomasses, ownRows)) target.depthUnit = source.depthUnit;
     target
       ..experimentPlotSize = text(target.experimentPlotSize, source.experimentPlotSize)
-      ..geomasses =
-          rows(target.geomasses, source.geomasses, (r) => r.toJson(), GeomassRow.fromJson)
       ..treePhytomass = rows(target.treePhytomass, source.treePhytomass, (r) => r.toJson(),
           TreePhytomassRow.fromJson);
   }
