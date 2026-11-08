@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../models/btk_record.dart';
+import '../sync/conflict_guard.dart';
 import 'data_repository.dart';
 import 'firestore_write.dart';
 
@@ -7,6 +8,8 @@ import 'firestore_write.dart';
 /// Path: expeditions/{expeditionId}/btk_records/{recordId}
 class ExpeditionRepository implements DataRepository {
   final String expeditionId;
+
+  late final _guard = ConflictGuard(expeditionScope(expeditionId));
 
   ExpeditionRepository({required this.expeditionId});
 
@@ -18,11 +21,7 @@ class ExpeditionRepository implements DataRepository {
 
   @override
   Stream<List<BtkRecord>> get stream =>
-      _col.orderBy('date', descending: true).snapshots().map(
-            (snap) => snap.docs
-                .map((d) => BtkRecord.fromStored(d.id, d.data()))
-                .toList(),
-          );
+      guardedRecords(_col.orderBy('date', descending: true), _guard);
 
   @override
   Future<List<BtkRecord>> getAll() async {
@@ -33,29 +32,17 @@ class ExpeditionRepository implements DataRepository {
   @override
   Future<bool> upsert(BtkRecord record, {bool keepUpdatedAt = false}) async {
     final docRef = _col.doc(record.id);
-    final conflicted = await _newerInCache(docRef, record.updatedAt);
-    // Always write — last-write-wins, but caller is informed of the conflict.
+    final conflicted = await _guard.beforeWrite(record, await readCachedRecord(docRef),
+        bulk: keepUpdatedAt);
     if (!keepUpdatedAt) record.updatedAt = DateTime.now();
-    sendToFirestore(docRef.set(record.toJson()));
+    final sent = BtkRecord.fromStored(record.id, record.toJson());
+    sendToFirestore(docRef.set(sent.toJson()), onRefused: () => _guard.keepRefused(sent));
     return conflicted;
-  }
-
-  /// Compares with the local cache, which the live stream keeps current. A
-  /// transaction would give a stricter check but cannot run offline.
-  Future<bool> _newerInCache(
-      DocumentReference<Map<String, dynamic>> docRef, DateTime localTs) async {
-    try {
-      final snap = await docRef.get(const GetOptions(source: Source.cache));
-      final raw = snap.data()?['updatedAt'];
-      final serverTs = raw is String ? DateTime.tryParse(raw) : null;
-      return serverTs != null && serverTs.isAfter(localTs);
-    } on FirebaseException {
-      return false; // not in the cache yet
-    }
   }
 
   @override
   Future<void> delete(String id) async {
+    await _guard.beforeDelete(id);
     sendToFirestore(_col.doc(id).delete());
   }
 }

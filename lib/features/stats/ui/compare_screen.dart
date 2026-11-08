@@ -14,7 +14,18 @@ const _valueWidth = 112.0;
 class CompareScreen extends StatefulWidget {
   final List<BtkRecord> records;
 
-  const CompareScreen({super.key, required this.records});
+  /// Column headings, in place of the record names.
+  final List<String>? titles;
+  final String? title;
+  final Widget? bottomBar;
+
+  const CompareScreen({
+    super.key,
+    required this.records,
+    this.titles,
+    this.title,
+    this.bottomBar,
+  });
 
   static Future<void> open(BuildContext context, List<BtkRecord> records) =>
       Navigator.of(context).push(MaterialPageRoute<void>(
@@ -56,8 +67,11 @@ class _CompareScreenState extends State<CompareScreen> {
         decoration: BoxDecoration(color: cs.surfaceContainerHighest),
         children: [
           const SizedBox.shrink(),
-          for (final r in widget.records)
-            _cell(r.name.isNotEmpty ? r.name : l10n.btkNumber(r.id), bold: true),
+          for (final (i, r) in widget.records.indexed)
+            _cell(
+              widget.titles?[i] ?? (r.name.isNotEmpty ? r.name : l10n.btkNumber(r.id)),
+              bold: true,
+            ),
         ],
       ),
     ];
@@ -84,7 +98,8 @@ class _CompareScreenState extends State<CompareScreen> {
     final cs = Theme.of(context).colorScheme;
     final tableRows = _tableRows(l10n, cs);
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.compareTitle)),
+      appBar: AppBar(title: Text(widget.title ?? l10n.compareTitle)),
+      bottomNavigationBar: widget.bottomBar,
       body: ListView(
         padding: const EdgeInsets.only(bottom: 24),
         children: [

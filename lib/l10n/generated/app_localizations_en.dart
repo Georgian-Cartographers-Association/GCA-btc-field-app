@@ -1206,7 +1206,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get otherUserChanged =>
-      '⚠️ Another user changed this record — your version has been saved';
+      '⚠️ This record was also changed elsewhere. Your change is saved, and the other version is in the records list';
 
   @override
   String get gpsOffMessage =>
@@ -2150,4 +2150,85 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statsLastDate => 'Last date';
+
+  @override
+  String syncKeptBanner(Object count) {
+    return 'Kept versions to review: $count';
+  }
+
+  @override
+  String get syncKeptTitle => 'Kept versions';
+
+  @override
+  String get syncKeptExplain =>
+      'This record was changed on more than one device at once. Nothing was lost: these versions stay on this device only, until you decide.';
+
+  @override
+  String get syncKeptEmpty => 'No versions to review.';
+
+  @override
+  String get syncKeptCurrent => 'Current';
+
+  @override
+  String get syncKeptOther => 'Kept version';
+
+  @override
+  String get syncKeptNoCurrent =>
+      'The current record no longer exists: it was deleted elsewhere.';
+
+  @override
+  String get syncKeepCurrent => 'Keep current';
+
+  @override
+  String get syncKeepOther => 'Replace with this';
+
+  @override
+  String get syncKeepBoth => 'Keep both';
+
+  @override
+  String get syncRestore => 'Restore';
+
+  @override
+  String get syncKeepCurrentConfirm =>
+      'The kept version will be deleted. Continue?';
+
+  @override
+  String get syncKeepOtherConfirm =>
+      'The current version will be replaced by this one. Continue?';
+
+  @override
+  String get syncActionFailed =>
+      'That didn\'t work. The kept version is still here.';
+
+  @override
+  String get syncCheckFailed => 'The sync check failed';
+
+  @override
+  String get syncStateSynced => 'Synced';
+
+  @override
+  String get syncStateSending => 'Sending';
+
+  @override
+  String get syncStateOffline => 'Offline: changes are on this device';
+
+  @override
+  String get syncOfflineNote =>
+      'You can keep working. Changes are sent when the connection returns, and closing the app doesn\'t lose them.';
+
+  @override
+  String syncLastSynced(Object time) {
+    return 'Last synced: $time';
+  }
+
+  @override
+  String get syncNeverSynced => 'Not synced on this device yet';
+
+  @override
+  String syncWaitingRecords(Object count) {
+    return 'Records waiting to be sent: $count';
+  }
+
+  @override
+  String get syncStateChecking => 'Checking';
 }

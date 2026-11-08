@@ -2441,7 +2441,7 @@ abstract class AppLocalizations {
   /// No description provided for @otherUserChanged.
   ///
   /// In ka, this message translates to:
-  /// **'⚠️ სხვა მომხმარებელმა ჩანაწერი შეცვალა — თქვენი ვერსია შენახულია'**
+  /// **'⚠️ ჩანაწერი სხვაგანაც შეიცვალა. თქვენი ცვლილება შენახულია, ხოლო მეორე ვერსიას ჩანაწერების სიაში ნახავთ'**
   String get otherUserChanged;
 
   /// No description provided for @gpsOffMessage.
@@ -4009,6 +4009,144 @@ abstract class AppLocalizations {
   /// In ka, this message translates to:
   /// **'ბოლო თარიღი'**
   String get statsLastDate;
+
+  /// No description provided for @syncKeptBanner.
+  ///
+  /// In ka, this message translates to:
+  /// **'განსახილველი შენახული ვერსიები: {count}'**
+  String syncKeptBanner(Object count);
+
+  /// No description provided for @syncKeptTitle.
+  ///
+  /// In ka, this message translates to:
+  /// **'შენახული ვერსიები'**
+  String get syncKeptTitle;
+
+  /// No description provided for @syncKeptExplain.
+  ///
+  /// In ka, this message translates to:
+  /// **'ჩანაწერი ერთდროულად შეიცვალა სხვადასხვა მოწყობილობაზე. არაფერი დაკარგულა: ეს ვერსიები ინახება მხოლოდ ამ მოწყობილობაზე, სანამ არ გადაწყვეტთ.'**
+  String get syncKeptExplain;
+
+  /// No description provided for @syncKeptEmpty.
+  ///
+  /// In ka, this message translates to:
+  /// **'განსახილველი ვერსია არ არის.'**
+  String get syncKeptEmpty;
+
+  /// No description provided for @syncKeptCurrent.
+  ///
+  /// In ka, this message translates to:
+  /// **'მიმდინარე'**
+  String get syncKeptCurrent;
+
+  /// No description provided for @syncKeptOther.
+  ///
+  /// In ka, this message translates to:
+  /// **'შენახული ვერსია'**
+  String get syncKeptOther;
+
+  /// No description provided for @syncKeptNoCurrent.
+  ///
+  /// In ka, this message translates to:
+  /// **'მიმდინარე ჩანაწერი აღარ არსებობს: სხვაგან წაიშალა.'**
+  String get syncKeptNoCurrent;
+
+  /// No description provided for @syncKeepCurrent.
+  ///
+  /// In ka, this message translates to:
+  /// **'მიმდინარეს დატოვება'**
+  String get syncKeepCurrent;
+
+  /// No description provided for @syncKeepOther.
+  ///
+  /// In ka, this message translates to:
+  /// **'ამით ჩანაცვლება'**
+  String get syncKeepOther;
+
+  /// No description provided for @syncKeepBoth.
+  ///
+  /// In ka, this message translates to:
+  /// **'ორივეს დატოვება'**
+  String get syncKeepBoth;
+
+  /// No description provided for @syncRestore.
+  ///
+  /// In ka, this message translates to:
+  /// **'აღდგენა'**
+  String get syncRestore;
+
+  /// No description provided for @syncKeepCurrentConfirm.
+  ///
+  /// In ka, this message translates to:
+  /// **'შენახული ვერსია წაიშლება. გავაგრძელოთ?'**
+  String get syncKeepCurrentConfirm;
+
+  /// No description provided for @syncKeepOtherConfirm.
+  ///
+  /// In ka, this message translates to:
+  /// **'მიმდინარე ვერსია ამ ვერსიით ჩანაცვლდება. გავაგრძელოთ?'**
+  String get syncKeepOtherConfirm;
+
+  /// No description provided for @syncActionFailed.
+  ///
+  /// In ka, this message translates to:
+  /// **'ვერ შესრულდა. შენახული ვერსია ადგილზეა.'**
+  String get syncActionFailed;
+
+  /// No description provided for @syncCheckFailed.
+  ///
+  /// In ka, this message translates to:
+  /// **'სინქრონიზაციის შემოწმება ვერ მოხერხდა'**
+  String get syncCheckFailed;
+
+  /// No description provided for @syncStateSynced.
+  ///
+  /// In ka, this message translates to:
+  /// **'სინქრონიზებულია'**
+  String get syncStateSynced;
+
+  /// No description provided for @syncStateSending.
+  ///
+  /// In ka, this message translates to:
+  /// **'იგზავნება'**
+  String get syncStateSending;
+
+  /// No description provided for @syncStateOffline.
+  ///
+  /// In ka, this message translates to:
+  /// **'ოფლაინი: ცვლილებები ტელეფონზეა'**
+  String get syncStateOffline;
+
+  /// No description provided for @syncOfflineNote.
+  ///
+  /// In ka, this message translates to:
+  /// **'მუშაობა შეგიძლიათ გააგრძელოთ. ცვლილებები გაიგზავნება, როცა კავშირი აღდგება. აპის დახურვა მათ არ კარგავს.'**
+  String get syncOfflineNote;
+
+  /// No description provided for @syncLastSynced.
+  ///
+  /// In ka, this message translates to:
+  /// **'ბოლო სინქრონიზაცია: {time}'**
+  String syncLastSynced(Object time);
+
+  /// No description provided for @syncNeverSynced.
+  ///
+  /// In ka, this message translates to:
+  /// **'ამ მოწყობილობაზე ჯერ არ სინქრონიზებულა'**
+  String get syncNeverSynced;
+
+  /// No description provided for @syncWaitingRecords.
+  ///
+  /// In ka, this message translates to:
+  /// **'გაგზავნას ელოდება ჩანაწერები: {count}'**
+  String syncWaitingRecords(Object count);
+
+  /// No description provided for @syncStateChecking.
+  ///
+  /// In ka, this message translates to:
+  /// **'მოწმდება'**
+  String get syncStateChecking;
 }
 
 class _AppLocalizationsDelegate

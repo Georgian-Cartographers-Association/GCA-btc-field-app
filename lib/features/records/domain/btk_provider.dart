@@ -7,6 +7,7 @@ import '../../../data/repositories/cloud_repository.dart';
 import '../../../data/repositories/data_repository.dart';
 import '../../../data/repositories/expedition_repository.dart';
 import '../../../data/repositories/local_repository.dart';
+import '../../../data/sync/record_versions.dart';
 import '../../auth/domain/firebase_auth_provider.dart';
 import '../../settings/domain/settings_provider.dart';
 
@@ -66,7 +67,7 @@ class BtkNotifier extends StateNotifier<List<BtkRecord>> {
     }
   }
 
-  /// Returns true if a sync conflict was detected (expedition mode only).
+  /// Returns true if a sync conflict was detected, and the other version kept.
   /// Throws if the save fails. The edit stays on screen so it can be retried.
   Future<bool> update(BtkRecord record) async {
     state = [
@@ -90,12 +91,28 @@ class BtkNotifier extends StateNotifier<List<BtkRecord>> {
   Future<BtkRecord> duplicate(BtkRecord original, String copySuffix) async {
     final json = original.toJson();
     json['id'] = _newId();
+    json.remove('versions'); // the copy is a record of its own
     if ((json['name'] as String).isNotEmpty) {
       json['name'] = '${json['name']} $copySuffix';
     }
     final copy = BtkRecord.fromJson(json);
     await _insert(copy);
     return copy;
+  }
+
+  /// Makes a kept version the record again, replacing the current one by choice,
+  /// so the current one must not count as a conflict with it.
+  Future<void> restoreKept(BtkRecord kept) async {
+    for (final current in state) {
+      if (current.id == kept.id) {
+        kept.versions = mergeVersions(kept.versions, current.versions);
+      }
+    }
+    if (state.any((r) => r.id == kept.id)) {
+      await update(kept);
+    } else {
+      await _insert(kept);
+    }
   }
 
   /// Adds new records and replaces older copies. A copy that is the same age

@@ -247,6 +247,10 @@ class BtkRecord {
   // Sync metadata
   DateTime updatedAt;
 
+  /// How many saves each device has made to this record, in Cloud and Expedition
+  /// modes. Empty until then.
+  Map<String, int> versions;
+
   BtkRecord({
     required this.id,
     required this.date,
@@ -280,7 +284,9 @@ class BtkRecord {
     this.vertStructHeight = '',
     this.vertStructDesc = '',
     DateTime? updatedAt,
+    Map<String, int>? versions,
   })  : updatedAt = updatedAt ?? DateTime.now(),
+        versions = versions ?? {},
         vegetation = vegetation ?? [VegetationRow()],
         soilHorizons = soilHorizons ?? [SoilHorizonRow()],
         geomasses = geomasses ?? [GeomassRow()],
@@ -319,6 +325,7 @@ class BtkRecord {
         'vertStructHeight': vertStructHeight,
         'vertStructDesc': vertStructDesc,
         'updatedAt': updatedAt.toIso8601String(),
+        if (versions.isNotEmpty) 'versions': versions,
       };
 
   factory BtkRecord.fromJson(Map<String, dynamic> j) {
@@ -358,8 +365,16 @@ class BtkRecord {
       // Without a timestamp, the record's own date is the safest age: "now"
       // would let an old record look newer than everything else.
       updatedAt: DateTime.tryParse(_str(j['updatedAt'])) ?? date,
+      versions: _versions(j['versions']),
     );
   }
+
+  static Map<String, int> _versions(Object? raw) => raw is Map
+      ? {
+          for (final e in raw.entries)
+            if (e.value is num) '${e.key}': (e.value as num).toInt(),
+        }
+      : {};
 
   /// Reads a record kept under [storedId], which fills in a missing `id`.
   factory BtkRecord.fromStored(String storedId, Map<String, dynamic> j) =>

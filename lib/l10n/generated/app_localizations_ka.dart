@@ -1206,7 +1206,7 @@ class AppLocalizationsKa extends AppLocalizations {
 
   @override
   String get otherUserChanged =>
-      '⚠️ სხვა მომხმარებელმა ჩანაწერი შეცვალა — თქვენი ვერსია შენახულია';
+      '⚠️ ჩანაწერი სხვაგანაც შეიცვალა. თქვენი ცვლილება შენახულია, ხოლო მეორე ვერსიას ჩანაწერების სიაში ნახავთ';
 
   @override
   String get gpsOffMessage =>
@@ -2107,4 +2107,83 @@ class AppLocalizationsKa extends AppLocalizations {
 
   @override
   String get statsLastDate => 'ბოლო თარიღი';
+
+  @override
+  String syncKeptBanner(Object count) {
+    return 'განსახილველი შენახული ვერსიები: $count';
+  }
+
+  @override
+  String get syncKeptTitle => 'შენახული ვერსიები';
+
+  @override
+  String get syncKeptExplain =>
+      'ჩანაწერი ერთდროულად შეიცვალა სხვადასხვა მოწყობილობაზე. არაფერი დაკარგულა: ეს ვერსიები ინახება მხოლოდ ამ მოწყობილობაზე, სანამ არ გადაწყვეტთ.';
+
+  @override
+  String get syncKeptEmpty => 'განსახილველი ვერსია არ არის.';
+
+  @override
+  String get syncKeptCurrent => 'მიმდინარე';
+
+  @override
+  String get syncKeptOther => 'შენახული ვერსია';
+
+  @override
+  String get syncKeptNoCurrent =>
+      'მიმდინარე ჩანაწერი აღარ არსებობს: სხვაგან წაიშალა.';
+
+  @override
+  String get syncKeepCurrent => 'მიმდინარეს დატოვება';
+
+  @override
+  String get syncKeepOther => 'ამით ჩანაცვლება';
+
+  @override
+  String get syncKeepBoth => 'ორივეს დატოვება';
+
+  @override
+  String get syncRestore => 'აღდგენა';
+
+  @override
+  String get syncKeepCurrentConfirm => 'შენახული ვერსია წაიშლება. გავაგრძელოთ?';
+
+  @override
+  String get syncKeepOtherConfirm =>
+      'მიმდინარე ვერსია ამ ვერსიით ჩანაცვლდება. გავაგრძელოთ?';
+
+  @override
+  String get syncActionFailed => 'ვერ შესრულდა. შენახული ვერსია ადგილზეა.';
+
+  @override
+  String get syncCheckFailed => 'სინქრონიზაციის შემოწმება ვერ მოხერხდა';
+
+  @override
+  String get syncStateSynced => 'სინქრონიზებულია';
+
+  @override
+  String get syncStateSending => 'იგზავნება';
+
+  @override
+  String get syncStateOffline => 'ოფლაინი: ცვლილებები ტელეფონზეა';
+
+  @override
+  String get syncOfflineNote =>
+      'მუშაობა შეგიძლიათ გააგრძელოთ. ცვლილებები გაიგზავნება, როცა კავშირი აღდგება. აპის დახურვა მათ არ კარგავს.';
+
+  @override
+  String syncLastSynced(Object time) {
+    return 'ბოლო სინქრონიზაცია: $time';
+  }
+
+  @override
+  String get syncNeverSynced => 'ამ მოწყობილობაზე ჯერ არ სინქრონიზებულა';
+
+  @override
+  String syncWaitingRecords(Object count) {
+    return 'გაგზავნას ელოდება ჩანაწერები: $count';
+  }
+
+  @override
+  String get syncStateChecking => 'მოწმდება';
 }
