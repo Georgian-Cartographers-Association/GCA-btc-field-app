@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../models/btk_record.dart';
+import '../widgets/english_field.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
 class PhysicalGeoSection extends StatefulWidget {
@@ -64,6 +65,13 @@ class _PhysicalGeoSectionState extends State<PhysicalGeoSection> {
               isDense: true,
             ),
           ),
+          if (r.isBilingual)
+            EnglishField(
+              values: r.english,
+              fieldKey: 'geologicalFormation',
+              label: l10n.geologicalFormation,
+              onChanged: () => widget.onChanged(r),
+            ),
           const SizedBox(height: 12),
           TextField(
             controller: _reliefTypeCtrl,
@@ -75,6 +83,13 @@ class _PhysicalGeoSectionState extends State<PhysicalGeoSection> {
               isDense: true,
             ),
           ),
+          if (r.isBilingual)
+            EnglishField(
+              values: r.english,
+              fieldKey: 'reliefType',
+              label: l10n.reliefType,
+              onChanged: () => widget.onChanged(r),
+            ),
           const SizedBox(height: 12),
           TextField(
             controller: _morphologicalDescCtrl,
@@ -87,6 +102,14 @@ class _PhysicalGeoSectionState extends State<PhysicalGeoSection> {
               isDense: true,
             ),
           ),
+          if (r.isBilingual)
+            EnglishField(
+              values: r.english,
+              fieldKey: 'morphologicalDesc',
+              label: l10n.morphologicalDesc,
+              maxLines: 3,
+              onChanged: () => widget.onChanged(r),
+            ),
           const SizedBox(height: 12),
           TextField(
             controller: _geomorphProcessesCtrl,
@@ -99,6 +122,14 @@ class _PhysicalGeoSectionState extends State<PhysicalGeoSection> {
               isDense: true,
             ),
           ),
+          if (r.isBilingual)
+            EnglishField(
+              values: r.english,
+              fieldKey: 'geomorphProcesses',
+              label: l10n.geomorphProcesses,
+              maxLines: 2,
+              onChanged: () => widget.onChanged(r),
+            ),
           const SizedBox(height: 12),
           TextField(
             controller: _migrationRegimeCtrl,
@@ -110,6 +141,13 @@ class _PhysicalGeoSectionState extends State<PhysicalGeoSection> {
               isDense: true,
             ),
           ),
+          if (r.isBilingual)
+            EnglishField(
+              values: r.english,
+              fieldKey: 'migrationRegime',
+              label: l10n.migrationRegime,
+              onChanged: () => widget.onChanged(r),
+            ),
           const SizedBox(height: 12),
           TextField(
             controller: _moistureDegreeCtrl,
@@ -121,6 +159,13 @@ class _PhysicalGeoSectionState extends State<PhysicalGeoSection> {
               isDense: true,
             ),
           ),
+          if (r.isBilingual)
+            EnglishField(
+              values: r.english,
+              fieldKey: 'moistureDegree',
+              label: l10n.moistureDegree,
+              onChanged: () => widget.onChanged(r),
+            ),
         ],
       ),
     );

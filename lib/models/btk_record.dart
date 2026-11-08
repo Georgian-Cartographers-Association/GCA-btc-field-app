@@ -7,6 +7,19 @@ String _str(dynamic v) => v == null ? '' : v.toString();
 double? _num(dynamic v) =>
     v is num ? v.toDouble() : (v is String ? double.tryParse(v) : null);
 
+Map<String, String> _texts(dynamic v) => v is Map
+    ? {
+        for (final e in v.entries)
+          if (_str(e.value).isNotEmpty) '${e.key}': _str(e.value),
+      }
+    : {};
+
+/// Languages a record can be filled in. English typed alongside Georgian lives
+/// in a separate map, so the main fields always hold the record's first language.
+const fillKa = 'ka';
+const fillEn = 'en';
+const fillBoth = 'both';
+
 List<T>? _rows<T>(dynamic v, T Function(Map<String, dynamic>) fromJson) =>
     v is List
         ? v
@@ -22,13 +35,17 @@ class VegetationRow {
   String phenophase;
   String species;
 
+  /// English for [density] and [phenophase], when the record has both languages.
+  Map<String, String> english;
+
   VegetationRow({
     this.tier = '',
     this.height = '',
     this.density = '',
     this.phenophase = '',
     this.species = '',
-  });
+    Map<String, String>? english,
+  }) : english = english ?? {};
 
   Map<String, dynamic> toJson() => {
         'tier': tier,
@@ -36,6 +53,7 @@ class VegetationRow {
         'density': density,
         'phenophase': phenophase,
         'species': species,
+        if (english.isNotEmpty) 'en': english,
       };
 
   factory VegetationRow.fromJson(Map<String, dynamic> j) => VegetationRow(
@@ -44,6 +62,7 @@ class VegetationRow {
         density: _str(j['density']),
         phenophase: _str(j['phenophase']),
         species: _str(j['species']),
+        english: _texts(j['en']),
       );
 
   double? get heightValue => Measures.vegHeight.value(height);
@@ -53,11 +72,22 @@ class SoilHorizonRow {
   String horizon;
   String description;
 
-  SoilHorizonRow({this.horizon = '', this.description = ''});
+  /// English for [description], when the record has both languages.
+  Map<String, String> english;
 
-  Map<String, dynamic> toJson() => {'horizon': horizon, 'description': description};
-  factory SoilHorizonRow.fromJson(Map<String, dynamic> j) =>
-      SoilHorizonRow(horizon: _str(j['horizon']), description: _str(j['description']));
+  SoilHorizonRow({this.horizon = '', this.description = '', Map<String, String>? english})
+      : english = english ?? {};
+
+  Map<String, dynamic> toJson() => {
+        'horizon': horizon,
+        'description': description,
+        if (english.isNotEmpty) 'en': english,
+      };
+  factory SoilHorizonRow.fromJson(Map<String, dynamic> j) => SoilHorizonRow(
+        horizon: _str(j['horizon']),
+        description: _str(j['description']),
+        english: _texts(j['en']),
+      );
 }
 
 class GeomassRow {
@@ -244,6 +274,13 @@ class BtkRecord {
   String vertStructHeight;
   String vertStructDesc;
 
+  /// [fillKa], [fillEn] or [fillBoth]. Empty in records from before the choice,
+  /// which were all filled in Georgian.
+  String fillLanguage;
+
+  /// English for text fields, by their JSON key, when [fillLanguage] is both.
+  Map<String, String> english;
+
   // Sync metadata
   DateTime updatedAt;
 
@@ -285,8 +322,11 @@ class BtkRecord {
     this.vertStructDesc = '',
     DateTime? updatedAt,
     Map<String, int>? versions,
+    this.fillLanguage = '',
+    Map<String, String>? english,
   })  : updatedAt = updatedAt ?? DateTime.now(),
         versions = versions ?? {},
+        english = english ?? {},
         vegetation = vegetation ?? [VegetationRow()],
         soilHorizons = soilHorizons ?? [SoilHorizonRow()],
         geomasses = geomasses ?? [GeomassRow()],
@@ -324,6 +364,8 @@ class BtkRecord {
         'vertStructIndex': vertStructIndex,
         'vertStructHeight': vertStructHeight,
         'vertStructDesc': vertStructDesc,
+        if (fillLanguage.isNotEmpty) 'fillLanguage': fillLanguage,
+        if (english.isNotEmpty) 'en': english,
         'updatedAt': updatedAt.toIso8601String(),
         if (versions.isNotEmpty) 'versions': versions,
       };
@@ -366,6 +408,13 @@ class BtkRecord {
       // would let an old record look newer than everything else.
       updatedAt: DateTime.tryParse(_str(j['updatedAt'])) ?? date,
       versions: _versions(j['versions']),
+      fillLanguage: switch (_str(j['fillLanguage'])) {
+        fillEn => fillEn,
+        fillBoth => fillBoth,
+        fillKa => fillKa,
+        _ => '',
+      },
+      english: _texts(j['en']),
     );
   }
 
@@ -379,6 +428,9 @@ class BtkRecord {
   /// Reads a record kept under [storedId], which fills in a missing `id`.
   factory BtkRecord.fromStored(String storedId, Map<String, dynamic> j) =>
       BtkRecord.fromJson(_str(j['id']).isEmpty ? {...j, 'id': storedId} : j);
+
+  String get fillLang => fillLanguage.isEmpty ? fillKa : fillLanguage;
+  bool get isBilingual => fillLanguage == fillBoth;
 
   MeasureRange? get vertHeightRange => Measures.vertHeight.range(vertStructHeight);
   double? get plotArea => Measures.plotSize.area(experimentPlotSize);

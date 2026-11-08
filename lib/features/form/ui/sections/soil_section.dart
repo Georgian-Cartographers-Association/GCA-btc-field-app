@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../models/btk_record.dart';
+import '../widgets/english_field.dart';
 import '../../domain/photo_provider.dart';
 import '../widgets/section_photo_panel.dart';
 import '../../../../l10n/generated/app_localizations.dart';
@@ -113,6 +114,13 @@ class _SoilSectionState extends ConsumerState<SoilSection> {
               isDense: true,
             ),
           ),
+          if (r.isBilingual)
+            EnglishField(
+              values: r.english,
+              fieldKey: 'soilTypeName',
+              label: l10n.soilTypeName,
+              onChanged: () => _upd(r),
+            ),
           const SizedBox(height: 12),
           TextField(
             controller: _soilProfileDescCtrl,
@@ -125,6 +133,14 @@ class _SoilSectionState extends ConsumerState<SoilSection> {
               isDense: true,
             ),
           ),
+          if (r.isBilingual)
+            EnglishField(
+              values: r.english,
+              fieldKey: 'soilProfileDesc',
+              label: l10n.soilProfileDescShort,
+              maxLines: 3,
+              onChanged: () => _upd(r),
+            ),
           const SizedBox(height: 10),
 
           // ── Soil profile photos ─────────────────────────────────────
@@ -185,18 +201,30 @@ class _SoilSectionState extends ConsumerState<SoilSection> {
                   ),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: TextField(
-                      controller: cs[1],
-                      onChanged: _edit((v) => h.description = v),
-                      maxLines: 2,
-                      decoration: InputDecoration(
-                        labelText: l10n.description,
-                        border: OutlineInputBorder(),
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                        isDense: true,
+                    child: Column(children: [
+                      TextField(
+                        controller: cs[1],
+                        onChanged: _edit((v) => h.description = v),
+                        maxLines: 2,
+                        decoration: InputDecoration(
+                          labelText: l10n.description,
+                          border: OutlineInputBorder(),
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                          isDense: true,
+                        ),
                       ),
-                    ),
+                      if (r.isBilingual)
+                        EnglishField(
+                          // Keyed by the row, so a removed row's text doesn't move up.
+                          key: ObjectKey(h),
+                          values: h.english,
+                          fieldKey: 'description',
+                          label: l10n.description,
+                          maxLines: 2,
+                          onChanged: () => _upd(r),
+                        ),
+                    ]),
                   ),
                   IconButton(
                     icon: const Icon(Icons.remove_circle_outline,
@@ -234,6 +262,13 @@ class _SoilSectionState extends ConsumerState<SoilSection> {
               isDense: true,
             ),
           ),
+          if (r.isBilingual)
+            EnglishField(
+              values: r.english,
+              fieldKey: 'soilSurfaceFormation',
+              label: l10n.soilSurfaceFormationShort,
+              onChanged: () => _upd(r),
+            ),
         ],
       ),
     );

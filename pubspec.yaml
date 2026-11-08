@@ -97,6 +97,7 @@ flutter:
 
   assets:
     - assets/pdf/methodology.pdf
+    - assets/pdf/methodology_en.pdf
     - assets/geojson/georgia.geojson
     - assets/geojson/Regions.geojson
     - assets/geojson/Municipalities.geojson

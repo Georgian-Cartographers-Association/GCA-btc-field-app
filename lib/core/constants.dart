@@ -19,6 +19,9 @@ class AppConstants {
   static const double maxZoom = 18.0;
 
   static const String pdfAssetPath = 'assets/pdf/methodology.pdf';
+  /// Shown when the app is in English. It only counts once it is also listed
+  /// under assets in pubspec.yaml; until then the Georgian one shows.
+  static const String pdfAssetPathEn = 'assets/pdf/methodology_en.pdf';
   static const String geojsonAssetPath = 'assets/geojson/georgia.geojson';
   static const String regionsGeojsonPath = 'assets/geojson/Regions.geojson';
   static const String municipalitiesGeojsonPath = 'assets/geojson/Municipalities.geojson';

@@ -12,6 +12,7 @@ import '../../../core/firebase_state.dart';
 import '../../../core/locale.dart';
 import '../../auth/domain/firebase_auth_provider.dart';
 import '../domain/settings_provider.dart';
+import 'tips_section.dart';
 import '../../../data/services/account_service.dart';
 import '../../../data/services/sync_service.dart';
 import '../../../l10n/generated/app_localizations.dart';
@@ -136,6 +137,9 @@ class SettingsScreen extends ConsumerWidget {
           // ── მონაცემების შენახვა ───────────────────────────────────
           _SectionHeader(l10n.storageTitle),
           _StorageSection(settings: settings, notifier: notifier),
+          const Divider(),
+
+          const TipsSection(),
           const Divider(),
 
           // ── შესახებ ────────────────────────────────────────────────
