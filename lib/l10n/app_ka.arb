@@ -694,5 +694,12 @@
   "statsExportSubject": "ბტკ სტატისტიკა — CSV",
   "statsExportCovers": "მოიცავს {count} ჩანაწერს {total}-დან",
   "statsExportNote": "ეს შეყვანილი მონაცემების დათვლაა და არა დასკვნა.",
-  "statsExportRecords": "ჩანაწერები"
+  "statsExportRecords": "ჩანაწერები",
+  "exportDepthFromCm": "სიღრმე, დან (სმ)",
+  "exportDepthToCm": "სიღრმე, მდე (სმ)",
+  "shareRecordsXlsx": "ბტკ ჩანაწერები — Excel",
+  "exportExcelAll": "Excel (ყველა ცხრილით)",
+  "statsExportPdf": "შედეგების PDF, გრაფიკებით",
+  "statsFirstDate": "პირველი თარიღი",
+  "statsLastDate": "ბოლო თარიღი"
 }

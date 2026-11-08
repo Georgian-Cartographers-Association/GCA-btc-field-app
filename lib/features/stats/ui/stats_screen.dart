@@ -7,6 +7,8 @@ import '../../records/domain/record_filter.dart';
 import '../../records/domain/btk_provider.dart';
 import '../../records/ui/record_filter_sheet.dart';
 import '../../../data/services/export_service.dart';
+import '../../../data/services/statistics_pdf.dart';
+import '../../pdf/ui/pdf_preview_screen.dart';
 import '../domain/geomass_analytics.dart';
 import '../domain/group_analytics.dart';
 import '../domain/record_analytics.dart';
@@ -45,6 +47,27 @@ class StatsScreen extends ConsumerWidget {
     }
   }
 
+  void _openPdf(BuildContext context, WidgetRef ref, List<BtkRecord> records, int total,
+      RecordFilter filter) {
+    final l10n = AppLocalizations.of(context)!;
+    final bandStep = ref.read(_bandStepProvider);
+    final now = DateTime.now();
+    Navigator.of(context).push(MaterialPageRoute<void>(
+      builder: (_) => PdfPreviewScreen(
+        records: records,
+        filename: 'btc_statistics_${shortDate(now)}.pdf',
+        buildPdf: (records) => buildStatisticsPdf(
+          records: records,
+          totalRecords: total,
+          filter: filter,
+          bandStep: bandStep,
+          l10n: l10n,
+          now: now,
+        ),
+      ),
+    ));
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
@@ -62,10 +85,16 @@ class StatsScreen extends ConsumerWidget {
               onPressed: () => showRecordFilterSheet(context),
             ),
           if (records.isNotEmpty)
-            IconButton(
+            PopupMenuButton<String>(
               icon: const Icon(Icons.file_download_outlined),
-              tooltip: l10n.statsExportAction,
-              onPressed: () => _export(context, ref, records, all.length, filter),
+              tooltip: l10n.exportAction,
+              onSelected: (format) => format == 'pdf'
+                  ? _openPdf(context, ref, records, all.length, filter)
+                  : _export(context, ref, records, all.length, filter),
+              itemBuilder: (_) => [
+                PopupMenuItem(value: 'pdf', child: Text(l10n.statsExportPdf)),
+                PopupMenuItem(value: 'csv', child: Text(l10n.statsExportAction)),
+              ],
             ),
         ],
       ),

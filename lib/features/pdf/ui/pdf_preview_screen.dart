@@ -11,10 +11,14 @@ class PdfPreviewScreen extends StatefulWidget {
   final List<BtkRecord> records;
   final Future<Uint8List> Function(List<BtkRecord>) buildPdf;
 
+  /// Named after the records when left out.
+  final String? filename;
+
   const PdfPreviewScreen({
     super.key,
     required this.records,
     this.buildPdf = ExportService.buildPdf,
+    this.filename,
   });
 
   static Future<void> open(BuildContext context, List<BtkRecord> records) =>
@@ -31,7 +35,7 @@ class _PdfPreviewScreenState extends State<PdfPreviewScreen> {
   bool _failed = false;
   bool _busy = false;
 
-  String get _filename => ExportService.pdfFilename(widget.records);
+  String get _filename => widget.filename ?? ExportService.pdfFilename(widget.records);
 
   @override
   void initState() {

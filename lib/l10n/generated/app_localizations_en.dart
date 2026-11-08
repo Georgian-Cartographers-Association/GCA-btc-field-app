@@ -2129,4 +2129,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statsExportRecords => 'Records';
+
+  @override
+  String get exportDepthFromCm => 'Depth, from (cm)';
+
+  @override
+  String get exportDepthToCm => 'Depth, to (cm)';
+
+  @override
+  String get shareRecordsXlsx => 'BTC records — Excel';
+
+  @override
+  String get exportExcelAll => 'Excel (all tables)';
+
+  @override
+  String get statsExportPdf => 'Results PDF with charts';
+
+  @override
+  String get statsFirstDate => 'First date';
+
+  @override
+  String get statsLastDate => 'Last date';
 }
