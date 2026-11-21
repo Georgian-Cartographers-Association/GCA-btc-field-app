@@ -1,6 +1,7 @@
 # ბტკ საველე აპლიკაცია · BTC Field App
 
 [![Launch BTC Web](https://img.shields.io/badge/Launch-BTC%20Web-2D8653?logo=googlechrome&logoColor=white)](https://btc.qgis.ge)
+[![Google Play](https://img.shields.io/badge/Google%20Play-ge.btc.field__app-414141?logo=googleplay&logoColor=white)](https://play.google.com/store/apps/details?id=ge.btc.field_app)
 [![GCA GitHub](https://img.shields.io/badge/Georgian%20Cartographers%20Association-GitHub-181717?logo=github&logoColor=white)](https://github.com/Georgian-Cartographers-Association)
 [![Build & Release](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/actions/workflows/release.yml/badge.svg)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/actions/workflows/release.yml)
 [![Version](https://img.shields.io/github/v/release/Georgian-Cartographers-Association/GCA-btc-field-app?label=version&color=brightgreen)](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)
@@ -20,10 +21,12 @@
 A joint project of Tbilisi State University and the **Georgian Cartographers Association** — a free, open-source field survey platform for **landscape natural-territorial complexes (NTC/BTC)**. Runs on the web, Android, Windows, and Linux, with your data stored locally by default and optional cloud sync.
 
 - **[Launch BTC Web](https://btc.qgis.ge)** — სრული აპლიკაცია ბრაუზერში, ინსტალაცია არ სჭირდება
+- **[Google Play](https://play.google.com/store/apps/details?id=ge.btc.field_app)** — Android-ის ვერსია, ავტომატური განახლებებით
 - **[Download the app](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)** — Android APK, Windows Setup/Portable, Linux AppImage/.deb/.rpm
 - **[ბტკ ბლანკი](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)** — 6-სექციანი ფიზიკურ-გეოგრაფიული ბლანკი GPS-ით, კოორდინატების კონვერტერით, ფოტოებით
-- **[Import / Export](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)** — .btk, .btkz (ფოტო+GPS), PDF, KML, GeoJSON, CSV, GPX
-- **[სტატისტიკა](https://btc.qgis.ge)** — dashboard: ჩანაწერების ანალიზი, bar charts, mini-map
+- **[Import / Export](https://github.com/Georgian-Cartographers-Association/GCA-btc-field-app/releases/latest)** — .btk, .btkz (ფოტო+GPS), PDF, Excel, KML, GeoJSON, CSV, GPX
+- **[სტატისტიკა და ანალიზი](https://btc.qgis.ge)** — ბტკ-ების შედარება, მცენარეულობა, ნიადაგი, გეომასები, სიმაღლის ზოლები, შედეგების PDF
+- **ორენოვანი ჩანაწერი** — ბლანკის შევსება ქართულად, ინგლისურად ან ორივე ენაზე
 - **[GPS ტრეკი](https://btc.qgis.ge)** — ჩაწერა → GPX ექსპორტი → .btkz-ში ავტოჩართვა
 - **[რუქის ინსტრუმენტები](https://btc.qgis.ge)** — მანძილისა და ფართობის გაზომვა, ძიება, ამინდი, საკუთარი WMS/XYZ სერვისები
 
@@ -63,7 +66,8 @@ A joint project of Tbilisi State University and the **Georgian Cartographers Ass
 
 | პლატფორმა | ფაილი | შენიშვნა |
 |---|---|---|
-| **Android** | `btk-android-arm64.apk` | თანამედროვე ტელეფონები (რეკომენდ.) |
+| **Android** | **[Google Play](https://play.google.com/store/apps/details?id=ge.btc.field_app)** | რეკომენდებული, ავტომატური განახლებით |
+| **Android** | `btk-android-arm64.apk` | თანამედროვე ტელეფონები |
 | **Android** | `btk-android-arm32.apk` | ძველი ტელეფონები |
 | **Android** | `btk-android-x86_64.apk` | ემულატორები |
 | **Android** | `app-release.aab` | CI-ის არტეფაქტი; Google Play-ზე იტვირთება ლოკალურად აწყობილი AAB ([docs/release](docs/release/ANDROID_RELEASE_BUILD.md)) |
@@ -77,7 +81,10 @@ A joint project of Tbilisi State University and the **Georgian Cartographers Ass
 
 SHA256 checksums: `checksums-android.txt` · `checksums-windows.txt` · `checksums-linux.txt`
 
-**Google Play:** აპლიკაცია (`ge.btc.field_app`) გამოსაქვეყნებლად მზადდება და ჯერ საჯაროდ არ არის ხელმისაწვდომი.
+**Google Play:** [BTC Field App](https://play.google.com/store/apps/details?id=ge.btc.field_app) (`ge.btc.field_app`) საჯაროდ ხელმისაწვდომია. Android-ზე რეკომენდებულია Play-დან დაყენება: განახლებები ავტომატურად მოდის.
+
+> [!NOTE]
+> ახალი ფუნქციები (სტატისტიკა და ანალიზი, Excel, რუკა PDF-ში, სინქრონიზაციის სტატუსი, ორენოვანი ჩანაწერი, ინგლისური გზამკვლევი) ჯერ ვებ-ვერსიაშია ([btc.qgis.ge](https://btc.qgis.ge)). Google Play-ზე და GitHub Releases-ზე ისინი 1.22 ვერსიით გამოჩნდება.
 
 > [!IMPORTANT]
 > Android-ის პაკეტის სახელი შეიცვალა: `ge.cartographers.btk_field_app` → `ge.btc.field_app`. ახალი ვერსია ძველ APK-ს (v1.20.2 და უფრო ძველი) ვერ განაახლებს და ცალკე აპლიკაციად დაყენდება. ადგილობრივი ჩანაწერების გადასატანად ძველ აპლიკაციაში გააკეთეთ `.btkz` ექსპორტი, ახალში კი იმპორტი.
@@ -105,7 +112,7 @@ sudo dpkg -i btk-linux-*.deb && sudo apt-get install -f
 
 | # | სექცია | ველები |
 |---|---|---|
-| 1 | **ძირითადი** | ID, სახელი, თარიღი, GPS კოორდინატები, სიმაღლე, ექსპოზიცია, ლოკაცია, კოორდინატების კონვერტერი |
+| 1 | **ძირითადი** | ID, სახელი, ჯგუფი, თარიღი, შევსების ენა (ქართ. / ინგლ. / ორივე), GPS კოორდინატები, სიმაღლე, ექსპოზიცია, ლოკაცია, კოორდინატების კონვერტერი |
 | 2 | **ფიზ.-გეოგ.** | გეოლ. ფორმაცია, რელიეფი, მორფ. დახასიათება, მიგრ. რეჟიმი, ტენიანობა |
 | 3 | **მცენარეულობა** | ვ.სტრუქტ. ტიპი/ინდ., იარუსები, სახეობები, სიმ./სიმძლ./ფენოფაზა |
 | 4 | **ნიადაგი** | ტიპი, ჰორიზონტები, გეოჰ. ინდ., ზ.ფენ. ფორმ. + ფოტოები |
@@ -119,13 +126,23 @@ sudo dpkg -i btk-linux-*.deb && sudo apt-get install -f
 |---|---|---|
 | **.btk** | JSON — ჩანაწერების სრული მონაცემები | import ✓ · export ✓ |
 | **.btkz** | ZIP — ჩანაწერები + ფოტოები + GPS ტრეკები | import ✓ · export ✓ |
-| **PDF** | A4, ქართული ფონტი (Noto Sans Georgian), ფოტოები | export · share |
+| **PDF** | A4, ქართული ფონტი (Noto Sans Georgian), ფოტოები, ყველა ცხრილი, ადგილმდებარეობის რუკა (ინტერნეტით); ქართულად, ინგლისურად ან ორივეზე | export · share |
+| **Excel** | .xlsx — ჩანაწერები და ყველა ცხრილი ცალკე ფურცლებზე | export · share |
 | **KML** | Google Earth / QGIS / ArcGIS | export · share |
 | **GeoJSON** | QGIS / Mapbox / Leaflet | export · share |
 | **CSV** | Excel / Sheets — 5 კოორდინატთა ფორმატი | export · share |
 | **GPX** | GPS ტრეკი — Garmin / OsmAnd / Strava | export · share |
 
 ყველა ფორმატი **Android, Windows და Linux**-ზე სრულად მუშაობს.
+
+### სტატისტიკა და ანალიზი
+
+- **ბტკ-ების შედარება** გვერდიგვერდ
+- **მცენარეულობის სტრუქტურა**, **ნიადაგის ჰორიზონტები** და **გეომასები** ყველა ჩანაწერში
+- დაჯგუფება **სიმაღლის ზოლებით** (100 / 250 / 500 მ) და **წლებით**, განმეორებით აღწერილი ადგილები
+- მასის გრაფიკი სიმაღლის ან დროის მიხედვით
+- **ფილტრები** და შედეგების ექსპორტი **PDF**-ად (გრაფიკებით) და **CSV**-ად
+- მხოლოდ რაოდენობები ჩანაწერების რიცხვით: საშუალოები და დასკვნები არასაკმარისი მონაცემებიდან არ კეთდება
 
 ### რუქა და GPS
 
@@ -137,7 +154,8 @@ sudo dpkg -i btk-linux-*.deb && sudo apt-get install -f
 - **ამინდის პროგნოზი** (api.met.no) და **კომპასი**
 - ლოკალური **რასტრული რუქები** — Bounding Box + გამჭვირვალობა (ნიადაგი, ლანდშაფტი, რელიეფი)
 - საქართველოს ადმინ. საზღვრები (GeoJSON) — რეგიონები, მუნიციპალიტეტები
-- **GPS ტრეკის ჩაწერა** — ტრეკის ისტორია, GPX ექსპორტი. ფონური ჩაწერა არ არის, ამიტომ ჩართეთ „ეკრანი ნუ ჩაქრება“
+- **GPS ტრეკის ჩაწერა** — ტრეკის ისტორია, GPX ექსპორტი, სიზუსტის მაჩვენებელი, ჩანაწერის ტრეკთან დაკავშირება. 1.22-დან Android-ზე ჩაწერა ეკრანის ჩაქრობისასაც გრძელდება (შეტყობინებით)
+- **ჩანაწერები რუქაზე** — ჯგუფების ფერებით, ფილტრით, ხილულ არეში მყოფი ჩანაწერებით
 - ტრეკი **ავტომატურად .btkz-ში** — ჩანაწერების მიმდებარე დღის ტრეკები
 
 ### UX
@@ -154,7 +172,9 @@ sudo dpkg -i btk-linux-*.deb && sudo apt-get install -f
 | კოორდინატთა ფორმატები | DD, DM, DMS, UTM 37N, UTM 38N |
 | ეკრანი ნუ ჩაქრება | რუქაზე მუშაობისას |
 | ჩანაწერის გაგზავნა | ელფოსტით, ბლანკიდან |
-| მეთოდიკა | PDF აპლიკაციის შიგნით |
+| მეთოდიკა | ქართული მეთოდიკა (PDF) აპლიკაციის შიგნით; ინგლისურ ენაზე — მოკლე საველე გზამკვლევი |
+| შაბლონები და დაუსრულებელი ჩანაწერები | წინა ჩანაწერის მონაცემების გამოყენება, სავალდებულო ველების შემოწმება |
+| რჩევები | პარამეტრებში: მაგ., ხმოვანი აკრეფა კლავიატურის მიკროფონით (Gboard) |
 
 ### შენახვის რეჟიმები
 
@@ -163,6 +183,8 @@ sudo dpkg -i btk-linux-*.deb && sudo apt-get install -f
 | **Local** | SQLite — მოწყობილობაზე, ინტერნეტი არ სჭირდება |
 | **Cloud** | Firebase Firestore — real-time sync; საჭიროა ანგარიში |
 | **Expedition** | გუნდური — ექსპედიციის კოდით; საჭიროა ანგარიში |
+
+Cloud და Expedition რეჟიმები **offline-first**-ია: ჩანაწერი ჯერ მოწყობილობაზე ინახება და ინტერნეტის დაბრუნებისას იგზავნება. ჩანაწერების ეკრანზე **სინქრონიზაციის სტატუსი** ჩანს (შემოწმება / სინქრონიზებულია / იგზავნება / offline). თუ ერთი და იგივე ჩანაწერი ორ მოწყობილობაზე შეიცვალა, არცერთი ვერსია არ იკარგება: შეცვლილი ვერსია მოწყობილობაზე ინახება და მომხმარებელი თავად ირჩევს, რომელი დატოვოს.
 
 რეგისტრაცია შეზღუდულია: ელფოსტა ადმინისტრატორმა უნდა დაამატოს ნებადართულთა სიაში (`allowed_users`).
 
@@ -208,6 +230,8 @@ flutter run -d linux
 
 | Job | Trigger | Artifacts |
 |---|---|---|
+| `ci.yml` | ყოველი pull request | analyze, ტესტები (ძველი `.btk` ფაილების ჩატვირთვის ჩათვლით), Android release AAB build, Web build — არტეფაქტები არ ინახება |
+| `ios.yml` | pull request (iOS ფაილები) | Unsigned iOS build |
 | `build-apk` | `git tag v*` | arm64 / arm32 / x86_64 APK + AAB + SHA256 |
 | `build-windows` | `git tag v*` | Setup .exe + Portable .zip + SHA256 |
 | `build-linux` | `git tag v*` | AppImage + .deb + .rpm + SHA256 |
@@ -227,8 +251,13 @@ lib/
 ├── database/btk_database.dart       # SQLite (sqflite_common_ffi)
 ├── data/
 │   ├── repositories/                # Local / Cloud / Expedition / User
+│   ├── sync/                        # Version vectors, conflict guard, kept versions, sync status
 │   └── services/
 │       ├── export_service.dart      # .btk .btkz PDF KML GeoJSON CSV GPX
+│       ├── records_workbook.dart    # Excel (.xlsx) export
+│       ├── statistics_pdf.dart      # Statistics results PDF with charts
+│       ├── pdf_map.dart             # Location map image for the PDF
+│       ├── template_service.dart    # Record templates
 │       ├── account_service.dart     # In-app account deletion
 │       ├── sync_service.dart        # Cloud ⇄ local sync
 │       ├── weather_service.dart     # api.met.no forecast
@@ -239,14 +268,15 @@ lib/
     ├── map/                         # FlutterMap, tile layers, measurement, search, weather
     ├── form/                        # 6-section BTC form + photo panels
     ├── records/                     # List, search, batch ops, import/export
-    ├── stats/                       # Dashboard — charts + mini-map
+    ├── stats/                       # Statistics, comparison, analysis, results export
+    ├── sync/                        # Sync status, kept versions review
     ├── gps/                         # Track recording + history
     ├── auth/                        # Firebase Auth
     ├── expedition/                  # Expedition mode
     ├── settings/                    # Storage mode, theme, locale, coord fmt
     ├── layers/                      # Raster and WMS/XYZ layer manager
     ├── raster/                      # Raster layer state
-    └── pdf/                         # Methodology PDF viewer (164 გვ.)
+    └── pdf/                         # Methodology viewer: Georgian PDF (164 გვ.), English field guide
 ```
 
 ## Tech Stack
@@ -318,6 +348,6 @@ If you use this software, please cite it. Use GitHub's **"Cite this repository"*
 
 <div align="center">
 
-[Georgian Cartographers Association](https://github.com/Georgian-Cartographers-Association) · [Tbilisi State University](https://tsu.ge) · 2024–2026
+[Georgian Cartographers Association](https://github.com/Georgian-Cartographers-Association) · [Tbilisi State University](https://tsu.ge/) · [Business and Technology University](https://btu.edu.ge/) · 2024–2026
 
 </div>
